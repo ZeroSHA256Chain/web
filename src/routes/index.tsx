@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <VStack as="main" spaceX={4} background="teal.500" padding={4}>
+    <VStack as="main" spaceX={4} padding={4}>
       <ConnectMetamask />
     </VStack>
   );

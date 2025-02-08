@@ -1,3 +1,4 @@
+import { Alert, Button, Input, Presence, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Web3 } from "web3";
 
@@ -5,8 +6,6 @@ export const ConnectMetamask = () => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [provider, setProvider] = useState<string | null>(null);
-  const [chainId, setChainId] = useState<string | null>(null);
-  const [latestBlock, setLatestBlock] = useState<string | null>(null);
   const [accountButtonDisabled, setAccountButtonDisabled] =
     useState<boolean>(false);
   const [accounts, setAccounts] = useState<string[] | null>(null);
@@ -16,6 +15,10 @@ export const ConnectMetamask = () => {
   const [originalMessage, setOriginalMessage] = useState<string | null>(null);
   const [signedMessage, setSignedMessage] = useState<string | null>(null);
   const [signingAccount, setSigningAccount] = useState<string | null>(null);
+
+  // unused
+  const [_chainId, setChainId] = useState<string | null>(null);
+  const [_latestBlock, setLatestBlock] = useState<string | null>(null);
 
   useEffect(() => {
     // ensure that there is an injected the Ethereum provider
@@ -42,7 +45,7 @@ export const ConnectMetamask = () => {
       }
 
       // get chain ID and populate placeholder
-      setChainId(`Chain ID: ${await web3.eth.getChainId()}`);
+      setChainId(String(await web3.eth.getChainId()));
     }
 
     async function getLatestBlock() {
@@ -56,7 +59,7 @@ export const ConnectMetamask = () => {
       // subscribe to new blocks and update UI when a new block is created
       const blockSubscription = await web3.eth.subscribe("newBlockHeaders");
       blockSubscription.on("data", (block) => {
-        setLatestBlock(`Latest Block: ${block.number}`);
+        setLatestBlock(String(block.number));
       });
     }
 
@@ -78,7 +81,7 @@ export const ConnectMetamask = () => {
     const allAccounts = await web3.eth.getAccounts();
     setAccounts(allAccounts);
     // get the first account and populate placeholder
-    setConnectedAccount(`Account: ${allAccounts[0]}`);
+    setConnectedAccount(allAccounts[0]);
   }
 
   // click event for "Sign Message" button
@@ -108,78 +111,119 @@ export const ConnectMetamask = () => {
       signedMessage
     );
 
+    console.log({ account });
+
     setSigningAccount(account);
   }
   return (
-    <>
-      <div id="warn" style={{ color: "red" }}>
-        {warning}
-      </div>
+    <VStack
+      bg="white"
+      border="2px solid"
+      borderColor="gray.600"
+      p={4}
+      borderRadius="md"
+      spaceY={4}
+      maxW={600}
+    >
+      <VStack spaceY={2} align="start">
+        <Presence present={Boolean(warning)}>
+          <Alert.Root status="error">
+            <Alert.Indicator />
+            <Alert.Title>{warning}</Alert.Title>
+          </Alert.Root>
+        </Presence>
 
-      <div id="provider">{provider}</div>
-      <div id="chainId">{chainId}</div>
-      <div id="latestBlock">{latestBlock}</div>
-      <div id="connectedAccount">{connectedAccount}</div>
+        <Presence present={Boolean(provider)}>
+          <Alert.Root status="success">
+            <Alert.Indicator />
+            <Alert.Title>{provider}</Alert.Title>
+          </Alert.Root>
+        </Presence>
 
-      <div>
-        <button
-          onClick={() => requestAccounts()}
-          id="requestAccounts"
-          disabled={accountButtonDisabled}
-        >
-          Request MetaMask Accounts
-        </button>
-      </div>
+        <Presence present={Boolean(connectedAccount)}>
+          <Alert.Root status="info">
+            <Alert.Title>Account: {connectedAccount}</Alert.Title>
+          </Alert.Root>
+        </Presence>
 
-      <div>
-        <input
+        {/* not used */}
+        {/* <Presence present={Boolean(chainId)}>
+        <Alert.Root status="info">
+          <Alert.Title>Chain ID: {chainId}</Alert.Title>
+        </Alert.Root>
+      </Presence>
+
+      <Presence present={Boolean(latestBlock)}>
+        <Alert.Root status="info">
+          <Alert.Title>Latest Block: {latestBlock}</Alert.Title>
+        </Alert.Root>
+      </Presence> */}
+      </VStack>
+
+      <Button
+        variant="solid"
+        colorPalette="pink"
+        onClick={() => requestAccounts()}
+        disabled={accountButtonDisabled}
+      >
+        Request MetaMask Accounts
+      </Button>
+
+      <VStack spaceY={2}>
+        <Input
+          maxW={200}
+          variant="subtle"
           onChange={(event) => {
             setMessageToSign(event.target.value);
           }}
-          id="messageToSign"
           placeholder="Message to Sign"
           disabled={connectedAccount === null}
         />
 
-        <button
+        <Button
+          variant="surface"
+          colorPalette="pink"
           onClick={() => signMessage()}
-          id="signMessage"
           disabled={connectedAccount === null}
         >
           Sign Message
-        </button>
-        <div id="signingResult">{signingResult}</div>
-      </div>
+        </Button>
 
-      <div>
-        <input
+        <Text maxW={400} truncate>
+          {signingResult}
+        </Text>
+      </VStack>
+
+      <VStack spaceY={2}>
+        <Input
+          variant="subtle"
           onChange={(event) => {
             setOriginalMessage(event.target.value);
           }}
-          id="originalMessage"
           placeholder="Original Message"
           disabled={connectedAccount === null}
         />
 
-        <input
+        <Input
+          variant="subtle"
           onChange={(event) => {
             setSignedMessage(event.target.value);
           }}
-          id="signedMessage"
           placeholder="Signed Message"
           disabled={connectedAccount === null}
         />
 
-        <button
+        <Button
+          variant="subtle"
+          colorPalette="pink"
           onClick={() => recoverAccount()}
-          id="recoverAccount"
           disabled={connectedAccount === null}
         >
           Recover Account
-        </button>
+        </Button>
 
-        <div id="signingAccount">{signingAccount}</div>
-      </div>
-    </>
+        <Text truncate>{signingAccount}</Text>
+      </VStack>
+    </VStack>
   );
 };
