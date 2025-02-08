@@ -1,18 +1,14 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import { VStack } from "@chakra-ui/react";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
+
+import { Header } from "@/components/features";
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
-      </div>
-      <hr />
+    <VStack background="teal.100" minHeight="100vh" width="100vw">
+      <Header />
+
       <Outlet />
-    </>
+    </VStack>
   ),
 });

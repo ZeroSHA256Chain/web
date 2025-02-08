@@ -1,11 +1,3 @@
-import { createSystem, defineConfig } from "@chakra-ui/react";
+import { defaultSystem } from "@chakra-ui/react";
 
-const config = defineConfig({
-  theme: {
-    tokens: {
-      colors: {},
-    },
-  },
-});
-
-export const system = createSystem(config);
+export const system = defaultSystem;
