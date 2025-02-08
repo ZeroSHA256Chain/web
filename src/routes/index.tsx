@@ -1,6 +1,7 @@
+import { VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Avatar } from "@/components/ui/avatar";
+import { ConnectMetamask } from "@/components/features";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -8,10 +9,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="p-2">
-      <Avatar colorScheme="blue">Click me</Avatar>
-
-      <h3>Welcome Home!</h3>
-    </div>
+    <VStack as="main" spaceX={4} padding={4}>
+      <ConnectMetamask />
+    </VStack>
   );
 }
