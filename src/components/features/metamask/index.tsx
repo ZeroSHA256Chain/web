@@ -2,6 +2,9 @@ import { Alert, Button, Input, Presence, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Web3 } from "web3";
 
+import { SmartContractRepository } from "@/blockchain/SmartContractRepository";
+import abi from "@/blockchain/abi.json";
+
 export const ConnectMetamask = () => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -82,6 +85,31 @@ export const ConnectMetamask = () => {
     setAccounts(allAccounts);
     // get the first account and populate placeholder
     setConnectedAccount(allAccounts[0]);
+  }
+
+  async function doThing() {
+    const provider = "http://127.0.0.1:8545/";
+    const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    const userAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+
+    const repo: SmartContractRepository = new SmartContractRepository(
+      provider,
+      contractAddress,
+      abi,
+      userAccount
+    );
+
+    await repo.createProject(
+      "Project 1",
+      "Description 1",
+      1739789181,
+      false,
+      [],
+      []
+    );
+
+    const project = await repo.getProject(0);
+    console.log(project);
   }
 
   // click event for "Sign Message" button
@@ -167,6 +195,15 @@ export const ConnectMetamask = () => {
         disabled={accountButtonDisabled}
       >
         Request MetaMask Accounts
+      </Button>
+
+      <Button
+        variant="solid"
+        colorPalette="pink"
+        onClick={() => doThing()}
+        disabled={accountButtonDisabled}
+      >
+        Do thing
       </Button>
 
       <VStack spaceY={2}>

@@ -1,6 +1,22 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
+export interface Submission {
+  taskHash: string;
+  isVerified: boolean;
+  isRejected: boolean;
+  grade: number;
+}
+
+export interface ProjectView {
+  name: string;
+  description: string;
+  deadline: number;
+  mentor: string;
+  isRestricted: boolean;
+  allowResubmission: boolean;
+}
+
 export class SmartContractRepository {
   private web3: Web3;
   private contract: any;
@@ -63,11 +79,11 @@ export class SmartContractRepository {
     return await this.contract.methods.checkTaskVerified(taskHash).call();
   }
 
-  async getSubmission(projectId: number, student: string): Promise<any> {
+  async getSubmission(projectId: number, student: string): Promise<Submission> {
     return await this.contract.methods.getSubmission(projectId, student).call();
   }
 
-  async getProject(projectId: number): Promise<any> {
+  async getProject(projectId: number): Promise<ProjectView> {
     return await this.contract.methods.getProject(projectId).call();
   }
 }
