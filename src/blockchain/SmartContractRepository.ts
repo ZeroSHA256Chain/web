@@ -1,4 +1,4 @@
-import Web3 from "web3";
+import Web3, { Contract } from "web3";
 import { AbiItem } from "web3-utils";
 
 export interface Submission {
@@ -19,7 +19,7 @@ export interface ProjectView {
 
 export class SmartContractRepository {
   private web3: Web3;
-  private contract: any;
+  private contract;
   private account: string;
 
   constructor(
@@ -29,8 +29,13 @@ export class SmartContractRepository {
     account: string
   ) {
     this.web3 = new Web3(provider);
-    this.contract = new this.web3.eth.Contract(abi, contractAddress);
+    const contractAbi = abi;
+    this.contract = new this.web3.eth.Contract(contractAbi, contractAddress);
     this.account = account;
+  }
+
+  async getProjectCount(): Promise<number> {
+    return await this.contract.methods.projectCount().call();
   }
 
   async createProject(
