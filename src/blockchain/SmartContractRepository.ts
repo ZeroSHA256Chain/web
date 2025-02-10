@@ -1,7 +1,18 @@
-import Web3, { Contract } from "web3";
+import Web3, { EventLog } from "web3";
 import { AbiItem } from "web3-utils";
 
-import { ProjectView, Submission } from "@/components/features/metamask/models";
+import {
+  ProjectCreatedEvent,
+  ProjectCreatedEventFilter,
+  ProjectView,
+  Submission,
+  TaskRejectedEvent,
+  TaskRejectedEventFilter,
+  TaskSubmittedEvent,
+  TaskSubmittedEventFilter,
+  TaskVerifiedEvent,
+  TaskVerifiedEventFilter,
+} from "@/components/features/metamask/models";
 
 export class SmartContractRepository {
   private web3: Web3;
@@ -76,5 +87,71 @@ export class SmartContractRepository {
 
   async getProject(projectId: number): Promise<ProjectView> {
     return await this.contract.methods.getProject(projectId).call();
+  }
+
+  async getProjectCreatedEvents(
+    filter: ProjectCreatedEventFilter = {}
+  ): Promise<ProjectCreatedEvent[]> {
+    const contractAny = this.contract as any;
+    const events: EventLog[] = await contractAny.getPastEvents(
+      "ProjectCreated",
+      { filter: filter, fromBlock: 0 }
+    );
+
+    const event = events.map((event) => ({
+      projectId: event.returnValues["projectId"] as number,
+      name: event.returnValues["name"] as string,
+      mentor: event.returnValues["mentor"] as string,
+    }));
+
+    return event;
+  }
+
+  async getTaskSubmittedEvents(
+    filter: TaskSubmittedEventFilter = {}
+  ): Promise<TaskSubmittedEvent[]> {
+    const contractAny = this.contract as any;
+    const events: EventLog[] = await contractAny.getPastEvents(
+      "TaskSubmitted",
+      { filter: filter, fromBlock: 0 }
+    );
+    const event = events.map((event) => ({
+      projectId: event.returnValues["projectId"] as number,
+      student: event.returnValues["student"] as string,
+      taskHash: event.returnValues["taskHash"] as string,
+    }));
+    return event;
+  }
+
+  async getTaskVerifiedEvents(
+    filter: TaskVerifiedEventFilter = {}
+  ): Promise<TaskVerifiedEvent[]> {
+    const contractAny = this.contract as any;
+    const events: EventLog[] = await contractAny.getPastEvents("TaskVerified", {
+      filter: filter,
+      fromBlock: 0,
+    });
+    const event = events.map((event) => ({
+      projectId: event.returnValues["projectId"] as number,
+      student: event.returnValues["student"] as string,
+      taskHash: event.returnValues["taskHash"] as string,
+      grade: event.returnValues["grade"] as number,
+    }));
+    return event;
+  }
+
+  async getTaskRejectedEvents(
+    filter: TaskRejectedEventFilter = {}
+  ): Promise<TaskRejectedEvent[]> {
+    const contractAny = this.contract as any;
+    const events: EventLog[] = await contractAny.getPastEvents("TaskRejected", {
+      filter: filter,
+      fromBlock: 0,
+    });
+    const event = events.map((event) => ({
+      projectId: event.returnValues["projectId"] as number,
+      student: event.returnValues["student"] as string,
+    }));
+    return event;
   }
 }

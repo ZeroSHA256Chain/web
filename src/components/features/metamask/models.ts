@@ -46,3 +46,51 @@ export interface RejectTaskDto {
   projectId: number;
   student: string;
 }
+
+export interface ProjectCreatedEvent {
+  projectId: number;
+  name: string;
+  mentor: string;
+}
+
+export interface ProjectCreatedEventFilter {
+  projectId?: number;
+  name?: string;
+  mentor?: string;
+}
+
+export interface TaskSubmittedEvent {
+  projectId: number;
+  student: string;
+  taskHash: string;
+}
+
+export interface TaskSubmittedEventFilter {
+  projectId?: number;
+  student?: string;
+  taskHash?: string;
+}
+
+export interface TaskVerifiedEvent {
+  projectId: number;
+  student: string;
+  taskHash: string;
+  grade: number;
+}
+
+export interface TaskVerifiedEventFilter {
+  projectId?: number;
+  student?: string;
+  taskHash?: string;
+  grade?: number;
+}
+
+export interface TaskRejectedEvent {
+  projectId: number;
+  student: string;
+}
+
+export interface TaskRejectedEventFilter {
+  projectId?: number;
+  student?: string;
+}

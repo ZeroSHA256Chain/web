@@ -5,9 +5,17 @@ import ABI from "@/blockchain/smart_contract_abi.json";
 
 import {
   CreateProjectDto,
+  ProjectCreatedEvent,
+  ProjectCreatedEventFilter,
   ProjectView,
   RejectTaskDto,
   SubmitTaskDto,
+  TaskRejectedEvent,
+  TaskRejectedEventFilter,
+  TaskSubmittedEvent,
+  TaskSubmittedEventFilter,
+  TaskVerifiedEvent,
+  TaskVerifiedEventFilter,
   VerifyTaskDto,
 } from "./models";
 
@@ -101,6 +109,46 @@ export class SmartContractService {
       await this.repository.rejectTask(dto.projectId, dto.student);
     } catch (error) {
       throw new Error(`SmartContract address is wrong: ${error}`);
+    }
+  }
+
+  async getProjectCreatedEvents(
+    filter: ProjectCreatedEventFilter = {}
+  ): Promise<ProjectCreatedEvent[]> {
+    try {
+      return await this.repository.getProjectCreatedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Project Created Events: ${error}`);
+    }
+  }
+
+  async getTaskSubmittedEvents(
+    filter: TaskSubmittedEventFilter = {}
+  ): Promise<TaskSubmittedEvent[]> {
+    try {
+      return await this.repository.getTaskSubmittedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Task Submitted Events: ${error}`);
+    }
+  }
+
+  async getTaskVerifiedEvents(
+    filter: TaskVerifiedEventFilter = {}
+  ): Promise<TaskVerifiedEvent[]> {
+    try {
+      return await this.repository.getTaskVerifiedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Task Verified Events: ${error}`);
+    }
+  }
+
+  async getTaskRejectedEvents(
+    filter: TaskRejectedEventFilter = {}
+  ): Promise<TaskRejectedEvent[]> {
+    try {
+      return await this.repository.getTaskRejectedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Task Rejected Events: ${error}`);
     }
   }
 }
