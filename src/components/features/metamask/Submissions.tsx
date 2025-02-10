@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { BaseProps, TaskSubmittedEvent } from "./models";
 import {
@@ -14,9 +14,12 @@ const Submissions: React.FC<BaseProps> = (props) => {
   const [taskSubmittedEvents, setTaskSubmittedEvents] =
     useState<TaskSubmittedEvent[]>();
 
-  async function fetchSubmitEvents() {
-    const events = await service.getTaskSubmittedEvents();
-    setTaskSubmittedEvents(events);
+  async function fetchSubmitEvents(projectId?: number) {
+    if (projectId)
+      setTaskSubmittedEvents(
+        await service.getTaskSubmittedEvents({ projectId: projectId })
+      );
+    else setTaskSubmittedEvents(await service.getTaskSubmittedEvents());
   }
 
   return (
@@ -29,7 +32,12 @@ const Submissions: React.FC<BaseProps> = (props) => {
           </li>
         ))}
       </ul>
-      <Button onClick={fetchSubmitEvents}>Fetch Task Submissions</Button>
+      <Button onClick={() => fetchSubmitEvents()}>
+        Fetch All Task Submissions
+      </Button>
+      <Button onClick={() => fetchSubmitEvents(1)}>
+        Fetch Task Submissions For Project 1
+      </Button>
     </div>
   );
 };
