@@ -2,8 +2,11 @@ import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import AddProjectForm from "./AddProjectForm";
+import RejectedTasks from "./RejectedTasks";
 import Submissions from "./Submissions";
 import { SubmitTask } from "./SubmitTask";
+import TaskReviewForm from "./TaskReviewForm";
+import VerifiedTasks from "./VerifiedTasks";
 import { BaseProps, ProjectView } from "./models";
 import {
   SmartContractService,
@@ -44,6 +47,12 @@ const ProjectManagementHome: React.FC<BaseProps> = (props) => {
       <SubmitTask {...props} />
       --------------All Submissions------------------
       <Submissions {...props} />
+      -------------------Task Review----------------------
+      <TaskReviewForm {...props} />
+      ----------------Verified Tasks-------------------
+      <VerifiedTasks {...props} />
+      ----------------Rejected Tasks-------------------
+      <RejectedTasks {...props} />
     </>
   );
 };
