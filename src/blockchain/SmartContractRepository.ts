@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
-export class DEDUAssessRepository {
+export class SmartContractRepository {
   private web3: Web3;
   private contract: any;
   private account: string;
