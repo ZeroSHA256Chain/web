@@ -1,0 +1,73 @@
+import Web3 from "web3";
+import { AbiItem } from "web3-utils";
+
+export class DEDUAssessRepository {
+  private web3: Web3;
+  private contract: any;
+  private account: string;
+
+  constructor(
+    provider: string,
+    contractAddress: string,
+    abi: AbiItem[],
+    account: string
+  ) {
+    this.web3 = new Web3(provider);
+    this.contract = new this.web3.eth.Contract(abi, contractAddress);
+    this.account = account;
+  }
+
+  async createProject(
+    name: string,
+    description: string,
+    deadline: number,
+    allowResubmission: boolean,
+    verifiers: string[],
+    allowedStudents: string[]
+  ): Promise<void> {
+    await this.contract.methods
+      .createProject(
+        name,
+        description,
+        deadline,
+        allowResubmission,
+        verifiers,
+        allowedStudents
+      )
+      .send({ from: this.account });
+  }
+
+  async submitTask(projectId: number, taskHash: string): Promise<void> {
+    await this.contract.methods
+      .submitTask(projectId, taskHash)
+      .send({ from: this.account });
+  }
+
+  async verifyTask(
+    projectId: number,
+    student: string,
+    grade: number
+  ): Promise<void> {
+    await this.contract.methods
+      .verifyTask(projectId, student, grade)
+      .send({ from: this.account });
+  }
+
+  async rejectTask(projectId: number, student: string): Promise<void> {
+    await this.contract.methods
+      .rejectTask(projectId, student)
+      .send({ from: this.account });
+  }
+
+  async checkTaskVerified(taskHash: string): Promise<number> {
+    return await this.contract.methods.checkTaskVerified(taskHash).call();
+  }
+
+  async getSubmission(projectId: number, student: string): Promise<any> {
+    return await this.contract.methods.getSubmission(projectId, student).call();
+  }
+
+  async getProject(projectId: number): Promise<any> {
+    return await this.contract.methods.getProject(projectId).call();
+  }
+}
