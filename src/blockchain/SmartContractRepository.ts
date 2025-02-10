@@ -1,21 +1,7 @@
 import Web3, { Contract } from "web3";
 import { AbiItem } from "web3-utils";
 
-export interface Submission {
-  taskHash: string;
-  isVerified: boolean;
-  isRejected: boolean;
-  grade: number;
-}
-
-export interface ProjectView {
-  name: string;
-  description: string;
-  deadline: number;
-  mentor: string;
-  isRestricted: boolean;
-  allowResubmission: boolean;
-}
+import { ProjectView, Submission } from "@/components/features/metamask/models";
 
 export class SmartContractRepository {
   private web3: Web3;

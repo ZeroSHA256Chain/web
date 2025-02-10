@@ -1,51 +1,40 @@
-import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+import AddProjectForm from "./AddProjectForm";
+import { BaseProps, ProjectView } from "./models";
 import {
-  ProjectView,
-  SmartContractRepository,
-} from "@/blockchain/SmartContractRepository";
+  SmartContractService,
+  getSmartContractService,
+} from "./smartContractService";
 
-import { BaseProps } from "./models";
-import { getSmartContractRepository } from "./smartContract";
-
-const ProjectManagementHome: React.FC<BaseProps> = ({ connectedAccount }) => {
+const ProjectManagementHome: React.FC<BaseProps> = (props) => {
   const [projects, setProjects] = useState<ProjectView[]>([]);
-  const [repo] = useState<SmartContractRepository>(
-    getSmartContractRepository(connectedAccount)
+  const [service] = useState<SmartContractService>(
+    getSmartContractService(props.connectedAccount)
   );
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
-  async function doThing() {
-    await repo.createProject(
-      "Project 1",
-      "Description 1",
-      1739789181,
-      false,
-      [],
-      []
-    );
-  }
-
   async function fetchProjects() {
-    const projectCount = await repo.getProjectCount();
-
-    const projectItems = [];
-    for (let projectId = 0; projectId < projectCount; projectId++) {
-      projectItems.push(await repo.getProject(projectId));
-    }
+    const projectItems = await service.getAllProjects();
 
     setProjects(projectItems);
   }
 
   return (
     <>
-      <Button variant="solid" colorPalette="pink" onClick={() => doThing()}>
-        Do thing
-      </Button>
+      <ul>
+        {projects.map((project) => (
+          <li key={project.id}>
+            {project.id}, {project.name}, {project.description}, Resubmission:{" "}
+            {project.allowResubmission.toString()}
+          </li>
+        ))}
+      </ul>
+
+      <AddProjectForm {...props} />
     </>
   );
 };
