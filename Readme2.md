@@ -1,6 +1,11 @@
 # DEDUAssess - Decentralized EDU Assessment
 
-**DEDUAssess** is a decentralized system designed to facilitate secure and transparent educational assessments on the blockchain. 
+We, the ZeroSHA256Chain team, are dedicated to developing an innovative 
+blockchain-based platform that enables students to validate their completed tasks while
+allowing educators and independent experts to efficiently verify these achievements.
+Our goal is to create a transparent, automated, and secure system for tracking educational
+success.
+
 
 ---
 
@@ -17,7 +22,7 @@
 
 ## Getting Started
 
-This guide will help you set up the development environment, run tests, and deploy the contract either locally or on a testnet. Whether you're a developer new to blockchain or an experienced contributor, these instructions are designed to help you get up and running quickly.
+This guide will help you set up the development environment, run tests, and deploy the contract either locally. Whether you're a developer new to blockchain or an experienced contributor, these instructions are designed to help you get up and running quickly.
 
 ---
 
@@ -34,6 +39,8 @@ For Hardhat installation and documentation, visit the [Hardhat Getting Started G
 ---
 
 ## Installation
+
+Repository with the smart contract - https://github.com/ZeroSHA256Chain/smart_contract
 
 1. **Clone the Repository:**
    ```bash
