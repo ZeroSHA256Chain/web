@@ -1,16 +1,21 @@
 import {
   Badge,
-  Box,
+  Button,
   Card,
   Flex,
+  HStack,
   Heading,
   Show,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { memo } from "react";
 
+import { toaster } from "@/components/ui";
 import { ProjectView } from "@/services";
+
+import { formatEthereumAddress } from "../../metamask/connect/utils";
 
 interface ProjectItemProps {
   project: ProjectView;
@@ -19,6 +24,8 @@ interface ProjectItemProps {
 export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
   return (
     <Card.Root
+      color="white"
+      bg="black"
       width="100%"
       shadow="md"
       transition="all 0.2s"
@@ -26,37 +33,55 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
     >
       <Card.Body>
         <Stack spaceX={3}>
-          <Flex justify="space-between" align="center">
-            <Heading size="md">{project.name}</Heading>
+          <Heading size="lg" textAlign="center">
+            {project.name}
+          </Heading>
 
-            <Flex gap={2}>
-              <Show when={project.isRestricted}>
-                <Badge colorPalette="red">Restricted</Badge>
-              </Show>
+          <HStack justify="end" align="center">
+            <Show when={project.isRestricted}>
+              <Badge colorPalette="red">Restricted</Badge>
+            </Show>
 
-              <Show when={project.allowResubmission}>
-                <Badge colorPalette="green">Resubmission Allowed</Badge>
-              </Show>
-            </Flex>
-          </Flex>
+            <Show when={project.allowResubmission}>
+              <Badge colorPalette="green">Resubmission Allowed</Badge>
+            </Show>
+          </HStack>
 
-          <Text color="gray.600">{project.description}</Text>
+          <Text color="gray.700">{project.description}</Text>
 
-          <Box>
-            <Text fontSize="sm" fontWeight="bold">
-              Mentor:{" "}
-              <Text as="span" fontWeight="normal">
-                {project.mentor}
+          <VStack spaceY={2} align="start">
+            <HStack spaceX={2}>
+              <Text fontSize="sm" fontWeight="bold">
+                Deadline:
               </Text>
-            </Text>
 
-            <Text fontSize="sm" fontWeight="bold">
-              Deadline:{" "}
-              <Text as="span" fontWeight="normal">
+              <Badge colorPalette="orange">
                 {new Date(Number(project.deadline)).toLocaleString()}
+              </Badge>
+            </HStack>
+            <HStack spaceX={2}>
+              <Text fontSize="sm" fontWeight="bold">
+                Mentor:
               </Text>
-            </Text>
-          </Box>
+
+              <Button
+                h={7}
+                variant="subtle"
+                colorPalette="pink"
+                onClick={async () => {
+                  await navigator.clipboard.writeText(project.mentor);
+
+                  toaster.create({
+                    title: "Copied to clipboard",
+                    description: `Mentor address copied to clipboard: ${project.mentor}`,
+                    type: "success",
+                  });
+                }}
+              >
+                {formatEthereumAddress(project.mentor)}
+              </Button>
+            </HStack>
+          </VStack>
         </Stack>
       </Card.Body>
     </Card.Root>

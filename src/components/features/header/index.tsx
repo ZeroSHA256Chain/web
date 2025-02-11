@@ -38,11 +38,15 @@ export const Header: React.FC<HeaderProps> = ({
         <Spacer />
 
         <HStack spaceX={8} as="nav">
-          <List.Root spaceX={4} display="flex" flexDirection="row">
+          <List.Root
+            spaceX={4}
+            display="flex"
+            flexDirection="row"
+            listStyle="none"
+          >
             <For each={routes}>
               {({ path, label }) => (
                 <List.Item
-                  listStyle="none"
                   key={path}
                   fontWeight="semibold"
                   color="white"
