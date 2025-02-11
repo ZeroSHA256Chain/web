@@ -2,13 +2,21 @@ import {
   Button,
   Fieldset,
   Field as FormControl,
+  HStack,
+  IconButton,
   Input,
   Textarea,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
 
-import { Checkbox, DatePicker, FormFieldError, toaster } from "@/components/ui";
+import {
+  Checkbox,
+  DatePicker,
+  FormFieldError,
+  Icon,
+  toaster,
+} from "@/components/ui";
 import { SECOND } from "@/constants";
 import { CreateProjectDto } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
@@ -93,6 +101,59 @@ export const AddProjectForm: React.FC = () => {
                 onChange={(event) => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
               />
+
+              <FormFieldError field={field} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="verifiers"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label>Verifiers:</FormControl.Label>
+
+              {field.state.value.map((verifier: string, index: number) => (
+                <HStack key={index} mb={2}>
+                  <Input
+                    color="white"
+                    colorPalette="teal"
+                    value={verifier}
+                    onChange={(event) => {
+                      const newVerifiers = [...field.state.value];
+
+                      newVerifiers[index] = event.target.value;
+
+                      field.handleChange(newVerifiers);
+                    }}
+                  />
+
+                  <IconButton
+                    aria-label="Remove verifier"
+                    colorPalette="red"
+                    onClick={() => {
+                      const newVerifiers = field.state.value.filter(
+                        (_, _index) => _index !== index
+                      );
+
+                      field.handleChange(newVerifiers);
+                    }}
+                  >
+                    <Icon name="Trash" />
+                  </IconButton>
+                </HStack>
+              ))}
+
+              <IconButton
+                aria-label="Add verifier"
+                colorPalette="teal"
+                onClick={() => {
+                  field.handleChange([...field.state.value, ""]);
+                }}
+                mb={2}
+              >
+                <Icon name="Plus" />
+              </IconButton>
 
               <FormFieldError field={field} />
             </FormControl.Root>

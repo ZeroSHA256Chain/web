@@ -23,6 +23,7 @@ export const ProjectManagementHome: React.FC<
   const fetchProjects = useCallback(async () => {
     if (!service) return;
 
+    console.log("PROJ", await service.getAllProjects());
     const projectItems = await service.getAllProjects();
 
     setProjects(projectItems);
@@ -34,6 +35,10 @@ export const ProjectManagementHome: React.FC<
 
   return (
     <>
+      <ProjectList list={projects} fetchList={fetchProjects} />
+
+      <AddProjectForm />
+
       <Show
         when={projects.length > 0}
         fallback={
@@ -48,14 +53,10 @@ export const ProjectManagementHome: React.FC<
         }
       >
         <HStack>
-          <ProjectList list={projects} fetchList={fetchProjects} />
-
           <SubmissionsList projects={projects} />
         </HStack>
 
         <HStack>
-          <AddProjectForm />
-
           <SubmitTaskForm projects={projects} />
         </HStack>
       </Show>
