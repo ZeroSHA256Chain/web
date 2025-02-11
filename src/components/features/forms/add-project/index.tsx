@@ -17,7 +17,6 @@ import {
   Icon,
   toaster,
 } from "@/components/ui";
-import { SECOND } from "@/constants";
 import { CreateProjectDto } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
 
@@ -30,7 +29,7 @@ export const AddProjectForm: React.FC = () => {
     defaultValues: {
       name: "",
       description: "",
-      deadline: Math.floor(Date.now() / SECOND),
+      deadline: Date.now(),
       allowResubmission: false,
       verifiers: [],
       allowedStudents: [],
@@ -169,11 +168,9 @@ export const AddProjectForm: React.FC = () => {
               </FormControl.Label>
 
               <DatePicker
-                value={new Date(field.state.value * 1000)}
+                value={new Date(field.state.value)}
                 onChange={(date) =>
-                  field.handleChange(
-                    Math.floor((date?.getTime() || Date.now()) / 1000)
-                  )
+                  field.handleChange(date?.getTime() || Date.now())
                 }
                 placeholder="Select deadline"
               />
