@@ -1,7 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ConnectMetamask } from "@/components/features";
+import { ProjectManagementHome } from "@/components/features/metamask/ProjectManagementHome";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <VStack as="main" spaceX={4} padding={4}>
-      <ConnectMetamask />
+      <ProjectManagementHome />
     </VStack>
   );
 }

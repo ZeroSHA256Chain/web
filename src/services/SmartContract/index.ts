@@ -1,7 +1,6 @@
 import { Web3 } from "web3";
 
-import { SMART_CONTRACT_ABI } from "@/blockchain";
-import { SmartContractRepository } from "@/blockchain/repository";
+import { SMART_CONTRACT_ABI, SmartContractRepository } from "@/blockchain";
 
 import {
   CreateProjectDto,
@@ -17,7 +16,7 @@ import {
   TaskVerifiedEvent,
   TaskVerifiedEventFilter,
   VerifyTaskDto,
-} from "./models";
+} from "./types";
 
 export const getSmartContractService = (
   connectedAccount: string
@@ -147,3 +146,5 @@ export class SmartContractService {
     }
   }
 }
+
+export * from "./types";

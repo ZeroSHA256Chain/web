@@ -1,16 +1,41 @@
 import { Alert, Button, Presence, VStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
-import { ProjectManagementHome } from "./ProjectManagementHome";
+import { SMART_CONTRACT_ABI } from "@/blockchain/";
+import { SmartContractRepository } from "@/blockchain/repository";
+import { SmartContractService } from "@/services";
+import {
+  connectedAccountAtom,
+  smartContractService,
+  web3Atom,
+} from "@/store/atoms";
 
-export const ConnectMetamaskV2 = () => {
-  const [web3, setWeb3] = useState<Web3 | null>(null);
+import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
+
+export const ConnectMetamask = () => {
+  const [web3, setWeb3] = useAtom(web3Atom);
+  const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
+  const setService = useSetAtom(smartContractService);
+
   const [warning, setWarning] = useState<string | null>(null);
   const [providerMessage, setProvider] = useState<string | null>(null);
-  const [accountButtonDisabled, setAccountButtonDisabled] =
-    useState<boolean>(false);
-  const [connectedAccount, setConnectedAccount] = useState<string | null>(null);
+
+  const requestAccounts = useCallback(async () => {
+    if (!web3) return;
+
+    setWarning(null);
+
+    await requestEthereumAccounts();
+
+    removeRequestAccountsDialog();
+
+    const allAccounts = await web3.eth.getAccounts();
+
+    // set the first account as the connected account
+    setConnectedAccount(allAccounts[0]);
+  }, [web3]);
 
   useEffect(() => {
     // ensure that there is an injected the Ethereum provider
@@ -26,29 +51,27 @@ export const ConnectMetamaskV2 = () => {
     } else {
       // no Ethereum provider - instruct user to install MetaMask
       setWarning("Please install MetaMask");
-      setAccountButtonDisabled(true);
     }
   }, []);
 
   useEffect(() => {
-    requestAccounts();
-  }, [web3]);
+    if (connectedAccount) {
+      const repository = new SmartContractRepository(
+        import.meta.env.VITE_PROVIDER_URL,
+        import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
+        SMART_CONTRACT_ABI,
+        connectedAccount
+      );
 
-  // click event for "Request MetaMask Accounts" button
-  async function requestAccounts() {
-    if (web3 === null) {
-      return;
+      const service = new SmartContractService(repository);
+
+      setService(service);
     }
-    console.log("Requesting MetaMask accounts...");
-    // request accounts from MetaMask
-    await window.ethereum.request({ method: "eth_requestAccounts" });
-    document.getElementById("requestAccounts")?.remove();
+  }, [connectedAccount]);
 
-    // get list of accounts
-    const allAccounts = await web3.eth.getAccounts();
-    // get the first account and populate placeholder
-    setConnectedAccount(allAccounts[0]);
-  }
+  useEffect(() => {
+    requestAccounts();
+  }, [requestAccounts]);
 
   return (
     <VStack
@@ -87,13 +110,11 @@ export const ConnectMetamaskV2 = () => {
           variant="solid"
           colorPalette="pink"
           onClick={() => requestAccounts()}
-          disabled={accountButtonDisabled}
+          disabled={Boolean(warning)}
         >
           Connect MetaMask
         </Button>
       ) : null}
-
-      {web3 && connectedAccount ? <ProjectManagementHome /> : null}
     </VStack>
   );
 };
