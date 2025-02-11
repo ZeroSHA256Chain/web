@@ -1,4 +1,4 @@
-import Web3, { EventLog } from "web3";
+import Web3, { AbiFragment, Contract, EventLog } from "web3";
 import { AbiItem } from "web3-utils";
 
 import {
@@ -16,19 +16,17 @@ import {
 
 export class SmartContractRepository {
   private web3: Web3;
-  private contract;
-  private account: string;
+  private contract: Contract<AbiFragment[]>;
 
   constructor(
     provider: string,
     contractAddress: string,
     abi: AbiItem[],
-    account: string
+    private account: string
   ) {
     this.web3 = new Web3(provider);
-    const contractAbi = abi;
-    this.contract = new this.web3.eth.Contract(contractAbi, contractAddress);
-    this.account = account;
+
+    this.contract = new this.web3.eth.Contract(abi, contractAddress);
   }
 
   async getProjectCount(): Promise<number> {
@@ -120,6 +118,7 @@ export class SmartContractRepository {
       student: event.returnValues["student"] as string,
       taskHash: event.returnValues["taskHash"] as string,
     }));
+
     return event;
   }
 
@@ -137,6 +136,7 @@ export class SmartContractRepository {
       taskHash: event.returnValues["taskHash"] as string,
       grade: event.returnValues["grade"] as number,
     }));
+
     return event;
   }
 
@@ -152,6 +152,7 @@ export class SmartContractRepository {
       projectId: event.returnValues["projectId"] as number,
       student: event.returnValues["student"] as string,
     }));
+
     return event;
   }
 }
