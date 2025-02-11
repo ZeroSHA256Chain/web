@@ -34,15 +34,23 @@ export const ProjectSelect: React.FC<ProjectSelectProps> = ({
 
   return (
     <SelectRoot
-      colorPalette="teal"
+      _placeholder={{
+        color: "white",
+      }}
       color="white"
+      colorPalette="teal"
+      bg="gray.700"
       size="sm"
       collection={projectsCollection}
       value={value}
       onValueChange={(event) => onChange(event.value)}
     >
       <SelectTrigger>
-        <SelectValueText placeholder="Select project" />
+        <SelectValueText
+          placeholder="Select project"
+          fontWeight="semibold"
+          color="white"
+        />
       </SelectTrigger>
 
       <SelectContent>

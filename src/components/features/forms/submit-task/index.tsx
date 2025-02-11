@@ -9,10 +9,10 @@ import { useAtomValue } from "jotai";
 
 import { ProjectSelect } from "@/components/features";
 import { FormFieldError, toaster } from "@/components/ui";
-import { ProjectView, SubmitTaskDto } from "@/services";
+import { ProjectView } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
 
-import { submitTaskSchema } from "./validaton";
+import { SubmitTaskFormValues, submitTaskSchema } from "./validaton";
 
 interface SubmitTaskFormProps {
   projects: ProjectView[];
@@ -21,27 +21,31 @@ interface SubmitTaskFormProps {
 export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projects }) => {
   const service = useAtomValue(smartContractServiceAtom);
 
-  const { Field, Subscribe, handleSubmit, reset } = useForm<SubmitTaskDto>({
-    defaultValues: {
-      projectId: -1, // default value
-      taskString: "",
-    },
-    onSubmit: async ({ value }) => {
-      if (!service) return;
+  const { Field, Subscribe, handleSubmit, reset } =
+    useForm<SubmitTaskFormValues>({
+      defaultValues: {
+        projectId: null,
+        taskString: "",
+      },
+      onSubmit: async ({ value }) => {
+        if (!service || !value.projectId) return;
 
-      await service.submitTaskAndHash(value);
+        await service.submitTaskAndHash({
+          projectId: value.projectId,
+          taskString: value.taskString,
+        });
 
-      reset();
+        reset();
 
-      toaster.create({
-        description: "Task submitted successfully",
-        type: "success",
-      });
-    },
-    validators: {
-      onChange: submitTaskSchema,
-    },
-  });
+        toaster.create({
+          description: "Task submitted successfully",
+          type: "success",
+        });
+      },
+      validators: {
+        onChange: submitTaskSchema,
+      },
+    });
 
   return (
     <form
@@ -63,7 +67,7 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projects }) => {
 
               <ProjectSelect
                 projects={projects}
-                value={[field.state.value.toString()]}
+                value={[field.state.value?.toString() ?? ""]}
                 onChange={(values) => field.handleChange(Number(values[0]))}
               />
 
