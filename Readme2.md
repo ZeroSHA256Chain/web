@@ -11,7 +11,6 @@
 - [Installation](#installation)
 - [Running Tests](#running_tests)
 - [Local Deployment and Interaction](#local-deployment-and-interaction)
-- [Testnet Deployment](#testnet-deployment)
 - [Latest Deployed Contract](#latest-deployed-contract)
 
 ---
@@ -76,13 +75,43 @@ To deploy and interact on your local blockchain network, follow these steps:
    ```bash
    npx hardhat ignition deploy ./ignition/modules/DEDUAssess.js --network localhost
    ```
+3. **Add local network to MetaMask**
+   
+   First, you need to visit our [website](https://web-zeta-wheat-80.vercel.app/). In the pop-up window, you will need to connect your MetaMask wallet.
 
----
+   Next, we go to MetaMask and connect to our local network:
 
-## Testnet Deployment
+   - First click. ```Select a network```
 
----
+   - Second click. ```+ Add a custome network```
 
+   ![image](https://github.com/user-attachments/assets/903cb17b-1042-4523-a52d-f0ad64f38466)
+
+   You should see something similar to this.
+
+4. **Get test account**
+   
+   When you run ```npx hardhat node```, you may see many test account:
+
+   ![image](https://github.com/user-attachments/assets/d0f31144-ca87-49ea-b04e-e6b83cad89c9)
+
+   These are **test accounts that have tokens** on the network and can be used for network testing.
+   Choose one account that you like and copy its private key.
+
+   Now you need to **return to MetaMask**:
+
+   - First click: ```accounts```
+   - Second click: ```+ Account or hardware wallet```
+   - Third click: ```Import account```
+
+   ![image](https://github.com/user-attachments/assets/6404a915-de2a-405e-a262-55d4d8864319)
+
+   Now click ```import``` and test account should appear in your wallet.(with 10000 tokens)
+
+   ![image](https://github.com/user-attachments/assets/125bb688-e887-4a1e-8aed-0b7c3d81e75e)
+
+   Now you can return to our website and perform system testing :)
+   
 ---
 
 ## Latest Deployed Contract
