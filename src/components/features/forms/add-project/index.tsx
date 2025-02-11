@@ -1,111 +1,157 @@
-import { Button } from "@chakra-ui/react";
+import {
+  Button,
+  Fieldset,
+  Field as FormControl,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
+import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
-import React, { useState } from "react";
 
-import { DatePicker } from "@/components/ui";
+import { Checkbox, DatePicker, FormFieldError, toaster } from "@/components/ui";
+import { SECOND } from "@/constants";
+import { CreateProjectDto } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
 
-interface AddProjectFormProps {}
+import { addProjectSchema } from "./validation";
 
-export const AddProjectForm: React.FC<AddProjectFormProps> = () => {
+export const AddProjectForm: React.FC = () => {
   const service = useAtomValue(smartContractServiceAtom);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    timestamp: Math.floor(Date.now() / 1000), // Default: current UNIX time
-    allowResubmission: false,
-  });
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.target;
-
-    // Handle checkbox separately
-    if (
-      event.target instanceof HTMLInputElement &&
-      event.target.type === "checkbox"
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: (event.target as any)["checked"],
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  // Handle form submission
-  const handleSubmit = async (event: React.FormEvent) => {
-    if (!service) return;
-
-    event.preventDefault(); // Prevent page reload
-
-    await service.createProject({
-      name: formData.name,
-      description: formData.description,
-      deadline: 1739789181,
-      allowResubmission: formData.allowResubmission,
-      allowedStudents: [],
-      verifiers: [],
-    });
-
-    // Reset form
-    setFormData({
+  const { Field, Subscribe, handleSubmit, reset } = useForm<CreateProjectDto>({
+    defaultValues: {
       name: "",
       description: "",
-      timestamp: Math.floor(Date.now() / 1000),
+      deadline: Math.floor(Date.now() / SECOND),
       allowResubmission: false,
-    });
-  };
+      verifiers: [],
+      allowedStudents: [],
+    },
+    onSubmit: async ({ value }) => {
+      if (!service) return;
+
+      await service.createProject(value);
+
+      reset();
+
+      toaster.create({
+        description: "Project added successfully",
+        type: "success",
+      });
+    },
+    validators: {
+      onChange: addProjectSchema,
+    },
+  });
 
   return (
     <form
-      onSubmit={handleSubmit}
-      style={{ background: "green", padding: "30px" }}
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        handleSubmit();
+      }}
     >
-      <DatePicker onChange={(date) => set} } value={undefined} placeholder={""}      />
-      <label>
-        Project Name:
-        <input
-          type="text"
+      <Fieldset.Root spaceY={4} bg="gray.700" p={4}>
+        <Field
           name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Project Name:
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+              />
+
+              <FormFieldError field={field} />
+            </FormControl.Root>
+          )}
         />
-      </label>
 
-      <br />
-
-      <label>
-        Description:
-        <textarea
+        <Field
           name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        ></textarea>
-      </label>
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Description:
+              </FormControl.Label>
 
-      <br />
+              <Textarea
+                minH={10}
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+              />
 
-      <label>
-        <input
-          type="checkbox"
-          name="allowResubmission"
-          checked={formData.allowResubmission}
-          onChange={handleChange}
+              <FormFieldError field={field} />
+            </FormControl.Root>
+          )}
         />
-        Allow Resubmission
-      </label>
 
-      <br />
+        <Field
+          name="deadline"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Deadline:
+              </FormControl.Label>
 
-      <Button type="submit">Add Project</Button>
+              <DatePicker
+                value={new Date(field.state.value * 1000)}
+                onChange={(date) =>
+                  field.handleChange(
+                    Math.floor((date?.getTime() || Date.now()) / 1000)
+                  )
+                }
+                placeholder="Select deadline"
+              />
+
+              <FormFieldError field={field} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="allowResubmission"
+          children={(field) => (
+            <FormControl.Root>
+              <Checkbox
+                color="white"
+                colorPalette="teal"
+                checked={field.state.value}
+                onChange={(event) =>
+                  field.handleChange((event.target as HTMLInputElement).checked)
+                }
+                onBlur={field.handleBlur}
+              >
+                Allow Resubmission
+              </Checkbox>
+
+              <FormFieldError field={field} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <Button colorPalette="teal" type="submit" disabled={!canSubmit}>
+              {isSubmitting ? "Adding Project..." : "Add Project"}
+            </Button>
+          )}
+        />
+      </Fieldset.Root>
     </form>
   );
 };

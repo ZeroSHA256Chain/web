@@ -1,13 +1,13 @@
 import { PropsWithChildren } from "react";
 
-import { Provider as ChakraProvider } from "@/components/ui";
+import { Provider as ChakraProvider, Toaster } from "@/components/ui";
 
 export const AppProvider = ({ children }: PropsWithChildren) => {
   return (
-    <>
-      <ChakraProvider>{children}</ChakraProvider>
+    <ChakraProvider>
+      <Toaster />
 
-      {/* <TanStackRouterDevtools /> */}
-    </>
+      {children}
+    </ChakraProvider>
   );
 };
