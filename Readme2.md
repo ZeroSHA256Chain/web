@@ -38,8 +38,8 @@ For Hardhat installation and documentation, visit the [Hardhat Getting Started G
 
 1. **Clone the Repository:**
    ```bash
-    git clone https://github.com/ZeroSHA256Chain/web
-    cd web
+    git clone https://github.com/ZeroSHA256Chain/smart_contract
+    cd smart_contract
     ```
 2. **Install Hardhat (if not already installed):**
    ```bash
