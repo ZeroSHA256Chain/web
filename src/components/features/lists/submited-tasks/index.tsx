@@ -83,14 +83,17 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
       </List.Root>
 
       <ButtonGroup display="flex" justifyContent="center" spaceX={4}>
-        <Button colorPalette="blue" onClick={() => fetchAllSubmitEvents()}>
+        <Button
+          colorPalette="blue"
+          onClick={async () => await fetchAllSubmitEvents()}
+        >
           All Task Submissions
         </Button>
 
         <Button
           disabled={!projectId}
           colorPalette="blue"
-          onClick={() => fetchSubmitEventsForProject(projectId)}
+          onClick={async () => await fetchSubmitEventsForProject(projectId)}
         >
           Task Submissions For Project {projectId}
         </Button>

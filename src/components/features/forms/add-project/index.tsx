@@ -128,6 +128,8 @@ export const AddProjectForm: React.FC = () => {
                   />
 
                   <IconButton
+                    minW={6}
+                    h={6}
                     aria-label="Remove verifier"
                     colorPalette="red"
                     onClick={() => {
@@ -144,6 +146,8 @@ export const AddProjectForm: React.FC = () => {
               ))}
 
               <IconButton
+                minW={6}
+                h={6}
                 aria-label="Add verifier"
                 colorPalette="green"
                 onClick={() => {
