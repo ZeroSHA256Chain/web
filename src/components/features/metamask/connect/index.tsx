@@ -8,7 +8,7 @@ import { SmartContractRepository } from "@/blockchain/repository";
 import { SmartContractService } from "@/services";
 import {
   connectedAccountAtom,
-  smartContractService,
+  smartContractServiceAtom,
   web3Atom,
 } from "@/store/atoms";
 
@@ -17,7 +17,7 @@ import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 export const ConnectMetamask = () => {
   const [web3, setWeb3] = useAtom(web3Atom);
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
-  const setService = useSetAtom(smartContractService);
+  const setService = useSetAtom(smartContractServiceAtom);
 
   const [warning, setWarning] = useState<string | null>(null);
   const [providerMessage, setProvider] = useState<string | null>(null);

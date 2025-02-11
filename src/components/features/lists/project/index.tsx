@@ -1,4 +1,4 @@
-import { Box, For, List, Text } from "@chakra-ui/react";
+import { Box, For, List } from "@chakra-ui/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, { memo, useRef } from "react";
 

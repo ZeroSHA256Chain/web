@@ -3,17 +3,16 @@ import { useAtom, useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
 import { SmartContractRepository } from "@/blockchain/repository";
-import { ProjectList } from "@/components/features";
+import { AddProjectForm, ProjectList } from "@/components/features";
+import { ProjectView } from "@/services";
 import { connectedAccountAtom, web3Atom } from "@/store/atoms";
-import { smartContractService } from "@/store/atoms/smartContract";
+import { smartContractServiceAtom } from "@/store/atoms/smartContract";
 
-import AddProjectForm from "./AddProjectForm";
 import RejectedTasks from "./RejectedTasks";
 import Submissions from "./Submissions";
 import { SubmitTask } from "./SubmitTask";
 import TaskReviewForm from "./TaskReviewForm";
 import VerifiedTasks from "./VerifiedTasks";
-import { BaseProps, ProjectView } from "./models";
 import { getSmartContractService } from "./smartContractService";
 
 interface ProjectManagementHomeProps {}
@@ -23,7 +22,7 @@ export const ProjectManagementHome: React.FC<
 > = () => {
   const [projects, setProjects] = useState<ProjectView[]>([]);
 
-  const service = useAtomValue(smartContractService);
+  const service = useAtomValue(smartContractServiceAtom);
 
   useEffect(() => {
     fetchProjects();
@@ -41,8 +40,10 @@ export const ProjectManagementHome: React.FC<
       <Show when={projects.length > 0}>
         <ProjectList projects={projects} />
       </Show>
+
       <Button onClick={fetchProjects}>Fetch Projects</Button>
-      ---------------Add Project-----------------
+
+      <AddProjectForm />
       {/* <AddProjectForm {...props} />
       -------------Submit Task---------------
       <SubmitTask {...props} />
