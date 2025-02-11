@@ -13,6 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as ProjectsProjectIdImport } from './routes/projects_.$projectId'
+import { Route as ProjectsProjectIdTasksTaskIdImport } from './routes/projects.$projectId.tasks.$taskId'
 
 // Create/Update Routes
 
@@ -27,6 +29,19 @@ const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ProjectsProjectIdRoute = ProjectsProjectIdImport.update({
+  id: '/projects_/$projectId',
+  path: '/projects/$projectId',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProjectsProjectIdTasksTaskIdRoute =
+  ProjectsProjectIdTasksTaskIdImport.update({
+    id: '/projects/$projectId/tasks/$taskId',
+    path: '/projects/$projectId/tasks/$taskId',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -46,6 +61,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/projects_/$projectId': {
+      id: '/projects_/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof ProjectsProjectIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/projects/$projectId/tasks/$taskId': {
+      id: '/projects/$projectId/tasks/$taskId'
+      path: '/projects/$projectId/tasks/$taskId'
+      fullPath: '/projects/$projectId/tasks/$taskId'
+      preLoaderRoute: typeof ProjectsProjectIdTasksTaskIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +83,59 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/projects/$projectId/tasks/$taskId': typeof ProjectsProjectIdTasksTaskIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/projects/$projectId/tasks/$taskId': typeof ProjectsProjectIdTasksTaskIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/projects_/$projectId': typeof ProjectsProjectIdRoute
+  '/projects/$projectId/tasks/$taskId': typeof ProjectsProjectIdTasksTaskIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/projects/$projectId'
+    | '/projects/$projectId/tasks/$taskId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/projects/$projectId'
+    | '/projects/$projectId/tasks/$taskId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/projects_/$projectId'
+    | '/projects/$projectId/tasks/$taskId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
+  ProjectsProjectIdTasksTaskIdRoute: typeof ProjectsProjectIdTasksTaskIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+  ProjectsProjectIdTasksTaskIdRoute: ProjectsProjectIdTasksTaskIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +149,9 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/about",
+        "/projects_/$projectId",
+        "/projects/$projectId/tasks/$taskId"
       ]
     },
     "/": {
@@ -105,6 +159,12 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/projects_/$projectId": {
+      "filePath": "projects_.$projectId.tsx"
+    },
+    "/projects/$projectId/tasks/$taskId": {
+      "filePath": "projects.$projectId.tasks.$taskId.tsx"
     }
   }
 }

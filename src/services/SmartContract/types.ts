@@ -16,7 +16,7 @@ export interface ProjectView {
   id?: number;
   name: string;
   description: string;
-  deadline: number;
+  deadline: bigint | number;
   mentor: string;
   isRestricted: boolean;
   allowResubmission: boolean;

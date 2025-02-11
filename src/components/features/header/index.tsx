@@ -4,6 +4,8 @@ import React from "react";
 
 import { ColorModeButton } from "@/components/ui";
 
+import { ConnectMetamask } from "../metamask";
+
 interface indexProps {}
 
 export const Header: React.FC<indexProps> = () => {
@@ -33,6 +35,8 @@ export const Header: React.FC<indexProps> = () => {
 
           <ColorModeButton />
         </HStack>
+
+        <ConnectMetamask />
       </Flex>
     </Box>
   );

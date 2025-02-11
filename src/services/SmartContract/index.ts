@@ -1,7 +1,6 @@
 import { Web3 } from "web3";
 
-import { SmartContractRepository } from "@/blockchain/SmartContractRepository";
-import ABI from "@/blockchain/smart_contract_abi.json";
+import { SMART_CONTRACT_ABI, SmartContractRepository } from "@/blockchain";
 
 import {
   CreateProjectDto,
@@ -17,18 +16,15 @@ import {
   TaskVerifiedEvent,
   TaskVerifiedEventFilter,
   VerifyTaskDto,
-} from "./models";
-
-const provider = "http://127.0.0.1:8545/";
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+} from "./types";
 
 export const getSmartContractService = (
   connectedAccount: string
 ): SmartContractService => {
   const repository = new SmartContractRepository(
-    provider,
-    contractAddress,
-    ABI.abi,
+    import.meta.env.VITE_PROVIDER_URL,
+    import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
+    SMART_CONTRACT_ABI,
     connectedAccount
   );
 
@@ -36,11 +32,7 @@ export const getSmartContractService = (
 };
 
 export class SmartContractService {
-  private repository: SmartContractRepository;
-
-  constructor(repository: SmartContractRepository) {
-    this.repository = repository;
-  }
+  constructor(private repository: SmartContractRepository) {}
 
   async getProjectCount(): Promise<number> {
     try {
@@ -77,10 +69,26 @@ export class SmartContractService {
     const projectCount = await this.repository.getProjectCount();
 
     const projectItems: ProjectView[] = [];
+
     for (let projectId = 0; projectId < projectCount; projectId++) {
-      const projectItem = await this.repository.getProject(projectId);
-      projectItem.id = projectId;
-      projectItems.push(projectItem);
+      const {
+        name,
+        description,
+        deadline,
+        mentor,
+        isRestricted,
+        allowResubmission,
+      } = await this.repository.getProject(projectId);
+
+      projectItems.push({
+        id: projectId,
+        name,
+        description,
+        deadline,
+        mentor,
+        isRestricted,
+        allowResubmission,
+      });
     }
 
     return projectItems;
@@ -152,3 +160,5 @@ export class SmartContractService {
     }
   }
 }
+
+export * from "./types";

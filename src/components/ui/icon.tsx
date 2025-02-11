@@ -1,9 +1,11 @@
-import { type LucideProps, Moon, Sun } from "lucide-react";
+import { type LucideProps, Moon, Plus, Sun, Trash } from "lucide-react";
 import React from "react";
 
 const IconsList = {
   Sun,
   Moon,
+  Trash,
+  Plus,
 };
 
 export type IconName = keyof typeof IconsList;
