@@ -6,6 +6,19 @@ import { useCallback, useEffect } from "react";
 import { Header } from "@/components/features";
 import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
+const routes = [
+  {
+    path: "/",
+    label: "Home",
+  },
+  {
+    path: "/about",
+    label: "About Us",
+  },
+];
+
+const appName = "ZeroSHA256Chain";
+
 const Root: React.FC = () => {
   const service = useAtomValue(smartContractServiceAtom);
   const setProjects = useSetAtom(projectsAtom);
@@ -24,9 +37,15 @@ const Root: React.FC = () => {
 
   return (
     <VStack background="teal.100" minHeight="100vh" width="100vw">
-      <Header />
+      <Header
+        routes={routes}
+        appName={appName}
+        bg="teal.700"
+        p={4}
+        color="white"
+      />
 
-      <VStack as="main" spaceX={4} padding={4}>
+      <VStack bg="teal.100" as="main" spaceX={4} p={4}>
         <Outlet />
       </VStack>
     </VStack>

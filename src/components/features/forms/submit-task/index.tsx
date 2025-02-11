@@ -28,17 +28,24 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
       onSubmit: async ({ value }) => {
         if (!service || !value.projectId) return;
 
-        await service.submitTaskAndHash({
-          projectId: value.projectId,
-          taskString: value.taskString,
-        });
+        try {
+          await service.submitTaskAndHash({
+            projectId: value.projectId,
+            taskString: value.taskString,
+          });
 
-        reset();
+          reset();
 
-        toaster.create({
-          description: "Task submitted successfully",
-          type: "success",
-        });
+          toaster.create({
+            description: "Task submitted successfully",
+            type: "success",
+          });
+        } catch (error) {
+          toaster.create({
+            description: "Error submitting task",
+            type: "error",
+          });
+        }
       },
       validators: {
         onChange: submitTaskSchema,

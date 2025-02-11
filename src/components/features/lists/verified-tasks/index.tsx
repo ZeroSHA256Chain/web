@@ -11,6 +11,7 @@ import { useAtomValue } from "jotai";
 import React, { useCallback, useState } from "react";
 
 import { ProjectSelect } from "@/components/features";
+import { toaster } from "@/components/ui";
 import { TaskVerifiedEvent } from "@/services";
 import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
@@ -27,16 +28,30 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = () => {
   const fetchAllVerifiedTasks = useCallback(async () => {
     if (!service) return;
 
-    setTaskVerifiedEvents(await service.getTaskVerifiedEvents());
+    try {
+      setTaskVerifiedEvents(await service.getTaskVerifiedEvents());
+    } catch (error) {
+      toaster.create({
+        description: "Error fetching verified tasks",
+        type: "error",
+      });
+    }
   }, [service]);
 
   const fetchVerifiedTask = useCallback(
     async (projectId: number | null) => {
       if (!service || !projectId) return;
 
-      setTaskVerifiedEvents(
-        await service.getTaskVerifiedEvents({ projectId: projectId })
-      );
+      try {
+        setTaskVerifiedEvents(
+          await service.getTaskVerifiedEvents({ projectId: projectId })
+        );
+      } catch (error) {
+        toaster.create({
+          description: "Error fetching verified tasks",
+          type: "error",
+        });
+      }
     },
     [service]
   );

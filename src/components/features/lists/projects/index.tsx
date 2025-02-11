@@ -15,13 +15,21 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
       maxH={800}
       width="auto"
       overflow="auto"
-      spaceY={4}
-      p={4}
-      bg="gray.700"
+      spaceY={2}
+      py={4}
+      px={8}
+      bg="pink.200"
     >
-      <Heading>Projects</Heading>
+      <Heading color="black">Projects</Heading>
 
-      <List.Root w="100%" position="relative" spaceY={2}>
+      <List.Root
+        w="100%"
+        position="relative"
+        gap={4}
+        listStyle="none"
+        display="grid"
+        gridTemplateColumns="1fr 1fr 1fr"
+      >
         <For each={projects} fallback={<Text>No projects found</Text>}>
           {(project) => (
             <List.Item key={project.name}>
