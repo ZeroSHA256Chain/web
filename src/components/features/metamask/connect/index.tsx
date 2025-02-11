@@ -101,7 +101,7 @@ export const ConnectMetamask = () => {
         <Show when={Boolean(connectedAccount)}>
           <Button
             variant="subtle"
-            colorPalette="black"
+            colorPalette="pink"
             onClick={async () => {
               if (!connectedAccount) return;
 

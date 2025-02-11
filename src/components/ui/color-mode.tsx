@@ -41,6 +41,7 @@ export function useColorModeValue<T>(light: T, dark: T) {
 
 export function ColorModeIcon() {
   const { colorMode } = useColorMode();
+
   return colorMode === "dark" ? <Icon name="Moon" /> : <Icon name="Sun" />;
 }
 
@@ -51,19 +52,21 @@ export const ColorModeButton = React.forwardRef<
   ColorModeButtonProps
 >(function ColorModeButton(props, ref) {
   const { toggleColorMode } = useColorMode();
+
   return (
     <ClientOnly fallback={<Skeleton boxSize="8" />}>
       <IconButton
         onClick={toggleColorMode}
         variant="ghost"
+        colorPalette="yellow"
         aria-label="Toggle color mode"
         size="sm"
         ref={ref}
         {...props}
         css={{
           _icon: {
-            width: "5",
-            height: "5",
+            width: "6",
+            height: "6",
           },
         }}
       >
