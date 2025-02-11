@@ -11,6 +11,7 @@ import { useAtomValue } from "jotai";
 import { useCallback, useState } from "react";
 
 import { ProjectSelect } from "@/components/features";
+import { toaster } from "@/components/ui";
 import { TaskSubmittedEvent } from "@/services";
 import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
@@ -28,9 +29,16 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
     async (projectId: number | null) => {
       if (!service || !projectId) return;
 
-      setTaskSubmittedEvents(
-        await service.getTaskSubmittedEvents({ projectId })
-      );
+      try {
+        setTaskSubmittedEvents(
+          await service.getTaskSubmittedEvents({ projectId })
+        );
+      } catch (error) {
+        toaster.create({
+          description: "Error fetching submitted tasks",
+          type: "error",
+        });
+      }
     },
     [service]
   );
@@ -38,7 +46,14 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
   const fetchAllSubmitEvents = useCallback(async () => {
     if (!service) return;
 
-    setTaskSubmittedEvents(await service.getTaskSubmittedEvents());
+    try {
+      setTaskSubmittedEvents(await service.getTaskSubmittedEvents());
+    } catch (error) {
+      toaster.create({
+        description: "Error fetching submitted tasks",
+        type: "error",
+      });
+    }
   }, [service]);
 
   return (

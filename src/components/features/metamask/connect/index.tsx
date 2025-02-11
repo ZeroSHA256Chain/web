@@ -109,7 +109,7 @@ export const ConnectMetamask = () => {
 
               toaster.create({
                 title: "Copied to clipboard",
-                description: "Ethereum address copied to clipboard",
+                description: "Your address has been copied to clipboard",
                 type: "success",
               });
             }}

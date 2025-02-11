@@ -11,6 +11,7 @@ import { useAtomValue } from "jotai";
 import React, { useCallback, useState } from "react";
 
 import { ProjectSelect } from "@/components/features";
+import { toaster } from "@/components/ui";
 import { TaskRejectedEvent } from "@/services";
 import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
@@ -27,16 +28,30 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
   const fetchAllRejectedTasks = useCallback(async () => {
     if (!service) return;
 
-    setTaskRejectedEvents(await service.getTaskRejectedEvents());
+    try {
+      setTaskRejectedEvents(await service.getTaskRejectedEvents());
+    } catch (error) {
+      toaster.create({
+        description: "Error fetching rejected tasks",
+        type: "error",
+      });
+    }
   }, [service]);
 
   const fetchRejectedTask = useCallback(
     async (projectId: number | null) => {
       if (!service || !projectId) return;
 
-      setTaskRejectedEvents(
-        await service.getTaskRejectedEvents({ projectId: projectId })
-      );
+      try {
+        setTaskRejectedEvents(
+          await service.getTaskRejectedEvents({ projectId: projectId })
+        );
+      } catch (error) {
+        toaster.create({
+          description: "Error fetching rejected tasks",
+          type: "error",
+        });
+      }
     },
     [service]
   );

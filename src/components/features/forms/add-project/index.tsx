@@ -37,14 +37,21 @@ export const AddProjectForm: React.FC = () => {
     onSubmit: async ({ value }) => {
       if (!service) return;
 
-      await service.createProject(value);
+      try {
+        await service.createProject(value);
 
-      reset();
+        reset();
 
-      toaster.create({
-        description: "Project added successfully",
-        type: "success",
-      });
+        toaster.create({
+          description: "Project added successfully",
+          type: "success",
+        });
+      } catch (error) {
+        toaster.create({
+          description: "Error adding project",
+          type: "error",
+        });
+      }
     },
     validators: {
       onChange: addProjectSchema,

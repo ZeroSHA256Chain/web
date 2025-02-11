@@ -34,30 +34,37 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
     onSubmit: async ({ value }) => {
       if (!service || !action || !value.projectId) return;
 
-      if (action === "verify") {
-        const verifyData: VerifyTaskDto = {
-          projectId: value.projectId,
-          student: value.student,
-          grade: value.grade,
-        };
+      try {
+        if (action === "verify") {
+          const verifyData: VerifyTaskDto = {
+            projectId: value.projectId,
+            student: value.student,
+            grade: value.grade,
+          };
 
-        await service.verifyTask(verifyData);
+          await service.verifyTask(verifyData);
 
+          toaster.create({
+            description: "Task verified successfully",
+            type: "success",
+          });
+        } else {
+          const rejectData: RejectTaskDto = {
+            projectId: value.projectId,
+            student: value.student,
+          };
+
+          await service.rejectTask(rejectData);
+
+          toaster.create({
+            description: "Task rejected successfully",
+            type: "success",
+          });
+        }
+      } catch (error) {
         toaster.create({
-          description: "Task verified successfully",
-          type: "success",
-        });
-      } else {
-        const rejectData: RejectTaskDto = {
-          projectId: value.projectId,
-          student: value.student,
-        };
-
-        await service.rejectTask(rejectData);
-
-        toaster.create({
-          description: "Task rejected successfully",
-          type: "success",
+          description: "Error reviewing task",
+          type: "error",
         });
       }
     },
