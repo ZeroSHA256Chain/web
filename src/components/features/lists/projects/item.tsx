@@ -30,11 +30,11 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
             <Heading size="md">{project.name}</Heading>
             <Flex gap={2}>
               <Show when={project.isRestricted}>
-                <Badge colorScheme="red">Restricted</Badge>
+                <Badge colorPalette="red">Restricted</Badge>
               </Show>
 
               <Show when={project.allowResubmission}>
-                <Badge colorScheme="green">Resubmission Allowed</Badge>
+                <Badge colorPalette="green">Resubmission Allowed</Badge>
               </Show>
             </Flex>
           </Flex>

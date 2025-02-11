@@ -79,7 +79,7 @@ export const AddProjectForm: React.FC = () => {
                 onBlur={field.handleBlur}
               />
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />
@@ -102,7 +102,7 @@ export const AddProjectForm: React.FC = () => {
                 onBlur={field.handleBlur}
               />
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />
@@ -146,7 +146,7 @@ export const AddProjectForm: React.FC = () => {
 
               <IconButton
                 aria-label="Add verifier"
-                colorPalette="teal"
+                colorPalette="green"
                 onClick={() => {
                   field.handleChange([...field.state.value, ""]);
                 }}
@@ -155,7 +155,7 @@ export const AddProjectForm: React.FC = () => {
                 <Icon name="Plus" />
               </IconButton>
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />
@@ -178,7 +178,7 @@ export const AddProjectForm: React.FC = () => {
                 placeholder="Select deadline"
               />
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />
@@ -199,7 +199,7 @@ export const AddProjectForm: React.FC = () => {
                 Allow Resubmission
               </Checkbox>
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />

@@ -11,15 +11,14 @@ import { useAtomValue } from "jotai";
 import { useCallback, useState } from "react";
 
 import { ProjectSelect } from "@/components/features";
-import { ProjectView, TaskSubmittedEvent } from "@/services";
-import { smartContractServiceAtom } from "@/store/atoms";
+import { TaskSubmittedEvent } from "@/services";
+import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
-interface SubmissionsProps {
-  projects: ProjectView[];
-}
+interface SubmitedTasksListProps {}
 
-export const SubmissionsList: React.FC<SubmissionsProps> = ({ projects }) => {
+export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
   const service = useAtomValue(smartContractServiceAtom);
+  const projects = useAtomValue(projectsAtom);
 
   const [taskSubmittedEvents, setTaskSubmittedEvents] =
     useState<TaskSubmittedEvent[]>();
@@ -44,7 +43,7 @@ export const SubmissionsList: React.FC<SubmissionsProps> = ({ projects }) => {
 
   return (
     <Stack spaceY={4} p={4} bg="gray.700">
-      <Heading>Task Submissions</Heading>
+      <Heading>Submitted Tasks</Heading>
 
       <ProjectSelect
         projects={projects}

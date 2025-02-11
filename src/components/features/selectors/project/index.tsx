@@ -1,4 +1,4 @@
-import { For, createListCollection } from "@chakra-ui/react";
+import { For, Text, createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
 
 import {
@@ -54,7 +54,10 @@ export const ProjectSelect: React.FC<ProjectSelectProps> = ({
       </SelectTrigger>
 
       <SelectContent>
-        <For each={projectsCollection.items}>
+        <For
+          each={projectsCollection.items}
+          fallback={<Text>No projects found</Text>}
+        >
           {(project) => (
             <SelectItem item={project} key={project.value}>
               {project.label}

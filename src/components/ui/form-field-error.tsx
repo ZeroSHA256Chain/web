@@ -1,15 +1,17 @@
 import { Em, Show } from "@chakra-ui/react";
-import { FieldApi } from "@tanstack/react-form";
+import { FieldState } from "@tanstack/react-form";
 
-interface FieldInfoProps {
-  field: FieldApi<any, any, any, any>;
+interface FieldInfoProps<TData extends unknown> {
+  state: FieldState<TData>;
 }
 
-export const FormFieldError: React.FC<FieldInfoProps> = ({ field }) => {
+export const FormFieldError = <TData extends unknown>({
+  state,
+}: FieldInfoProps<TData>) => {
   return (
-    <Show when={field.state.meta.isTouched && field.state.meta.errors.length}>
+    <Show when={state.meta.isTouched && state.meta.errors.length}>
       <Em fontSize="xs" color="red.500">
-        {field.state.meta.errors.join(", ")}
+        {state.meta.errors.join(", ")}
       </Em>
     </Show>
   );

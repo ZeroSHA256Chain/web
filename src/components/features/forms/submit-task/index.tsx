@@ -9,17 +9,15 @@ import { useAtomValue } from "jotai";
 
 import { ProjectSelect } from "@/components/features";
 import { FormFieldError, toaster } from "@/components/ui";
-import { ProjectView } from "@/services";
-import { smartContractServiceAtom } from "@/store/atoms";
+import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
 import { SubmitTaskFormValues, submitTaskSchema } from "./validaton";
 
-interface SubmitTaskFormProps {
-  projects: ProjectView[];
-}
+interface SubmitTaskFormProps {}
 
-export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projects }) => {
+export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
   const service = useAtomValue(smartContractServiceAtom);
+  const projects = useAtomValue(projectsAtom);
 
   const { Field, Subscribe, handleSubmit, reset } =
     useForm<SubmitTaskFormValues>({
@@ -71,7 +69,7 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projects }) => {
                 onChange={(values) => field.handleChange(Number(values[0]))}
               />
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />
@@ -94,7 +92,7 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projects }) => {
                 onBlur={field.handleBlur}
               />
 
-              <FormFieldError field={field} />
+              <FormFieldError state={field.state} />
             </FormControl.Root>
           )}
         />

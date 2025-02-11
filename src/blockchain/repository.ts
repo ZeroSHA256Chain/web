@@ -12,7 +12,7 @@ import {
   TaskSubmittedEventFilter,
   TaskVerifiedEvent,
   TaskVerifiedEventFilter,
-} from "@/components/features/metamask/models";
+} from "@/services";
 
 export class SmartContractRepository {
   private web3: Web3;

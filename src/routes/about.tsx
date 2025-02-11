@@ -1,11 +1,7 @@
 import { Heading, Text, VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/about")({
-  component: About,
-});
-
-function About() {
+const About: React.FC = () => {
   return (
     <VStack>
       <Heading>Tell about us</Heading>
@@ -13,4 +9,8 @@ function About() {
       <Text>We are a team of developers who build this shit.</Text>
     </VStack>
   );
-}
+};
+
+export const Route = createFileRoute("/about")({
+  component: About,
+});

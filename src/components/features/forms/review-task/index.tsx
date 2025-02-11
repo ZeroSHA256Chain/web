@@ -1,89 +1,169 @@
-// import { Button } from "@chakra-ui/react";
-// import React, { useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Fieldset,
+  Field as FormControl,
+  Input,
+} from "@chakra-ui/react";
+import { useForm } from "@tanstack/react-form";
+import { useAtomValue } from "jotai";
+import { useState } from "react";
 
-// import { BaseProps, RejectTaskDto, VerifyTaskDto } from "./models";
-// import {
-//   SmartContractService,
-//   getSmartContractService,
-// } from "./smartContractService";
+import { ProjectSelect } from "@/components/features";
+import { FormFieldError, toaster } from "@/components/ui";
+import { RejectTaskDto, VerifyTaskDto } from "@/services";
+import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
-// const TaskReviewForm: React.FC<BaseProps> = (props) => {
-//   const [projectId, setProjectId] = useState<number | "">("");
-//   const [student, setStudent] = useState<string>("");
-//   const [grade, setGrade] = useState<number | "">("");
-//   const [service] = useState<SmartContractService>(
-//     getSmartContractService(props.connectedAccount)
-//   );
+import { Action } from "./types";
+import { SubmitTaskFormValues, reviewTaskSchema } from "./validation";
 
-//   const handleVerify = async (event: React.FormEvent) => {
-//     event.preventDefault();
-//     if (projectId === "" || student.trim() === "" || grade === "") return;
+interface TaskReviewFormProps {}
 
-//     const verifyData: VerifyTaskDto = {
-//       projectId: Number(projectId),
-//       student,
-//       grade: Number(grade),
-//     };
+export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
+  const service = useAtomValue(smartContractServiceAtom);
+  const projects = useAtomValue(projectsAtom);
 
-//     console.log("Verifying:", verifyData);
-//     await service.verifyTask(verifyData);
-//   };
+  const [action, setAction] = useState<Action | null>(null);
 
-//   const handleReject = async (event: React.FormEvent) => {
-//     event.preventDefault();
-//     if (projectId === "" || student.trim() === "") return;
+  const { Field, Subscribe, handleSubmit } = useForm<SubmitTaskFormValues>({
+    defaultValues: {
+      projectId: null,
+      student: "",
+      grade: 50,
+    },
+    onSubmit: async ({ value }) => {
+      if (!service || !action || !value.projectId) return;
 
-//     const rejectData: RejectTaskDto = {
-//       projectId: Number(projectId),
-//       student,
-//     };
+      if (action === "verify") {
+        const verifyData: VerifyTaskDto = {
+          projectId: value.projectId,
+          student: value.student,
+          grade: value.grade,
+        };
 
-//     console.log("Rejecting:", rejectData);
-//     await service.rejectTask(rejectData);
-//   };
+        await service.verifyTask(verifyData);
 
-//   return (
-//     <form style={{ background: "purple", padding: "20px" }}>
-//       <div>
-//         <label>Project ID:</label>
-//         <input
-//           type="number"
-//           value={projectId}
-//           onChange={(e) =>
-//             setProjectId(e.target.value ? Number(e.target.value) : "")
-//           }
-//         />
-//       </div>
+        toaster.create({
+          description: "Task verified successfully",
+          type: "success",
+        });
+      } else {
+        const rejectData: RejectTaskDto = {
+          projectId: value.projectId,
+          student: value.student,
+        };
 
-//       <div>
-//         <label>Student:</label>
-//         <input
-//           type="text"
-//           value={student}
-//           onChange={(e) => setStudent(e.target.value)}
-//         />
-//       </div>
+        await service.rejectTask(rejectData);
 
-//       <div>
-//         <label>Grade (only for verification):</label>
-//         <input
-//           type="number"
-//           value={grade}
-//           onChange={(e) =>
-//             setGrade(e.target.value ? Number(e.target.value) : "")
-//           }
-//         />
-//       </div>
+        toaster.create({
+          description: "Task rejected successfully",
+          type: "success",
+        });
+      }
+    },
+    validators: {
+      onChange: reviewTaskSchema,
+    },
+  });
 
-//       <Button type="submit" onClick={handleVerify}>
-//         Verify
-//       </Button>
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-//       <Button type="submit" onClick={handleReject}>
-//         Reject
-//       </Button>
-//     </form>
-//   );
-// };
+        handleSubmit();
+      }}
+    >
+      <Fieldset.Root spaceY={4} bg="gray.700" p={4}>
+        <Field
+          name="projectId"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Project:
+              </FormControl.Label>
 
-// export default TaskReviewForm;
+              <ProjectSelect
+                projects={projects}
+                value={[field.state.value?.toString() ?? ""]}
+                onChange={(values) => field.handleChange(Number(values[0]))}
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="student"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Student Address:
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="grade"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>Grade:</FormControl.Label>
+
+              <Input
+                type="number"
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(Number(e.target.value))}
+                onBlur={field.handleBlur}
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <ButtonGroup justifyContent="center">
+              <Button
+                colorPalette="green"
+                type="submit"
+                disabled={!canSubmit}
+                onClick={() => setAction("verify")}
+              >
+                {isSubmitting ? "Verifying..." : "Verify"}
+              </Button>
+
+              <Button
+                colorPalette="red"
+                type="submit"
+                disabled={!canSubmit}
+                onClick={() => setAction("reject")}
+                mt={0}
+              >
+                {isSubmitting ? "Rejecting..." : "Reject"}
+              </Button>
+            </ButtonGroup>
+          )}
+        />
+      </Fieldset.Root>
+    </form>
+  );
+};

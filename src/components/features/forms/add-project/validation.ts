@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { ETHEREUM_ADDRESS_PATTERN } from "@/constants/patterns";
 import { CreateProjectDto } from "@/services";
 
 export const addProjectSchema = z.object({
@@ -10,7 +11,7 @@ export const addProjectSchema = z.object({
   verifiers: z
     .array(z.string())
     .refine(
-      (array) => array.every((item) => item.match(/^0x[a-fA-F0-9]{40}$/)),
+      (array) => array.every((item) => item.match(ETHEREUM_ADDRESS_PATTERN)),
       "All verifier addresses must be valid Ethereum addresses"
     ),
   allowedStudents: z.array(z.string()),

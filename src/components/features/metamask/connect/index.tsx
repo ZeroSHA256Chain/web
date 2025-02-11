@@ -35,7 +35,7 @@ export const ConnectMetamask = () => {
 
     // set the first account as the connected account
     setConnectedAccount(allAccounts[0]);
-  }, [web3]);
+  }, [web3, setConnectedAccount]);
 
   useEffect(() => {
     // ensure that there is an injected the Ethereum provider
@@ -52,7 +52,7 @@ export const ConnectMetamask = () => {
       // no Ethereum provider - instruct user to install MetaMask
       setWarning("Please install MetaMask");
     }
-  }, []);
+  }, [setWeb3]);
 
   useEffect(() => {
     if (connectedAccount) {
@@ -67,7 +67,7 @@ export const ConnectMetamask = () => {
 
       setService(service);
     }
-  }, [connectedAccount]);
+  }, [connectedAccount, setService]);
 
   useEffect(() => {
     requestAccounts();
