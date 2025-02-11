@@ -4,3 +4,6 @@ export const requestEthereumAccounts = async () =>
 export const removeRequestAccountsDialog = () => {
   document.getElementById("requestAccounts")?.remove();
 };
+
+export const formatEthereumAddress = (address: string) =>
+  `${address.slice(0, 6)}...${address.slice(-4)}`;
