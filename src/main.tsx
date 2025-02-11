@@ -2,7 +2,6 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 
-import { ErrorBoundary } from "@/app/error-boundary";
 import { AppProvider } from "@/app/provider";
 
 import { routeTree } from "./routeTree.gen";
@@ -23,9 +22,7 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <AppProvider>
-        <ErrorBoundary>
-          <RouterProvider router={router} />
-        </ErrorBoundary>
+        <RouterProvider router={router} />
       </AppProvider>
     </StrictMode>
   );
