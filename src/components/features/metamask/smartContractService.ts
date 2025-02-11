@@ -19,15 +19,12 @@ import {
   VerifyTaskDto,
 } from "./models";
 
-const provider = "http://127.0.0.1:8545/";
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-
 export const getSmartContractService = (
   connectedAccount: string
 ): SmartContractService => {
   const repository = new SmartContractRepository(
-    provider,
-    contractAddress,
+    import.meta.env.VITE_PROVIDER_URL,
+    import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
     ABI.abi,
     connectedAccount
   );
@@ -77,8 +74,10 @@ export class SmartContractService {
     const projectCount = await this.repository.getProjectCount();
 
     const projectItems: ProjectView[] = [];
+
     for (let projectId = 0; projectId < projectCount; projectId++) {
       const projectItem = await this.repository.getProject(projectId);
+
       projectItem.id = projectId;
       projectItems.push(projectItem);
     }
