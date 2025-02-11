@@ -1,6 +1,6 @@
 # DEDUAssess - Decentralized EDU Assessment
 
-**DEDUAssess** is a decentralized system designed to facilitate secure and transparent educational assessments on the blockchain. This project leverages Hardhat for development, testing, and deployment, making it easy to integrate into various blockchain environments.
+**DEDUAssess** is a decentralized system designed to facilitate secure and transparent educational assessments on the blockchain. 
 
 ---
 
