@@ -71,10 +71,24 @@ export class SmartContractService {
     const projectItems: ProjectView[] = [];
 
     for (let projectId = 0; projectId < projectCount; projectId++) {
-      const projectItem = await this.repository.getProject(projectId);
+      const {
+        name,
+        description,
+        deadline,
+        mentor,
+        isRestricted,
+        allowResubmission,
+      } = await this.repository.getProject(projectId);
 
-      projectItem.id = projectId;
-      projectItems.push(projectItem);
+      projectItems.push({
+        id: projectId,
+        name,
+        description,
+        deadline,
+        mentor,
+        isRestricted,
+        allowResubmission,
+      });
     }
 
     return projectItems;

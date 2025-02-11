@@ -1,19 +1,14 @@
-import { Button, Presence, Show } from "@chakra-ui/react";
-import { useAtom, useAtomValue } from "jotai";
+import { Button, Show } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
 
-import { SmartContractRepository } from "@/blockchain/repository";
-import { AddProjectForm, ProjectList } from "@/components/features";
+import {
+  AddProjectForm,
+  ProjectList,
+  SubmitTaskForm,
+} from "@/components/features";
 import { ProjectView } from "@/services";
-import { connectedAccountAtom, web3Atom } from "@/store/atoms";
-import { smartContractServiceAtom } from "@/store/atoms/smartContract";
-
-import RejectedTasks from "./RejectedTasks";
-import Submissions from "./Submissions";
-import { SubmitTask } from "./SubmitTask";
-import TaskReviewForm from "./TaskReviewForm";
-import VerifiedTasks from "./VerifiedTasks";
-import { getSmartContractService } from "./smartContractService";
+import { smartContractServiceAtom } from "@/store/atoms";
 
 interface ProjectManagementHomeProps {}
 
@@ -44,9 +39,13 @@ export const ProjectManagementHome: React.FC<
       <Button onClick={fetchProjects}>Fetch Projects</Button>
 
       <AddProjectForm />
+
+      <Show when={projects.length > 0}>
+        <SubmitTaskForm projects={projects} />
+      </Show>
       {/* <AddProjectForm {...props} />
       -------------Submit Task---------------
-      <SubmitTask {...props} />
+
       --------------All Submissions------------------
       <Submissions {...props} />
       -------------------Task Review----------------------

@@ -6,3 +6,4 @@ export * from "./form-field-error";
 export * from "./checkbox";
 export * from "./field";
 export * from "./toaster";
+export * from "./select";
