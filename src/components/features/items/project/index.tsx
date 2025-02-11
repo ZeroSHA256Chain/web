@@ -28,6 +28,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
         <Stack spaceX={3}>
           <Flex justify="space-between" align="center">
             <Heading size="md">{project.name}</Heading>
+
             <Flex gap={2}>
               <Show when={project.isRestricted}>
                 <Badge colorPalette="red">Restricted</Badge>
@@ -52,7 +53,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
             <Text fontSize="sm" fontWeight="bold">
               Deadline:{" "}
               <Text as="span" fontWeight="normal">
-                {new Date(Number(project.deadline)).toLocaleDateString()}
+                {new Date(Number(project.deadline)).toLocaleString()}
               </Text>
             </Text>
           </Box>
