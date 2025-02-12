@@ -1,6 +1,6 @@
 import {
-For,
-HStack,
+  For,
+  HStack,
   Heading,
   IconButton,
   List,
@@ -14,12 +14,12 @@ import React, { memo, useEffect, useState } from "react";
 
 import { ProjectItem } from "@/components/features/items";
 import { Dialog, Icon } from "@/components/ui";
-import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
+import { connectedAccountAtom, projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
 import { AddProjectForm } from "../../forms";
 import { ProjectView } from "@/services";
 
-interface ProjectsListProps {}
+interface ProjectsListProps { }
 
 export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
   const [projects, setProjects] = useAtom(projectsAtom);
@@ -27,10 +27,13 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
     submit: ProjectView[];
     verify: ProjectView[];
     other: ProjectView[];
-}>({
+  }>({
     submit: [],
     verify: [],
-    other: []})
+    other: []
+  })
+  const connectedAccount = useAtomValue(connectedAccountAtom);
+
 
   const service = useAtomValue(smartContractServiceAtom);
 
@@ -40,33 +43,34 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
 
   const fetchProjects = async () => {
     if (!service) return;
-  
+    if(!connectedAccount) return;
+
     const projectItems = await service.getAllProjects();
     if (!projectItems) return;
-  
+
     const categorizedProjects = {
       submit: [] as ProjectView[],
       verify: [] as ProjectView[],
       other: [] as ProjectView[],
     };
-  
+
     for (const project of projectItems) {
       if (project.id === undefined) {
         console.warn("Project ID is undefined");
         continue;
       }
-  
+
       try {
         const isAllowed = await service.isAllowedStudent({
           projectId: project.id,
-          student: project.mentor,
+          student: connectedAccount,
         });
-  
+
         const isVerifier = await service.isVerifier({
           projectId: project.id,
-          student: project.mentor,
+          student: connectedAccount,
         });
-  
+
         if (isAllowed) {
           categorizedProjects.submit.push(project);
         } else if (isVerifier) {
@@ -79,7 +83,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
         categorizedProjects.other.push(project);
       }
     }
-  
+
     setProjects(projectItems);
     setCategorizedProjects(categorizedProjects);
   };
@@ -133,10 +137,10 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-          
+
         </For>
       </List.Root>
-      
+
       Projects you can verify
       <List.Root
         w="100%"
@@ -155,7 +159,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-          
+
         </For>
       </List.Root>
 
@@ -177,7 +181,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-          
+
         </For>
       </List.Root>
 

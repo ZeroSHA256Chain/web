@@ -31,17 +31,6 @@ const Index: React.FC = () => {
           </Stack>
         }
       >
-        <HStack>
-          <SubmitedTasksList />
-
-          <VerifiedTasksList />
-
-          <RejectedTasksList />
-        </HStack>
-
-        <HStack>
-          <SubmitTaskForm />
-        </HStack>
       </Show>
     </>
   );
