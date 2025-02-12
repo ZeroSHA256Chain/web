@@ -86,11 +86,11 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
 
     setProjects(projectItems);
     setCategorizedProjects(categorizedProjects);
-  }, [service, connectedAccount]);
+  }, [service, connectedAccount, setProjects]);
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   return (
     <Stack

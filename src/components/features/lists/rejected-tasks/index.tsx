@@ -30,12 +30,10 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({
         projectId,
       });
 
-      console.log({ taskRejectedEvents });
-
       setTaskRejectedEvents(taskRejectedEvents);
 
       onRejectedIdsChange(taskRejectedEvents.map((event) => event.projectId));
-    } catch (error) {
+    } catch {
       toaster.create({
         description: "Error fetching rejected tasks",
         type: "error",
@@ -45,7 +43,7 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({
 
   useEffect(() => {
     fetchAllRejectedTasks();
-  }, []);
+  }, [fetchAllRejectedTasks]);
 
   return (
     <Stack spaceY={4} p={4} bg="gray.700">
