@@ -19,7 +19,7 @@ const Index: React.FC = () => {
       <ProjectsList />
 
       <Show
-        when={projects.length > 0 && false}
+        when={projects.length > 0}
         fallback={
           <Stack align="center" justify="center" h={300}>
             <Spinner

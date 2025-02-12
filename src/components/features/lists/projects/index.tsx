@@ -43,15 +43,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
   } = useDisclosure();
 
   return (
-    <Stack
-      maxH={800}
-      width="auto"
-      overflow="auto"
-      spaceY={2}
-      py={4}
-      px={8}
-      bg="pink.300"
-    >
+    <Stack width="auto" overflow="auto" spaceY={2} py={4} px={8} bg="pink.300">
       <HStack
         justify="space-between"
         align="center"
