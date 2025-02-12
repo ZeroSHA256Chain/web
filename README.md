@@ -125,9 +125,9 @@ To deploy and interact on your local blockchain network, follow these steps:
 
 The most recent deployment of the ```DEDUAssess``` contract is available at:
 ```
-0x2A4c1D303224A700BA8d7cC2d56fE3112c14D41B
+0xC3B6ECF9E480c27A9492A975710Bb976ED008e7b
 ```
 You can view the contract details on the 
-[Polygon Amoy Explorer](https://amoy.polygonscan.com/address/0x2A4c1D303224A700BA8d7cC2d56fE3112c14D41B)
+[Polygon Amoy Explorer](https://amoy.polygonscan.com/address/0xC3B6ECF9E480c27A9492A975710Bb976ED008e7b)
 
 
