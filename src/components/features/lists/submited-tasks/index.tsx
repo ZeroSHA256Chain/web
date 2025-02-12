@@ -11,7 +11,7 @@ import {
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
-import { TaskItem, TaskReviewForm } from "@/components/features";
+import { ReviewTaskForm, TaskItem } from "@/components/features";
 import { Dialog, toaster } from "@/components/ui";
 import { TaskSubmittedEvent } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
@@ -88,7 +88,7 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = ({
                     }
                     isOpen={isReviewTaskDialogOpen}
                   >
-                    <TaskReviewForm
+                    <ReviewTaskForm
                       onSuccess={() => setIsReviewTaskDialogOpen(false)}
                       projectId={projectId}
                       studentAddress={event.student}

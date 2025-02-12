@@ -48,6 +48,11 @@ export interface RejectTaskDto {
   student: string;
 }
 
+export interface SubmissionDto {
+  projectId: number;
+  student: string;
+}
+
 export interface ProjectCreatedEvent {
   projectId: number;
   name: string;
@@ -99,5 +104,5 @@ export interface TaskRejectedEventFilter {
 
 export interface UserCheckDto {
   projectId: number;
-  student: string
+  student: string;
 }
