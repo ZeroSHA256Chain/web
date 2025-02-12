@@ -56,7 +56,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(
                   </AccordionItemTrigger>
 
                   <AccordionItemContent>
-                    <Text color="gray.500">{project.description}</Text>
+                    <Text color="gray.300">{project.description}</Text>
                   </AccordionItemContent>
                 </AccordionItem>
               </AccordionRoot>

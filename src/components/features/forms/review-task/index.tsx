@@ -16,13 +16,13 @@ import { smartContractServiceAtom } from "@/store/atoms";
 import { Action } from "./types";
 import { ReviewTaskFormValues, reviewTaskSchema } from "./validation";
 
-interface TaskReviewFormProps {
+interface ReviewTaskFormProps {
   projectId: number;
   studentAddress: string;
   onSuccess: () => void;
 }
 
-export const TaskReviewForm: React.FC<TaskReviewFormProps> = ({
+export const ReviewTaskForm: React.FC<ReviewTaskFormProps> = ({
   projectId,
   studentAddress,
   onSuccess,

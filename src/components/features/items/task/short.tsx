@@ -19,20 +19,10 @@ export const TaskShortItem = <T extends TasksEvent>({
       spaceY={2}
       align="start"
       p={4}
-      borderWidth="1px"
       borderRadius="md"
       bg="gray.900"
       color="white"
-      shadow="sm"
     >
-      <HStack>
-        <Text as="span" fontWeight="semibold">
-          Project ID:
-        </Text>
-
-        <Text>{task.projectId}</Text>
-      </HStack>
-
       <HStack>
         <Text as="span" fontWeight="semibold">
           Student:

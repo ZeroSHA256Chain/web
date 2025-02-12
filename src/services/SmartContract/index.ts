@@ -4,19 +4,21 @@ import { SMART_CONTRACT_ABI, SmartContractRepository } from "@/blockchain";
 
 import {
   CreateProjectDto,
-  UserCheckDto,
   ProjectCreatedEvent,
   ProjectCreatedEventFilter,
   ProjectView,
   RejectTaskDto,
+  Submission,
+  SubmissionDto,
   SubmitTaskDto,
   TaskRejectedEvent,
   TaskRejectedEventFilter,
   TaskSubmittedEvent,
   TaskSubmittedEventFilter,
-  VerifyTaskDto,
   TaskVerifiedEvent,
   TaskVerifiedEventFilter,
+  UserCheckDto,
+  VerifyTaskDto,
 } from "./types";
 
 export const getSmartContractService = (
@@ -172,6 +174,14 @@ export class SmartContractService {
   ): Promise<TaskRejectedEvent[]> {
     try {
       return await this.repository.getTaskRejectedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Task Rejected Events: ${error}`);
+    }
+  }
+
+  async getSubmission(dto: SubmissionDto): Promise<Submission> {
+    try {
+      return await this.repository.getSubmission(dto.projectId, dto.student);
     } catch (error) {
       throw new Error(`Failed to fetch Task Rejected Events: ${error}`);
     }

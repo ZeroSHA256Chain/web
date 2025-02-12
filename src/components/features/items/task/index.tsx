@@ -16,22 +16,10 @@ export const TaskItem = <T extends TaskSubmittedEvent>({
       spaceY={2}
       align="start"
       p={4}
-      borderWidth="1px"
-      borderRadius="lg"
-      boxShadow="sm"
-      _hover={{ boxShadow: "md" }}
-      transition="all 0.2s"
+      borderRadius="md"
       color="white"
       bg="gray.900"
     >
-      <HStack>
-        <Text as="span" fontWeight="semibold">
-          Project ID:
-        </Text>
-
-        <Text>{task.projectId}</Text>
-      </HStack>
-
       <HStack>
         <Text as="span" fontWeight="semibold">
           Student:
