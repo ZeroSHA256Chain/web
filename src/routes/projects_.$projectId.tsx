@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 
 const ProjectId: React.FC = () => {
   const { projectId: projectIdParam } = Route.useParams();
+  const projectIdNum = Number(projectIdParam);
+
   const [project, setProject] = useState<ProjectView>();
   const service = useAtomValue(smartContractServiceAtom);
   const connectedAccount = useAtomValue(connectedAccountAtom);
@@ -20,13 +22,12 @@ const ProjectId: React.FC = () => {
 
   async function fetchProject() {
     if (!service) return;
-    const projectId = Number(projectIdParam);
-    if (isNaN(projectId)) return;
+    
     if (!connectedAccount) return
 
-    const project = await service.getProject(projectId);
-    const canSubmit = await service.isAllowedStudent({ projectId, student: connectedAccount });
-    const canVerify = await service.isVerifier({ projectId, student: connectedAccount });
+    const project = await service.getProject(projectIdNum);
+    const canSubmit = await service.isAllowedStudent({ projectId: projectIdNum, student: connectedAccount });
+    const canVerify = await service.isVerifier({ projectId: projectIdNum, student: connectedAccount });
 
     setProject(project);
     setCanSubmit(canSubmit)
@@ -35,6 +36,10 @@ const ProjectId: React.FC = () => {
 
   if (!project) {
     return (<div>Provide project id</div>)
+  }
+
+  if (isNaN(projectIdNum)) {
+    return (<div>Provide valid project id</div>)
   }
 
   return (
@@ -54,7 +59,7 @@ const ProjectId: React.FC = () => {
 
       {canSubmit ?
         <HStack>
-          <SubmitTaskForm />
+          <SubmitTaskForm project={project} projectId={projectIdNum}/>
         </HStack> : null
       }
 

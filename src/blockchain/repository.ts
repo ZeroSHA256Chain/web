@@ -83,14 +83,11 @@ export class SmartContractRepository {
 
   async isAllowedStudent(projectId: number, student: string): Promise<boolean> {
     const result: boolean = await this.contract.methods.isAllowedStudent(projectId, student).call();
-    console.log("Is Allowed student: ", projectId, student, result);
     return result
   }
 
   async isVerifier(projectId: number, student: string): Promise<boolean> {
     const result: boolean = await this.contract.methods.isVerifier(projectId, student).call();
-
-    console.log("Is Verifier: ", projectId, student, result)
 
     return result
   }

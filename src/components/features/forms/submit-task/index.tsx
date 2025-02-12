@@ -2,6 +2,7 @@ import {
   Button,
   Fieldset,
   Field as FormControl,
+  Input,
   Textarea,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
@@ -12,12 +13,15 @@ import { FormFieldError, toaster } from "@/components/ui";
 import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
 
 import { SubmitTaskFormValues, submitTaskSchema } from "./validaton";
+import { ProjectView } from "@/services";
 
-interface SubmitTaskFormProps {}
+interface SubmitTaskFormProps {
+  project: ProjectView,
+  projectId: number
+}
 
-export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
+export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projectId }) => {
   const service = useAtomValue(smartContractServiceAtom);
-  const projects = useAtomValue(projectsAtom);
 
   const { Field, Subscribe, handleSubmit, reset } =
     useForm<SubmitTaskFormValues>({
@@ -26,13 +30,14 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
         taskString: "",
       },
       onSubmit: async ({ value }) => {
-        if (!service || typeof value.projectId !== "number") return;
+        if (!service) return;
 
         try {
           await service.submitTaskAndHash({
-            projectId: value.projectId,
+            projectId: projectId,
             taskString: value.taskString,
           });
+          console.log("Task submitted successfully");
 
           reset();
 
@@ -62,25 +67,6 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
       }}
     >
       <Fieldset.Root spaceY={4} bg="gray.700" p={4}>
-        <Field
-          name="projectId"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Project:
-              </FormControl.Label>
-
-              <ProjectSelect
-                projects={projects}
-                value={[field.state.value?.toString() ?? ""]}
-                onChange={(values) => field.handleChange(Number(values[0]))}
-              />
-
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
-
         <Field
           name="taskString"
           children={(field) => (
