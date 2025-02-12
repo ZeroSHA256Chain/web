@@ -4,17 +4,25 @@ import {
   Card,
   HStack,
   Heading,
+  IconButton,
   Show,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
 import { memo } from "react";
 
-import { toaster } from "@/components/ui";
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+  Icon,
+  toaster,
+} from "@/components/ui";
+import { formatEthereumAddress } from "@/helpers";
 import { ProjectView } from "@/services";
-
-import { formatEthereumAddress } from "../../metamask/connect/utils";
 
 interface ProjectItemProps {
   project: ProjectView;
@@ -31,10 +39,31 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
       _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
     >
       <Card.Body>
-        <Stack spaceX={3}>
-          <Heading size="lg" textAlign="center">
-            {project.name}
-          </Heading>
+        <Stack spaceX={3} minH={160}>
+          <HStack justify="space-between" align="center">
+            <AccordionRoot multiple>
+              <AccordionItem value={project.name}>
+                <AccordionItemTrigger>
+                  <Heading size="lg" textAlign="center">
+                    {project.name}
+                  </Heading>
+                </AccordionItemTrigger>
+
+                <AccordionItemContent>
+                  <Text color="gray.700">{project.description}</Text>
+                </AccordionItemContent>
+              </AccordionItem>
+            </AccordionRoot>
+
+            <Link
+              to={`/projects/$projectId`}
+              params={{ projectId: String(project.id!) }}
+            >
+              <IconButton variant="ghost" size="xs" colorPalette="blue">
+                <Icon name="ExternalLink" />
+              </IconButton>
+            </Link>
+          </HStack>
 
           <HStack justify="end" align="center">
             <Show when={project.isRestricted}>
@@ -45,8 +74,6 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
               <Badge colorPalette="green">Resubmission Allowed</Badge>
             </Show>
           </HStack>
-
-          <Text color="gray.700">{project.description}</Text>
 
           <VStack spaceY={2} align="start">
             <HStack spaceX={2}>
@@ -72,7 +99,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
 
                   toaster.create({
                     title: "Copied to clipboard",
-                    description: `Mentor address copied to clipboard: ${project.mentor}`,
+                    description: `Mentor address copied`,
                     type: "success",
                   });
                 }}

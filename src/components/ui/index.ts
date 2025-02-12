@@ -7,3 +7,5 @@ export * from "./checkbox";
 export * from "./field";
 export * from "./toaster";
 export * from "./select";
+export * from "./dialog";
+export * from "./accordion";

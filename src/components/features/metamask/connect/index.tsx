@@ -1,4 +1,4 @@
-import { Alert, Button, HStack, Show, VStack } from "@chakra-ui/react";
+import { Alert, Button, HStack, Show } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
@@ -6,6 +6,7 @@ import { Web3 } from "web3";
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
 import { SmartContractRepository } from "@/blockchain/repository";
 import { toaster } from "@/components/ui";
+import { formatEthereumAddress } from "@/helpers";
 import { SmartContractService } from "@/services";
 import {
   connectedAccountAtom,
@@ -13,11 +14,7 @@ import {
   web3Atom,
 } from "@/store/atoms";
 
-import {
-  formatEthereumAddress,
-  removeRequestAccountsDialog,
-  requestEthereumAccounts,
-} from "./utils";
+import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 
 export const ConnectMetamask = () => {
   const [web3, setWeb3] = useAtom(web3Atom);
@@ -82,7 +79,7 @@ export const ConnectMetamask = () => {
   }, [requestAccounts]);
 
   return (
-    <VStack>
+    <HStack spaceX={2} align="center">
       <HStack spaceX={2} align="center">
         <Show when={Boolean(warning)}>
           <Alert.Root status="error" minW={250}>
@@ -118,8 +115,7 @@ export const ConnectMetamask = () => {
           </Button>
         </Show>
       </HStack>
-
-      <Show when={!connectedAccount && attemptedToConnect}>
+      <Show when={!connectedAccount && attemptedToConnect && !warning}>
         <Button
           variant="solid"
           colorPalette="red"
@@ -129,6 +125,6 @@ export const ConnectMetamask = () => {
           Connect MetaMask
         </Button>
       </Show>
-    </VStack>
+    </HStack>
   );
 };

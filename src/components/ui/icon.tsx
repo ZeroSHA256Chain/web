@@ -1,4 +1,14 @@
-import { type LucideProps, Moon, Plus, Sun, Trash, X } from "lucide-react";
+import {
+  ChevronDown,
+  ExternalLink,
+  type LucideProps,
+  Moon,
+  Plus,
+  RefreshCw,
+  Sun,
+  Trash,
+  X,
+} from "lucide-react";
 import React from "react";
 
 const IconsList = {
@@ -7,6 +17,9 @@ const IconsList = {
   Trash,
   Plus,
   X,
+  ChevronDown,
+  ExternalLink,
+  RefreshCw,
 };
 
 export type IconName = keyof typeof IconsList;
