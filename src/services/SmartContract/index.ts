@@ -112,6 +112,8 @@ export class SmartContractService {
     }
   }
 
+  
+
   async rejectTask(dto: RejectTaskDto): Promise<void> {
     try {
       await this.repository.rejectTask(dto.projectId, dto.student);

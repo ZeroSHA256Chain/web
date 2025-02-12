@@ -75,16 +75,20 @@ export class SmartContractRepository {
       .send({ from: this.account });
   }
 
-  async checkTaskVerified(taskHash: string): Promise<number> {
-    return await this.contract.methods.checkTaskVerified(taskHash).call();
-  }
-
   async getSubmission(projectId: number, student: string): Promise<Submission> {
     return await this.contract.methods.getSubmission(projectId, student).call();
   }
 
   async getProject(projectId: number): Promise<ProjectView> {
     return await this.contract.methods.getProject(projectId).call();
+  }
+
+  async isAllowedStudent(projectId: number, student: string): Promise<boolean> {
+    return await this.contract.methods.isAllowedStudent(projectId, student).call();
+  }
+
+  async isVerifier(projectId: number, student: string): Promise<boolean> {
+    return await this.contract.methods.isVerifier(projectId, student).call();
   }
 
   async getProjectCreatedEvents(
@@ -113,31 +117,30 @@ export class SmartContractRepository {
       "TaskSubmitted",
       { filter: filter, fromBlock: 0 }
     );
-    const event = events.map((event) => ({
-      projectId: event.returnValues["projectId"] as number,
-      student: event.returnValues["student"] as string,
-      taskHash: event.returnValues["taskHash"] as string,
-    }));
-
-    return event;
-  }
-
-  async getTaskVerifiedEvents(
-    filter: TaskVerifiedEventFilter = {}
-  ): Promise<TaskVerifiedEvent[]> {
-    const contractAny = this.contract as any;
-    const events: EventLog[] = await contractAny.getPastEvents("TaskVerified", {
-      filter: filter,
-      fromBlock: 0,
+    console.log(events);
+  
+    const lastSubmittedTasks: { [key: string]: TaskSubmittedEvent } = {};
+  
+    events.forEach((event) => {
+      const student = event.returnValues["student"] as string;
+      const projectId = event.returnValues["projectId"] as number;
+      const submissionId = event.returnValues["submissionId"] as number;
+      const task = {
+        projectId: projectId,
+        submissionId: submissionId,
+        student: student,
+        taskHash: event.returnValues["taskHash"] as string,
+      };
+      
+      // Create a unique key combining student and projectId
+      const key = `${student}-${projectId}`;
+      
+      // Update the map with the last task for this student and projectId
+      lastSubmittedTasks[key] = task;
     });
-    const event = events.map((event) => ({
-      projectId: event.returnValues["projectId"] as number,
-      student: event.returnValues["student"] as string,
-      taskHash: event.returnValues["taskHash"] as string,
-      grade: event.returnValues["grade"] as number,
-    }));
-
-    return event;
+  
+    // Convert the map to an array
+    return Object.values(lastSubmittedTasks);
   }
 
   async getTaskRejectedEvents(
