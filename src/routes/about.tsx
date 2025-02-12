@@ -6,7 +6,8 @@ const About: React.FC = () => {
     <VStack>
       <Heading>Tell about us</Heading>
 
-      <Text>We are a team of developers who build this shit.</Text>
+      <Text>We are a team of developers ZeroSHA256Chain</Text>
+      <Text>@chichmek @bohdan829 @gokuseii @van4o_0</Text>
     </VStack>
   );
 };

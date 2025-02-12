@@ -18,7 +18,6 @@ const Index: React.FC = () => {
     <>
       <ProjectsList />
 
-      {/* todo: complete */}
       <Show
         when={projects.length > 0 && false}
         fallback={
