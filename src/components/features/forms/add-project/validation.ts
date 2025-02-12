@@ -14,5 +14,10 @@ export const addProjectSchema = z.object({
       (array) => array.every((item) => item.match(ETHEREUM_ADDRESS_PATTERN)),
       "All verifier addresses must be valid Ethereum addresses"
     ),
-  allowedStudents: z.array(z.string()),
+  allowedStudents: z
+    .array(z.string())
+    .refine(
+      (array) => array.every((item) => item.match(ETHEREUM_ADDRESS_PATTERN)),
+      "All allowed students addresses must be valid Ethereum addresses"
+    ),
 }) satisfies z.ZodType<CreateProjectDto>;

@@ -4,25 +4,31 @@ import {
   Heading,
   IconButton,
   List,
-  Show,
   Stack,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { useAtom, useAtomValue } from "jotai";
-import React, { memo, useEffect, useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
+import { AddProjectForm } from "@/components/features";
 import { ProjectItem } from "@/components/features/items";
 import { Dialog, Icon } from "@/components/ui";
-import { connectedAccountAtom, projectsAtom, smartContractServiceAtom } from "@/store/atoms";
-
-import { AddProjectForm } from "../../forms";
 import { ProjectView } from "@/services";
+import {
+  connectedAccountAtom,
+  projectsAtom,
+  smartContractServiceAtom,
+} from "@/store/atoms";
 
-interface ProjectsListProps { }
+interface ProjectsListProps {}
 
 export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
-  const [projects, setProjects] = useAtom(projectsAtom);
+  const [isAddProjectDialogOpen, setIsAddProjectDialogOpen] = useState(false);
+
+  const setProjects = useSetAtom(projectsAtom);
+  const connectedAccount = useAtomValue(connectedAccountAtom);
+  const service = useAtomValue(smartContractServiceAtom);
+
   const [categorizedProjects, setCategorizedProjects] = useState<{
     submit: ProjectView[];
     verify: ProjectView[];
@@ -30,20 +36,12 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
   }>({
     submit: [],
     verify: [],
-    other: []
-  })
-  const connectedAccount = useAtomValue(connectedAccountAtom);
+    other: [],
+  });
 
-
-  const service = useAtomValue(smartContractServiceAtom);
-
-  useEffect(() => {
-    fetchProjects()
-  }, [])
-
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     if (!service) return;
-    if(!connectedAccount) return;
+    if (!connectedAccount) return;
 
     const projectItems = await service.getAllProjects();
     if (!projectItems) return;
@@ -80,46 +78,63 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
         }
       } catch (error) {
         console.error(`Error processing project ${project.id}:`, error);
+
         categorizedProjects.other.push(project);
       }
     }
 
     setProjects(projectItems);
     setCategorizedProjects(categorizedProjects);
-  };
+  }, [service, connectedAccount]);
 
-  const [shouldCloseAddProjectDialog, setShouldCloseAddProjectDialog] =
-    useState(false);
-
-  const {
-    open: isAddProjectDialogOpen,
-    onOpen: onAddProjectDialogOpen,
-    onClose: onAddProjectDialogClose,
-  } = useDisclosure();
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   return (
-    <Stack width="auto" overflow="auto" spaceY={2} py={4} px={8} bg="pink.300">
+    <Stack width="100vw" overflow="auto" spaceY={2} py={4} px={8} bg="gray.700">
       <HStack
         justify="space-between"
         align="center"
-        bg="pink.400"
+        bg="gray.300"
         py={2}
-        px={8}
+        px={4}
         borderRadius="md"
       >
-        <Heading color="black">Projects</Heading>
+        <Heading as="h2" fontSize="2xl" color="black">
+          Projects
+        </Heading>
 
-        <IconButton
-          variant="subtle"
-          size="md"
-          color="blue.700"
-          onClick={fetchProjects}
-        >
-          <Icon name="RefreshCw" />
-        </IconButton>
+        <HStack spaceX={2}>
+          <Dialog
+            title="Add Project"
+            triggerText="Add project"
+            onOpenChange={(event) => setIsAddProjectDialogOpen(event.open)}
+            isOpen={isAddProjectDialogOpen}
+            triggerColorPalette="green"
+          >
+            <AddProjectForm
+              onSuccess={() => setIsAddProjectDialogOpen(false)}
+            />
+          </Dialog>
+
+          <IconButton
+            bg="blue.500"
+            colorPalette="blue"
+            variant="subtle"
+            size="md"
+            color="white"
+            onClick={fetchProjects}
+          >
+            <Icon name="RefreshCw" />
+          </IconButton>
+        </HStack>
       </HStack>
 
-      Projects you can submit
+      <Heading color="black" as="h4">
+        Projects you can submit
+      </Heading>
+
       <List.Root
         w="100%"
         position="relative"
@@ -137,11 +152,13 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-
         </For>
       </List.Root>
 
-      Projects you can verify
+      <Heading color="black" as="h4">
+        Projects you can verify
+      </Heading>
+
       <List.Root
         w="100%"
         position="relative"
@@ -159,11 +176,13 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-
         </For>
       </List.Root>
 
-      Other projects
+      <Heading color="black" as="h4">
+        Other projects
+      </Heading>
+
       <List.Root
         w="100%"
         position="relative"
@@ -181,24 +200,8 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
               <ProjectItem project={project} />
             </List.Item>
           )}
-
         </For>
       </List.Root>
-
-      <Show when={!shouldCloseAddProjectDialog}>
-        <Dialog
-          title="Add Project"
-          triggerText="Add project"
-          onClose={onAddProjectDialogClose}
-          onOpen={onAddProjectDialogOpen}
-          isOpen={isAddProjectDialogOpen}
-          triggerColorPalette="green"
-        >
-          <AddProjectForm
-            onSuccess={() => setShouldCloseAddProjectDialog(true)}
-          />
-        </Dialog>
-      </Show>
     </Stack>
   );
 });

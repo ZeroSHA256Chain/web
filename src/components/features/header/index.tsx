@@ -11,8 +11,6 @@ import {
 import { Link } from "@tanstack/react-router";
 import React from "react";
 
-import { ColorModeButton } from "@/components/ui";
-
 import { ConnectMetamask } from "../metamask";
 
 interface HeaderProps extends BoxProps {
@@ -63,8 +61,6 @@ export const Header: React.FC<HeaderProps> = ({
           </List.Root>
 
           <HStack spaceX={4}>
-            <ColorModeButton />
-
             <ConnectMetamask />
           </HStack>
         </HStack>

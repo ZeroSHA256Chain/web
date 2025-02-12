@@ -1,6 +1,7 @@
 import {
   Button,
   Fieldset,
+  For,
   Field as FormControl,
   HStack,
   IconButton,
@@ -76,6 +77,52 @@ export const AddProjectForm: React.FC<AddProjectFormProps> = ({
       }}
     >
       <Fieldset.Root spaceY={4} bg="gray.700" p={4}>
+        <HStack justify="space-between" align="center">
+          <Field
+            name="deadline"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  Deadline:
+                </FormControl.Label>
+
+                <DatePicker
+                  value={new Date(field.state.value)}
+                  onChange={(date) =>
+                    field.handleChange(date?.getTime() || Date.now())
+                  }
+                  placeholder="Select deadline"
+                />
+
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
+
+          <Field
+            name="allowResubmission"
+            children={(field) => (
+              <FormControl.Root>
+                <Checkbox
+                  color="white"
+                  colorPalette="teal"
+                  checked={field.state.value}
+                  onChange={(event) =>
+                    field.handleChange(
+                      (event.target as HTMLInputElement).checked
+                    )
+                  }
+                  onBlur={field.handleBlur}
+                >
+                  Allow Resubmission
+                </Checkbox>
+
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
+        </HStack>
+
         <Field
           name="name"
           children={(field) => (
@@ -121,104 +168,145 @@ export const AddProjectForm: React.FC<AddProjectFormProps> = ({
           )}
         />
 
-        <Field
-          name="verifiers"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label>Verifiers:</FormControl.Label>
+        <HStack justify="space-between" align="flex-start">
+          <Field
+            name="verifiers"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label>Verifiers:</FormControl.Label>
 
-              {field.state.value.map((verifier: string, index: number) => (
-                <HStack key={index} mb={2}>
-                  <Input
-                    color="white"
-                    colorPalette="teal"
-                    value={verifier}
-                    onChange={(event) => {
-                      const newVerifiers = [...field.state.value];
+                <For
+                  each={field.state.value}
+                  fallback={
+                    <Input
+                      color="white"
+                      colorPalette="teal"
+                      disabled
+                      placeholder="No verifiers"
+                    />
+                  }
+                >
+                  {(verifier, index) => (
+                    <HStack key={verifier}>
+                      <Input
+                        color="white"
+                        colorPalette="teal"
+                        value={verifier}
+                        onChange={(event) => {
+                          const newVerifiers = [...field.state.value];
 
-                      newVerifiers[index] = event.target.value;
+                          newVerifiers[index] = event.target.value;
 
-                      field.handleChange(newVerifiers);
-                    }}
-                  />
+                          field.handleChange(newVerifiers);
+                        }}
+                      />
 
-                  <IconButton
-                    minW={6}
-                    h={6}
-                    aria-label="Remove verifier"
-                    colorPalette="red"
-                    onClick={() => {
-                      const newVerifiers = field.state.value.filter(
-                        (_, _index) => _index !== index
-                      );
+                      <IconButton
+                        minW={6}
+                        h={6}
+                        aria-label="Remove verifier"
+                        colorPalette="red"
+                        onClick={() => {
+                          const newVerifiers = field.state.value.filter(
+                            (_, _index) => _index !== index
+                          );
 
-                      field.handleChange(newVerifiers);
-                    }}
-                  >
-                    <Icon name="Trash" />
-                  </IconButton>
-                </HStack>
-              ))}
+                          field.handleChange(newVerifiers);
+                        }}
+                      >
+                        <Icon name="Trash" />
+                      </IconButton>
+                    </HStack>
+                  )}
+                </For>
 
-              <IconButton
-                minW={6}
-                h={6}
-                aria-label="Add verifier"
-                colorPalette="green"
-                onClick={() => {
-                  field.handleChange([...field.state.value, ""]);
-                }}
-                mb={2}
-              >
-                <Icon name="Plus" />
-              </IconButton>
+                <IconButton
+                  minW={6}
+                  h={6}
+                  aria-label="Add verifier"
+                  colorPalette="green"
+                  onClick={() => {
+                    field.handleChange([...field.state.value, ""]);
+                  }}
+                  mb={2}
+                >
+                  <Icon name="Plus" />
+                </IconButton>
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="deadline"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Deadline:
-              </FormControl.Label>
+          <Field
+            name="allowedStudents"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label>Allowed Students:</FormControl.Label>
 
-              <DatePicker
-                value={new Date(field.state.value)}
-                onChange={(date) =>
-                  field.handleChange(date?.getTime() || Date.now())
-                }
-                placeholder="Select deadline"
-              />
+                <For
+                  each={field.state.value}
+                  fallback={
+                    <Input
+                      color="white"
+                      colorPalette="teal"
+                      disabled
+                      placeholder="No allowed students"
+                    />
+                  }
+                >
+                  {(allowedStudent, index) => (
+                    <HStack key={allowedStudent}>
+                      <Input
+                        color="white"
+                        colorPalette="teal"
+                        value={allowedStudent}
+                        onChange={(event) => {
+                          const newAllowedStudents = [...field.state.value];
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                          newAllowedStudents[index] = event.target.value;
 
-        <Field
-          name="allowResubmission"
-          children={(field) => (
-            <FormControl.Root>
-              <Checkbox
-                color="white"
-                colorPalette="teal"
-                checked={field.state.value}
-                onChange={(event) =>
-                  field.handleChange((event.target as HTMLInputElement).checked)
-                }
-                onBlur={field.handleBlur}
-              >
-                Allow Resubmission
-              </Checkbox>
+                          field.handleChange(newAllowedStudents);
+                        }}
+                      />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                      <IconButton
+                        minW={6}
+                        h={6}
+                        aria-label="Remove allowed student"
+                        colorPalette="red"
+                        onClick={() => {
+                          const newAllowedStudents = field.state.value.filter(
+                            (_, _index) => _index !== index
+                          );
+
+                          field.handleChange(newAllowedStudents);
+                        }}
+                      >
+                        <Icon name="Trash" />
+                      </IconButton>
+                    </HStack>
+                  )}
+                </For>
+
+                <IconButton
+                  minW={6}
+                  h={6}
+                  aria-label="Add verifier"
+                  colorPalette="green"
+                  onClick={() => {
+                    field.handleChange([...field.state.value, ""]);
+                  }}
+                  mb={2}
+                >
+                  <Icon name="Plus" />
+                </IconButton>
+
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
+        </HStack>
 
         <Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}

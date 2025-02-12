@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
+import { useAtomValue } from "jotai";
 import { memo } from "react";
 
 import {
@@ -23,7 +24,6 @@ import {
 } from "@/components/ui";
 import { formatEthereumAddress } from "@/helpers";
 import { ProjectView } from "@/services";
-import { useAtomValue } from "jotai";
 import { connectedAccountAtom } from "@/store/atoms";
 
 interface ProjectItemProps {
@@ -36,7 +36,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
   return (
     <Card.Root
       color="white"
-      bg="black"
+      bg="gray.900"
       width="100%"
       shadow="md"
       transition="all 0.2s"
@@ -54,7 +54,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
                 </AccordionItemTrigger>
 
                 <AccordionItemContent>
-                  <Text color="gray.700">{project.description}</Text>
+                  <Text color="gray.500">{project.description}</Text>
                 </AccordionItemContent>
               </AccordionItem>
             </AccordionRoot>
@@ -108,7 +108,9 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
                   });
                 }}
               >
-                {connectedAccount === project.mentor ? "Me" : formatEthereumAddress(project.mentor)}
+                {connectedAccount === project.mentor
+                  ? "Me"
+                  : formatEthereumAddress(project.mentor)}
               </Button>
             </HStack>
           </VStack>
