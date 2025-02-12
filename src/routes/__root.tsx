@@ -12,6 +12,10 @@ const routes = [
     label: "Home",
   },
   {
+    path: "/verify-submission",
+    label: "Verify Submission",
+  },
+  {
     path: "/about",
     label: "About Us",
   },
