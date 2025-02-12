@@ -9,7 +9,9 @@ import {
   TaskRejectedEvent,
   TaskRejectedEventFilter,
   TaskSubmittedEvent,
-  TaskSubmittedEventFilter
+  TaskSubmittedEventFilter,
+  TaskVerifiedEvent,
+  TaskVerifiedEventFilter
 } from "@/services";
 
 export class SmartContractRepository {
@@ -142,6 +144,24 @@ export class SmartContractRepository {
   
     // Convert the map to an array
     return Object.values(lastSubmittedTasks);
+  }
+
+  async getTaskVerifiedEvents(
+    filter: TaskVerifiedEventFilter = {}
+  ): Promise<TaskVerifiedEvent[]> {
+    const contractAny = this.contract as any;
+    const events: EventLog[] = await contractAny.getPastEvents("TaskRejected", {
+      filter: filter,
+      fromBlock: 0,
+    });
+    const event = events.map((event) => ({
+      projectId: event.returnValues["projectId"] as number,
+      student: event.returnValues["student"] as string,
+      grade: event.returnValues["grade"] as number,
+      taskHash: event.returnValues["taskHash"] as string
+    }));
+
+    return event;
   }
 
   async getTaskRejectedEvents(

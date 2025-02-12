@@ -1,13 +1,9 @@
-import { HStack, Show, Spinner, Stack } from "@chakra-ui/react";
+import { Show, Spinner, Stack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 
 import {
-  ProjectsList,
-  RejectedTasksList,
-  SubmitTaskForm,
-  SubmitedTasksList,
-  VerifiedTasksList,
+  ProjectsList
 } from "@/components/features";
 import { projectsAtom } from "@/store/atoms";
 

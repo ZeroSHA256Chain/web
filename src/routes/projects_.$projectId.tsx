@@ -1,7 +1,7 @@
 import { SubmitedTasksList, VerifiedTasksList, RejectedTasksList, SubmitTaskForm, ProjectItem } from "@/components/features";
 import { ProjectView } from "@/services";
 import { connectedAccountAtom, smartContractServiceAtom } from "@/store/atoms";
-import { Box, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { useEffect, useState } from "react";
@@ -49,11 +49,11 @@ const ProjectId: React.FC = () => {
 
       {canVerify ?
         <>
-          <SubmitedTasksList />
+          <SubmitedTasksList project={project} projectId={projectIdNum}/>
 
-          <VerifiedTasksList />
+          <VerifiedTasksList project={project} projectId={projectIdNum}/>
 
-          <RejectedTasksList />
+          <RejectedTasksList project={project} projectId={projectIdNum}/>
         </>
         : null}
 

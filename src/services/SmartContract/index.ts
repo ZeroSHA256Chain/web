@@ -15,6 +15,8 @@ import {
   TaskSubmittedEvent,
   TaskSubmittedEventFilter,
   VerifyTaskDto,
+  TaskVerifiedEvent,
+  TaskVerifiedEventFilter,
 } from "./types";
 
 export const getSmartContractService = (
@@ -155,15 +157,15 @@ export class SmartContractService {
     }
   }
 
-  // async getTaskVerifiedEvents(
-  //   filter: TaskVerifiedEventFilter = {}
-  // ): Promise<TaskVerifiedEvent[]> {
-  //   try {
-  //     return await this.repository.getTaskVerifiedEvents(filter);
-  //   } catch (error) {
-  //     throw new Error(`Failed to fetch Task Verified Events: ${error}`);
-  //   }
-  // }
+  async getTaskVerifiedEvents(
+    filter: TaskVerifiedEventFilter = {}
+  ): Promise<TaskVerifiedEvent[]> {
+    try {
+      return await this.repository.getTaskVerifiedEvents(filter);
+    } catch (error) {
+      throw new Error(`Failed to fetch Task Verified Events: ${error}`);
+    }
+  }
 
   async getTaskRejectedEvents(
     filter: TaskRejectedEventFilter = {}
