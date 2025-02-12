@@ -311,7 +311,12 @@ export const AddProjectForm: React.FC<AddProjectFormProps> = ({
         <Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button colorPalette="teal" type="submit" disabled={!canSubmit}>
+            <Button
+              fontWeight="bold"
+              colorPalette="teal"
+              type="submit"
+              disabled={!canSubmit}
+            >
               {isSubmitting ? "Adding Project..." : "Add Project"}
             </Button>
           )}

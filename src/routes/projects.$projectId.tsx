@@ -10,7 +10,7 @@ import {
   SubmitedTasksList,
   VerifiedTasksList,
 } from "@/components/features";
-import { toaster } from "@/components/ui";
+import { Dialog, toaster } from "@/components/ui";
 import { ProjectView } from "@/services";
 import { connectedAccountAtom, smartContractServiceAtom } from "@/store/atoms";
 
@@ -27,6 +27,8 @@ const ProjectId: React.FC = () => {
   const [canVerify, setCanVerify] = useState<boolean>();
   const [verifiedIds, setVerifiedIds] = useState<number[]>([]);
   const [rejectedIds, setRejectedIds] = useState<number[]>([]);
+
+  const [isSubmitTaskDialogOpen, setIsSubmitTaskDialogOpen] = useState(false);
 
   const fetchProject = useCallback(async () => {
     if (!service || !connectedAccount || isNaN(projectIdAsNumber)) return;
@@ -56,7 +58,11 @@ const ProjectId: React.FC = () => {
     fetchProject();
   }, []);
 
-  if (isNaN(projectIdAsNumber)) {
+  if (!project) {
+    return <Spinner borderWidth="4px" />;
+  }
+
+  if (!isNaN && isNaN(projectIdAsNumber)) {
     return (
       <Alert.Root status="error">
         <Alert.Indicator />
@@ -70,15 +76,11 @@ const ProjectId: React.FC = () => {
     );
   }
 
-  if (!project) {
-    return <Spinner borderWidth="4px" />;
-  }
-
   return (
-    <VStack>
+    <VStack w="80vw">
       <ProjectItem project={project} linkDisabled />
 
-      <HStack w="100%" gap={4}>
+      <HStack w="100%" gap={4} align="start" justify="center">
         <Show when={canVerify}>
           <SubmitedTasksList
             processedTasks={verifiedIds.concat(rejectedIds)}
@@ -97,13 +99,24 @@ const ProjectId: React.FC = () => {
         </Show>
 
         <Show when={canSubmit}>
-          <SubmitTaskForm projectId={projectIdAsNumber} />
+          <Dialog
+            title="Submit Task"
+            triggerText="Submit Task"
+            triggerColorPalette="teal"
+            onOpenChange={(event) => setIsSubmitTaskDialogOpen(event.open)}
+            isOpen={isSubmitTaskDialogOpen}
+          >
+            <SubmitTaskForm
+              onSuccess={() => setIsSubmitTaskDialogOpen(false)}
+              projectId={projectIdAsNumber}
+            />
+          </Dialog>
         </Show>
       </HStack>
     </VStack>
   );
 };
 
-export const Route = createFileRoute("/projects_/$projectId")({
+export const Route = createFileRoute("/projects/$projectId")({
   component: ProjectId,
 });

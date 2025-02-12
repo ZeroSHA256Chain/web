@@ -29,8 +29,15 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <Box as="header" width="100%" {...props}>
       <Flex align="center" justify="space-between">
-        <Heading as="h1" size="lg" color="pink.600" fontWeight="bold">
-          {appName}
+        <Heading
+          as="h1"
+          size="2xl"
+          color="white"
+          fontWeight="extrabold"
+          letterSpacing="wide"
+          textShadow="2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000"
+        >
+          <Link to="/">{appName}</Link>
         </Heading>
 
         <Spacer />

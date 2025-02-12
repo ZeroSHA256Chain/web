@@ -98,7 +98,7 @@ export const ConnectMetamask = () => {
         <Show when={Boolean(connectedAccount)}>
           <Button
             variant="subtle"
-            colorPalette="pink"
+            colorPalette="black"
             onClick={async () => {
               if (!connectedAccount) return;
 
@@ -117,6 +117,7 @@ export const ConnectMetamask = () => {
       </HStack>
       <Show when={!connectedAccount && attemptedToConnect && !warning}>
         <Button
+          fontWeight="bold"
           variant="solid"
           colorPalette="red"
           onClick={() => requestAccounts()}

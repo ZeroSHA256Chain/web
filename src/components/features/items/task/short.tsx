@@ -1,12 +1,10 @@
-import { Text, VStack } from "@chakra-ui/react";
+import { Button, HStack, Show, Text, VStack } from "@chakra-ui/react";
 
-import {
-  TaskRejectedEvent,
-  TaskSubmittedEvent,
-  TaskVerifiedEvent,
-} from "@/services";
+import { toaster } from "@/components/ui";
+import { formatLongString } from "@/helpers";
+import { TaskRejectedEvent, TaskVerifiedEvent } from "@/services";
 
-type TasksEvent = TaskRejectedEvent | TaskVerifiedEvent | TaskSubmittedEvent;
+type TasksEvent = TaskRejectedEvent | TaskVerifiedEvent;
 
 interface TaskShortItemProps<T extends TasksEvent> {
   task: T;
@@ -14,6 +12,8 @@ interface TaskShortItemProps<T extends TasksEvent> {
 export const TaskShortItem = <T extends TasksEvent>({
   task,
 }: TaskShortItemProps<T>) => {
+  const isVerified = "grade" in task;
+
   return (
     <VStack
       spaceY={2}
@@ -21,22 +21,50 @@ export const TaskShortItem = <T extends TasksEvent>({
       p={4}
       borderWidth="1px"
       borderRadius="md"
-      bg="white"
+      bg="gray.900"
+      color="white"
       shadow="sm"
     >
-      <Text fontSize="sm" color="gray.600">
-        Project ID:
-        <Text as="span" ml={2} fontWeight="semibold" color="gray.900">
-          {task.projectId}
+      <HStack>
+        <Text as="span" fontWeight="semibold">
+          Project ID:
         </Text>
-      </Text>
 
-      <Text fontSize="sm" color="gray.600">
-        Student:
-        <Text as="span" ml={2} fontWeight="semibold" color="gray.900">
-          {task.student}
+        <Text>{task.projectId}</Text>
+      </HStack>
+
+      <HStack>
+        <Text as="span" fontWeight="semibold">
+          Student:
         </Text>
-      </Text>
+
+        <Button
+          h={7}
+          variant="subtle"
+          colorPalette="teal"
+          onClick={async () => {
+            await navigator.clipboard.writeText(task.student);
+
+            toaster.create({
+              title: "Copied to clipboard",
+              description: "Student address copied",
+              type: "success",
+            });
+          }}
+        >
+          {formatLongString(task.student)}
+        </Button>
+      </HStack>
+
+      <Show when={isVerified}>
+        <HStack>
+          <Text as="span" fontWeight="semibold">
+            Grade:
+          </Text>
+
+          <Text>{isVerified && (task.grade as number)}</Text>
+        </HStack>
+      </Show>
     </VStack>
   );
 };

@@ -16,10 +16,12 @@ import { submitTaskSchema } from "./validaton";
 
 interface SubmitTaskFormProps {
   projectId: number;
+  onSuccess: () => void;
 }
 
 export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({
   projectId,
+  onSuccess,
 }) => {
   const service = useAtomValue(smartContractServiceAtom);
 
@@ -44,6 +46,8 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({
           description: "Task submitted successfully",
           type: "success",
         });
+
+        onSuccess();
       } catch (error) {
         toaster.create({
           description: "Error submitting task",
@@ -92,7 +96,12 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({
         <Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button colorPalette="teal" type="submit" disabled={!canSubmit}>
+            <Button
+              fontWeight="bold"
+              colorPalette="teal"
+              type="submit"
+              disabled={!canSubmit}
+            >
               {isSubmitting ? "Submitting Task..." : "Submit Task"}
             </Button>
           )}

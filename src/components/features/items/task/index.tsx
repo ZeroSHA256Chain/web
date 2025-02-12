@@ -12,8 +12,8 @@ export const TaskItem = <T extends TaskSubmittedEvent>({
   task,
 }: TaskItemProps<T>) => {
   return (
-    <HStack
-      spaceX={6}
+    <VStack
+      spaceY={2}
       align="start"
       p={4}
       borderWidth="1px"
@@ -21,47 +21,62 @@ export const TaskItem = <T extends TaskSubmittedEvent>({
       boxShadow="sm"
       _hover={{ boxShadow: "md" }}
       transition="all 0.2s"
+      color="white"
+      bg="gray.900"
     >
-      <VStack align="start" spaceX={2}>
-        <HStack>
-          <Text as="span" fontWeight="semibold" color="gray.600">
-            Project ID:
-          </Text>
+      <HStack>
+        <Text as="span" fontWeight="semibold">
+          Project ID:
+        </Text>
 
-          <Text>{task.projectId}</Text>
-        </HStack>
+        <Text>{task.projectId}</Text>
+      </HStack>
 
-        <HStack>
-          <Text as="span" fontWeight="semibold" color="gray.600">
-            Student:
-          </Text>
+      <HStack>
+        <Text as="span" fontWeight="semibold">
+          Student:
+        </Text>
 
-          <Text>{task.student}</Text>
-        </HStack>
+        <Button
+          h={7}
+          variant="subtle"
+          colorPalette="teal"
+          onClick={async () => {
+            await navigator.clipboard.writeText(task.student);
 
-        <HStack>
-          <Text as="span" fontWeight="semibold" color="gray.600">
-            Task Hash:
-          </Text>
+            toaster.create({
+              title: "Copied to clipboard",
+              description: "Student address copied",
+              type: "success",
+            });
+          }}
+        >
+          {formatLongString(task.student)}
+        </Button>
+      </HStack>
 
-          <Button
-            h={7}
-            variant="subtle"
-            colorPalette="white"
-            onClick={async () => {
-              await navigator.clipboard.writeText(task.taskHash);
+      <HStack>
+        <Text as="span" fontWeight="semibold">
+          Task Hash:
+        </Text>
 
-              toaster.create({
-                title: "Copied to clipboard",
-                description: "Task hash copied",
-                type: "success",
-              });
-            }}
-          >
-            {formatLongString(task.taskHash)}
-          </Button>
-        </HStack>
-      </VStack>
-    </HStack>
+        <Button
+          h={7}
+          variant="subtle"
+          colorPalette="blue"
+          onClick={async () => {
+            await navigator.clipboard.writeText(task.taskHash);
+
+            toaster.create({
+              title: "Copied to clipboard",
+              description: "Task hash copied",
+              type: "success",
+            });
+          }}
+        >
+          {formatLongString(task.taskHash)}
+        </Button>
+      </HStack>
+    </VStack>
   );
 };

@@ -97,6 +97,7 @@ export const Dialog = ({
     >
       <DialogTrigger asChild>
         <Button
+          fontWeight="bold"
           width="fit-content"
           colorPalette={triggerColorPalette}
           variant="solid"

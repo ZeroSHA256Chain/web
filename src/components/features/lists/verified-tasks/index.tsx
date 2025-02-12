@@ -30,6 +30,8 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
         projectId,
       });
 
+      console.log({ taskVerifiedEvents });
+
       setTaskVerifiedEvents(taskVerifiedEvents);
 
       onVerifiedIdsChange(taskVerifiedEvents.map((event) => event.projectId));
@@ -51,18 +53,13 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
         Verified Tasks
       </Heading>
 
-      <List.Root spaceY={3}>
+      <List.Root spaceY={3} listStyle="none">
         <For
           each={taskVerifiedEvents}
           fallback={<Text>No submissions found</Text>}
         >
           {(event) => (
-            <List.Item
-              key={event.projectId}
-              p={3}
-              borderWidth="1px"
-              borderRadius="md"
-            >
+            <List.Item key={event.projectId}>
               <TaskShortItem task={event} />
             </List.Item>
           )}
@@ -70,6 +67,7 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
       </List.Root>
 
       <Button
+        fontWeight="bold"
         disabled={typeof projectId !== "number"}
         colorPalette="blue"
         onClick={() => fetchAllVerifiedTasks()}

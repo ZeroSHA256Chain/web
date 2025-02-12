@@ -30,6 +30,8 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({
         projectId,
       });
 
+      console.log({ taskRejectedEvents });
+
       setTaskRejectedEvents(taskRejectedEvents);
 
       onRejectedIdsChange(taskRejectedEvents.map((event) => event.projectId));
@@ -51,7 +53,7 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({
         Rejected Tasks
       </Heading>
 
-      <List.Root spaceY={3}>
+      <List.Root spaceY={3} listStyle="none">
         <For
           each={taskRejectedEvents}
           fallback={<Text>No submissions found</Text>}
@@ -64,7 +66,11 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({
         </For>
       </List.Root>
 
-      <Button colorPalette="blue" onClick={() => fetchAllRejectedTasks()}>
+      <Button
+        colorPalette="blue"
+        onClick={() => fetchAllRejectedTasks()}
+        fontWeight="bold"
+      >
         Refetch
       </Button>
     </Stack>

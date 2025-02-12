@@ -6,6 +6,7 @@ import {
   List,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useAtomValue, useSetAtom } from "jotai";
 import React, { memo, useCallback, useEffect, useState } from "react";
@@ -92,11 +93,20 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
   }, []);
 
   return (
-    <Stack width="100vw" overflow="auto" spaceY={2} py={4} px={8} bg="gray.700">
+    <Stack
+      h="100%"
+      width="100vw"
+      overflow="auto"
+      spaceY={2}
+      py={4}
+      px={8}
+      bg="gray.700"
+      color="white"
+    >
       <HStack
         justify="space-between"
         align="center"
-        bg="gray.300"
+        bg="gray.200"
         py={2}
         px={4}
         borderRadius="md"
@@ -123,7 +133,6 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
             colorPalette="blue"
             variant="subtle"
             size="md"
-            color="white"
             onClick={fetchProjects}
           >
             <Icon name="RefreshCw" />
@@ -131,77 +140,95 @@ export const ProjectsList: React.FC<ProjectsListProps> = memo(() => {
         </HStack>
       </HStack>
 
-      <Heading color="black" as="h4">
-        Projects you can submit
-      </Heading>
-
-      <List.Root
-        w="100%"
-        position="relative"
-        gap={4}
-        listStyle="none"
-        display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
+      <VStack
+        align="start"
+        spaceY={4}
+        border="1px solid white"
+        p={4}
+        borderRadius="md"
       >
-        <For
-          each={categorizedProjects.submit}
-          fallback={<Text color="gray.500">No projects found</Text>}
+        <Heading as="h4">Projects you can submit</Heading>
+
+        <List.Root
+          w="100%"
+          position="relative"
+          gap={4}
+          listStyle="none"
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
         >
-          {(project) => (
-            <List.Item key={project.name}>
-              <ProjectItem project={project} />
-            </List.Item>
-          )}
-        </For>
-      </List.Root>
+          <For
+            each={categorizedProjects.submit}
+            fallback={<Text>No projects found</Text>}
+          >
+            {(project) => (
+              <List.Item key={project.name}>
+                <ProjectItem project={project} />
+              </List.Item>
+            )}
+          </For>
+        </List.Root>
+      </VStack>
 
-      <Heading color="black" as="h4">
-        Projects you can verify
-      </Heading>
-
-      <List.Root
-        w="100%"
-        position="relative"
-        gap={4}
-        listStyle="none"
-        display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
+      <VStack
+        align="start"
+        spaceY={4}
+        border="1px solid white"
+        p={4}
+        borderRadius="md"
       >
-        <For
-          each={categorizedProjects.verify}
-          fallback={<Text color="gray.500">No projects found</Text>}
+        <Heading as="h4">Projects you can verify</Heading>
+
+        <List.Root
+          w="100%"
+          position="relative"
+          gap={4}
+          listStyle="none"
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
         >
-          {(project) => (
-            <List.Item key={project.name}>
-              <ProjectItem project={project} />
-            </List.Item>
-          )}
-        </For>
-      </List.Root>
+          <For
+            each={categorizedProjects.verify}
+            fallback={<Text>No projects found</Text>}
+          >
+            {(project) => (
+              <List.Item key={project.name}>
+                <ProjectItem project={project} />
+              </List.Item>
+            )}
+          </For>
+        </List.Root>
+      </VStack>
 
-      <Heading color="black" as="h4">
-        Other projects
-      </Heading>
-
-      <List.Root
-        w="100%"
-        position="relative"
-        gap={4}
-        listStyle="none"
-        display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
+      <VStack
+        align="start"
+        spaceY={4}
+        border="1px solid white"
+        p={4}
+        borderRadius="md"
       >
-        <For
-          each={categorizedProjects.other}
-          fallback={<Text color="gray.500">No projects found</Text>}
+        <Heading as="h4">Other projects</Heading>
+
+        <List.Root
+          w="100%"
+          position="relative"
+          gap={4}
+          listStyle="none"
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
         >
-          {(project) => (
-            <List.Item key={project.name}>
-              <ProjectItem project={project} />
-            </List.Item>
-          )}
-        </For>
-      </List.Root>
+          <For
+            each={categorizedProjects.other}
+            fallback={<Text>No projects found</Text>}
+          >
+            {(project) => (
+              <List.Item key={project.name}>
+                <ProjectItem project={project} />
+              </List.Item>
+            )}
+          </For>
+        </List.Root>
+      </VStack>
     </Stack>
   );
 });
