@@ -30,12 +30,10 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
         projectId,
       });
 
-      console.log({ taskVerifiedEvents });
-
       setTaskVerifiedEvents(taskVerifiedEvents);
 
       onVerifiedIdsChange(taskVerifiedEvents.map((event) => event.projectId));
-    } catch (error) {
+    } catch {
       toaster.create({
         description: "Error fetching verified tasks",
         type: "error",
@@ -45,7 +43,7 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
 
   useEffect(() => {
     fetchAllVerifiedTasks();
-  }, []);
+  }, [fetchAllVerifiedTasks]);
 
   return (
     <Stack spaceY={4} p={4} bg="gray.700">

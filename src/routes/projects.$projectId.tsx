@@ -47,7 +47,7 @@ const ProjectId: React.FC = () => {
       setProject(project);
       setCanSubmit(canSubmit);
       setCanVerify(canVerify);
-    } catch (error) {
+    } catch {
       toaster.create({
         description: "Error fetching project",
       });

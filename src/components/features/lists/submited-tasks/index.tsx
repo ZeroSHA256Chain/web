@@ -31,10 +31,6 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = ({
   const [taskSubmittedEvents, setTaskSubmittedEvents] =
     useState<TaskSubmittedEvent[]>();
 
-  useEffect(() => {
-    fetchSubmitEventsForProject();
-  }, []);
-
   const fetchSubmitEventsForProject = useCallback(async () => {
     if (!service) return;
 
@@ -55,6 +51,10 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = ({
       });
     }
   }, [service, processedTasks, projectId]);
+
+  useEffect(() => {
+    fetchSubmitEventsForProject();
+  }, [fetchSubmitEventsForProject]);
 
   return (
     <Stack spaceY={4} p={4} bg="gray.700">
