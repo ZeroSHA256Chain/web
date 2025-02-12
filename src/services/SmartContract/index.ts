@@ -4,6 +4,7 @@ import { SMART_CONTRACT_ABI, SmartContractRepository } from "@/blockchain";
 
 import {
   CreateProjectDto,
+  UserCheckDto,
   ProjectCreatedEvent,
   ProjectCreatedEventFilter,
   ProjectView,
@@ -13,9 +14,9 @@ import {
   TaskRejectedEventFilter,
   TaskSubmittedEvent,
   TaskSubmittedEventFilter,
+  VerifyTaskDto,
   TaskVerifiedEvent,
   TaskVerifiedEventFilter,
-  VerifyTaskDto,
 } from "./types";
 
 export const getSmartContractService = (
@@ -107,6 +108,22 @@ export class SmartContractService {
   async verifyTask(dto: VerifyTaskDto): Promise<void> {
     try {
       await this.repository.verifyTask(dto.projectId, dto.student, dto.grade);
+    } catch (error) {
+      throw new Error(`SmartContract address is wrong: ${error}`);
+    }
+  }
+
+  async isAllowedStudent(dto: UserCheckDto): Promise<boolean> {
+    try {
+      return await this.repository.isAllowedStudent(dto.projectId, dto.student);
+    } catch (error) {
+      throw new Error(`SmartContract address is wrong: ${error}`);
+    }
+  }
+
+  async isVerifier(dto: UserCheckDto): Promise<boolean> {
+    try {
+      return await this.repository.isVerifier(dto.projectId, dto.student);
     } catch (error) {
       throw new Error(`SmartContract address is wrong: ${error}`);
     }

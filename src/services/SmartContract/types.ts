@@ -6,6 +6,7 @@ export interface BaseProps {
 }
 
 export interface Submission {
+  id: number;
   taskHash: string;
   isVerified: boolean;
   isRejected: boolean;
@@ -60,6 +61,7 @@ export interface ProjectCreatedEventFilter {
 }
 
 export interface TaskSubmittedEvent {
+  submissionId: number;
   projectId: number;
   student: string;
   taskHash: string;
@@ -93,4 +95,9 @@ export interface TaskRejectedEvent {
 export interface TaskRejectedEventFilter {
   projectId?: number;
   student?: string;
+}
+
+export interface UserCheckDto {
+  projectId: number;
+  student: string
 }

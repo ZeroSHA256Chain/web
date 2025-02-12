@@ -8,30 +8,34 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { ProjectSelect } from "@/components/features";
 import { toaster } from "@/components/ui";
-import { TaskSubmittedEvent } from "@/services";
-import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
+import { ProjectView, TaskSubmittedEvent } from "@/services";
+import { smartContractServiceAtom } from "@/store/atoms";
 
-interface SubmitedTasksListProps {}
+interface SubmitedTasksListProps {
+  project: ProjectView,
+  projectId: number
+}
 
-export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
+export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = ({project, projectId}) => {
   const service = useAtomValue(smartContractServiceAtom);
-  const projects = useAtomValue(projectsAtom);
 
   const [taskSubmittedEvents, setTaskSubmittedEvents] =
     useState<TaskSubmittedEvent[]>();
-  const [projectId, setProjectId] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchSubmitEventsForProject()
+  }, [])
 
   const fetchSubmitEventsForProject = useCallback(
-    async (projectId: number | null) => {
-      if (!service || typeof projectId !== "number") return;
+    async () => {
+      if (!service) return;
 
       try {
         setTaskSubmittedEvents(
-          await service.getTaskSubmittedEvents({ projectId })
+          await service.getTaskSubmittedEvents({ projectId: projectId })
         );
       } catch (error) {
         toaster.create({
@@ -43,28 +47,9 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
     [service]
   );
 
-  const fetchAllSubmitEvents = useCallback(async () => {
-    if (!service) return;
-
-    try {
-      setTaskSubmittedEvents(await service.getTaskSubmittedEvents());
-    } catch (error) {
-      toaster.create({
-        description: "Error fetching submitted tasks",
-        type: "error",
-      });
-    }
-  }, [service]);
-
   return (
     <Stack spaceY={4} p={4} bg="gray.700">
       <Heading>Submitted Tasks</Heading>
-
-      <ProjectSelect
-        projects={projects}
-        value={[projectId?.toString() ?? ""]}
-        onChange={(value) => setProjectId(Number(value[0]))}
-      />
 
       <List.Root spaceY={3}>
         <For
@@ -100,17 +85,9 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
       <ButtonGroup display="flex" justifyContent="center" spaceX={4}>
         <Button
           colorPalette="blue"
-          onClick={async () => await fetchAllSubmitEvents()}
+          onClick={async () => await fetchSubmitEventsForProject()}
         >
-          All Task Submissions
-        </Button>
-
-        <Button
-          disabled={typeof projectId !== "number"}
-          colorPalette="blue"
-          onClick={async () => await fetchSubmitEventsForProject(projectId)}
-        >
-          Task Submissions For Project {projectId}
+          Refetch Task Submissions
         </Button>
       </ButtonGroup>
     </Stack>
