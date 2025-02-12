@@ -40,7 +40,7 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
 
   const fetchRejectedTask = useCallback(
     async (projectId: number | null) => {
-      if (!service || !projectId) return;
+      if (!service || typeof projectId !== "number") return;
 
       try {
         setTaskRejectedEvents(
@@ -92,7 +92,7 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
         </Button>
 
         <Button
-          disabled={!projectId}
+          disabled={typeof projectId !== "number"}
           colorPalette="blue"
           onClick={() => fetchRejectedTask(projectId)}
         >

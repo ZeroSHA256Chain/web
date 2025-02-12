@@ -22,7 +22,13 @@ import { smartContractServiceAtom } from "@/store/atoms";
 
 import { addProjectSchema } from "./validation";
 
-export const AddProjectForm: React.FC = () => {
+interface AddProjectFormProps {
+  onSuccess: () => void;
+}
+
+export const AddProjectForm: React.FC<AddProjectFormProps> = ({
+  onSuccess,
+}) => {
   const service = useAtomValue(smartContractServiceAtom);
 
   const { Field, Subscribe, handleSubmit, reset } = useForm<CreateProjectDto>({
@@ -46,6 +52,8 @@ export const AddProjectForm: React.FC = () => {
           description: "Project added successfully",
           type: "success",
         });
+
+        onSuccess();
       } catch (error) {
         toaster.create({
           description: "Error adding project",

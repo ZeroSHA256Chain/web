@@ -40,7 +40,7 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = () => {
 
   const fetchVerifiedTask = useCallback(
     async (projectId: number | null) => {
-      if (!service || !projectId) return;
+      if (!service || typeof projectId !== "number") return;
 
       try {
         setTaskVerifiedEvents(
@@ -92,7 +92,7 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = () => {
         </Button>
 
         <Button
-          disabled={!projectId}
+          disabled={typeof projectId !== "number"}
           colorPalette="blue"
           onClick={() => fetchVerifiedTask(projectId)}
         >

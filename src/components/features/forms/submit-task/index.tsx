@@ -26,7 +26,7 @@ export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = () => {
         taskString: "",
       },
       onSubmit: async ({ value }) => {
-        if (!service || !value.projectId) return;
+        if (!service || typeof value.projectId !== "number") return;
 
         try {
           await service.submitTaskAndHash({

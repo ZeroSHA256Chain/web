@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 
 import {
-  AddProjectForm,
   ProjectsList,
   RejectedTasksList,
   SubmitTaskForm,
@@ -19,10 +18,9 @@ const Index: React.FC = () => {
     <>
       <ProjectsList />
 
-      <AddProjectForm />
-
+      {/* todo: complete */}
       <Show
-        when={projects.length > 0}
+        when={projects.length > 0 && false}
         fallback={
           <Stack align="center" justify="center" h={300}>
             <Spinner

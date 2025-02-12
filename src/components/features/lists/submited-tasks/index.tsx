@@ -27,7 +27,7 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
 
   const fetchSubmitEventsForProject = useCallback(
     async (projectId: number | null) => {
-      if (!service || !projectId) return;
+      if (!service || typeof projectId !== "number") return;
 
       try {
         setTaskSubmittedEvents(
@@ -106,7 +106,7 @@ export const SubmitedTasksList: React.FC<SubmitedTasksListProps> = () => {
         </Button>
 
         <Button
-          disabled={!projectId}
+          disabled={typeof projectId !== "number"}
           colorPalette="blue"
           onClick={async () => await fetchSubmitEventsForProject(projectId)}
         >
