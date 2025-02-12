@@ -9,9 +9,7 @@ import {
   TaskRejectedEvent,
   TaskRejectedEventFilter,
   TaskSubmittedEvent,
-  TaskSubmittedEventFilter,
-  TaskVerifiedEvent,
-  TaskVerifiedEventFilter,
+  TaskSubmittedEventFilter
 } from "@/services";
 
 export class SmartContractRepository {
@@ -84,11 +82,17 @@ export class SmartContractRepository {
   }
 
   async isAllowedStudent(projectId: number, student: string): Promise<boolean> {
-    return await this.contract.methods.isAllowedStudent(projectId, student).call();
+    const result: boolean = await this.contract.methods.isAllowedStudent(projectId, student).call();
+    console.log("Is Allowed student: ", result);
+    return result
   }
 
   async isVerifier(projectId: number, student: string): Promise<boolean> {
-    return await this.contract.methods.isVerifier(projectId, student).call();
+    const result: boolean = await this.contract.methods.isVerifier(projectId, student).call();
+
+    console.log("Is Verifier: ", result)
+
+    return result
   }
 
   async getProjectCreatedEvents(

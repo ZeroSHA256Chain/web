@@ -96,3 +96,8 @@ export interface TaskRejectedEventFilter {
   projectId?: number;
   student?: string;
 }
+
+export interface UserCheckDto {
+  projectId: number;
+  student: string
+}

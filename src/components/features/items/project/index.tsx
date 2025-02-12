@@ -23,12 +23,16 @@ import {
 } from "@/components/ui";
 import { formatEthereumAddress } from "@/helpers";
 import { ProjectView } from "@/services";
+import { useAtomValue } from "jotai";
+import { connectedAccountAtom } from "@/store/atoms";
 
 interface ProjectItemProps {
   project: ProjectView;
 }
 
 export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
+  const connectedAccount = useAtomValue(connectedAccountAtom);
+
   return (
     <Card.Root
       color="white"
@@ -104,7 +108,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = memo(({ project }) => {
                   });
                 }}
               >
-                {formatEthereumAddress(project.mentor)}
+                {connectedAccount === project.mentor ? "Me" : formatEthereumAddress(project.mentor)}
               </Button>
             </HStack>
           </VStack>

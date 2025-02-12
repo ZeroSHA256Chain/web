@@ -4,6 +4,7 @@ import { SMART_CONTRACT_ABI, SmartContractRepository } from "@/blockchain";
 
 import {
   CreateProjectDto,
+  UserCheckDto,
   ProjectCreatedEvent,
   ProjectCreatedEventFilter,
   ProjectView,
@@ -13,8 +14,6 @@ import {
   TaskRejectedEventFilter,
   TaskSubmittedEvent,
   TaskSubmittedEventFilter,
-  TaskVerifiedEvent,
-  TaskVerifiedEventFilter,
   VerifyTaskDto,
 } from "./types";
 
@@ -112,7 +111,21 @@ export class SmartContractService {
     }
   }
 
-  
+  async isAllowedStudent(dto: UserCheckDto): Promise<boolean> {
+    try {
+      return await this.repository.isAllowedStudent(dto.projectId, dto.student);
+    } catch (error) {
+      throw new Error(`SmartContract address is wrong: ${error}`);
+    }
+  }
+
+  async isVerifier(dto: UserCheckDto): Promise<boolean> {
+    try {
+      return await this.repository.isVerifier(dto.projectId, dto.student);
+    } catch (error) {
+      throw new Error(`SmartContract address is wrong: ${error}`);
+    }
+  }
 
   async rejectTask(dto: RejectTaskDto): Promise<void> {
     try {
@@ -142,15 +155,15 @@ export class SmartContractService {
     }
   }
 
-  async getTaskVerifiedEvents(
-    filter: TaskVerifiedEventFilter = {}
-  ): Promise<TaskVerifiedEvent[]> {
-    try {
-      return await this.repository.getTaskVerifiedEvents(filter);
-    } catch (error) {
-      throw new Error(`Failed to fetch Task Verified Events: ${error}`);
-    }
-  }
+  // async getTaskVerifiedEvents(
+  //   filter: TaskVerifiedEventFilter = {}
+  // ): Promise<TaskVerifiedEvent[]> {
+  //   try {
+  //     return await this.repository.getTaskVerifiedEvents(filter);
+  //   } catch (error) {
+  //     throw new Error(`Failed to fetch Task Verified Events: ${error}`);
+  //   }
+  // }
 
   async getTaskRejectedEvents(
     filter: TaskRejectedEventFilter = {}
