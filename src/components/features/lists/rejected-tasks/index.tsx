@@ -8,28 +8,32 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { ProjectSelect } from "@/components/features";
 import { toaster } from "@/components/ui";
-import { TaskRejectedEvent } from "@/services";
-import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
+import { ProjectView, TaskRejectedEvent } from "@/services";
+import { smartContractServiceAtom } from "@/store/atoms";
 
-interface RejectedTasksListProps {}
+interface RejectedTasksListProps {
+  project: ProjectView,
+  projectId: number
+}
 
-export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
+export const RejectedTasksList: React.FC<RejectedTasksListProps> = ({ project, projectId }) => {
   const service = useAtomValue(smartContractServiceAtom);
-  const projects = useAtomValue(projectsAtom);
 
   const [taskRejectedEvents, setTaskRejectedEvents] =
     useState<TaskRejectedEvent[]>();
-  const [projectId, setProjectId] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchAllRejectedTasks();
+  }, [])
 
   const fetchAllRejectedTasks = useCallback(async () => {
     if (!service) return;
 
     try {
-      setTaskRejectedEvents(await service.getTaskRejectedEvents());
+      setTaskRejectedEvents(await service.getTaskRejectedEvents({ projectId: projectId }));
     } catch (error) {
       toaster.create({
         description: "Error fetching rejected tasks",
@@ -38,33 +42,9 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
     }
   }, [service]);
 
-  const fetchRejectedTask = useCallback(
-    async (projectId: number | null) => {
-      if (!service || typeof projectId !== "number") return;
-
-      try {
-        setTaskRejectedEvents(
-          await service.getTaskRejectedEvents({ projectId: projectId })
-        );
-      } catch (error) {
-        toaster.create({
-          description: "Error fetching rejected tasks",
-          type: "error",
-        });
-      }
-    },
-    [service]
-  );
-
   return (
     <Stack spaceY={4} p={4} bg="red.100">
       <Heading>Rejected Tasks</Heading>
-
-      <ProjectSelect
-        projects={projects}
-        value={[projectId?.toString() ?? ""]}
-        onChange={(value) => setProjectId(Number(value[0]))}
-      />
 
       <List.Root spaceY={3}>
         <For
@@ -88,15 +68,7 @@ export const RejectedTasksList: React.FC<RejectedTasksListProps> = () => {
 
       <ButtonGroup display="flex" justifyContent="center" spaceX={4}>
         <Button colorPalette="blue" onClick={() => fetchAllRejectedTasks()}>
-          All Task Submissions
-        </Button>
-
-        <Button
-          disabled={typeof projectId !== "number"}
-          colorPalette="blue"
-          onClick={() => fetchRejectedTask(projectId)}
-        >
-          Task Submissions For Project {projectId}
+          Refetch rejected tasks
         </Button>
       </ButtonGroup>
     </Stack>
