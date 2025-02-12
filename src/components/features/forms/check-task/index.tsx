@@ -38,7 +38,12 @@ export const CheckTaskForm: React.FC<CheckTaskFormProps> = () => {
       const projectId = value.projectId;
       const student = value.student;
 
-      if (!service || !projectId || !student) return;
+      if (
+        !service ||
+        typeof projectId !== "number" ||
+        typeof student !== "string"
+      )
+        return;
 
       setSubmission(null);
 
