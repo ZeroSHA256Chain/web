@@ -1,2 +1,2 @@
-export const formatEthereumAddress = (address: string) =>
-  `${address.slice(0, 6)}...${address.slice(-4)}`;
+export const formatLongString = (value: string) =>
+  `${value.slice(0, 6)}...${value.slice(-4)}`;

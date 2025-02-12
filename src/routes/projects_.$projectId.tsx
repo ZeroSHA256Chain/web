@@ -1,7 +1,7 @@
-import { HStack } from "@chakra-ui/react";
+import { Alert, HStack, Show, Spinner, VStack } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   ProjectItem,
@@ -10,71 +10,97 @@ import {
   SubmitedTasksList,
   VerifiedTasksList,
 } from "@/components/features";
+import { toaster } from "@/components/ui";
 import { ProjectView } from "@/services";
 import { connectedAccountAtom, smartContractServiceAtom } from "@/store/atoms";
 
 const ProjectId: React.FC = () => {
-  const { projectId: projectIdParam } = Route.useParams();
-  const projectIdNum = Number(projectIdParam);
+  const { projectId: projectId } = Route.useParams();
 
-  const [project, setProject] = useState<ProjectView>();
   const service = useAtomValue(smartContractServiceAtom);
   const connectedAccount = useAtomValue(connectedAccountAtom);
+
+  const projectIdAsNumber = useMemo(() => Number(projectId), [projectId]);
+
+  const [project, setProject] = useState<ProjectView>();
   const [canSubmit, setCanSubmit] = useState<boolean>();
   const [canVerify, setCanVerify] = useState<boolean>();
+  const [verifiedIds, setVerifiedIds] = useState<number[]>([]);
+  const [rejectedIds, setRejectedIds] = useState<number[]>([]);
+
+  const fetchProject = useCallback(async () => {
+    if (!service || !connectedAccount || isNaN(projectIdAsNumber)) return;
+
+    try {
+      const project = await service.getProject(projectIdAsNumber);
+      const canSubmit = await service.isAllowedStudent({
+        projectId: projectIdAsNumber,
+        student: connectedAccount,
+      });
+      const canVerify = await service.isVerifier({
+        projectId: projectIdAsNumber,
+        student: connectedAccount,
+      });
+
+      setProject(project);
+      setCanSubmit(canSubmit);
+      setCanVerify(canVerify);
+    } catch (error) {
+      toaster.create({
+        description: "Error fetching project",
+      });
+    }
+  }, [service, connectedAccount, projectIdAsNumber]);
 
   useEffect(() => {
     fetchProject();
   }, []);
 
-  async function fetchProject() {
-    if (!service) return;
+  if (isNaN(projectIdAsNumber)) {
+    return (
+      <Alert.Root status="error">
+        <Alert.Indicator />
 
-    if (!connectedAccount) return;
+        <Alert.Title w="100%">Provide valid project id</Alert.Title>
 
-    const project = await service.getProject(projectIdNum);
-    const canSubmit = await service.isAllowedStudent({
-      projectId: projectIdNum,
-      student: connectedAccount,
-    });
-    const canVerify = await service.isVerifier({
-      projectId: projectIdNum,
-      student: connectedAccount,
-    });
-
-    setProject(project);
-    setCanSubmit(canSubmit);
-    setCanVerify(canVerify);
+        <Alert.Description>
+          Please provide a valid project id to continue.
+        </Alert.Description>
+      </Alert.Root>
+    );
   }
 
   if (!project) {
-    return <div>Provide project id</div>;
-  }
-
-  if (isNaN(projectIdNum)) {
-    return <div>Provide valid project id</div>;
+    return <Spinner borderWidth="4px" />;
   }
 
   return (
-    <div>
-      <ProjectItem project={project} />
+    <VStack>
+      <ProjectItem project={project} linkDisabled />
 
-      {canVerify ? (
-        <>
-          <SubmitedTasksList project={project} projectId={projectIdNum} />
+      <HStack w="100%" gap={4}>
+        <Show when={canVerify}>
+          <SubmitedTasksList
+            processedTasks={verifiedIds.concat(rejectedIds)}
+            projectId={projectIdAsNumber}
+          />
 
-          <VerifiedTasksList project={project} projectId={projectIdNum} />
+          <VerifiedTasksList
+            projectId={projectIdAsNumber}
+            onVerifiedIdsChange={(ids) => setVerifiedIds(ids)}
+          />
 
-          <RejectedTasksList project={project} projectId={projectIdNum} />
-        </>
-      ) : null}
+          <RejectedTasksList
+            projectId={projectIdAsNumber}
+            onRejectedIdsChange={(ids) => setRejectedIds(ids)}
+          />
+        </Show>
 
-      {canSubmit ? (
-        <HStack>
-          <SubmitTaskForm project={project} projectId={projectIdNum} />
-        </HStack>
-      ) : null}
-    </div>
+        <Show when={canSubmit}>
+          <SubmitTaskForm projectId={projectIdAsNumber} />
+        </Show>
+      </HStack>
+    </VStack>
   );
 };
 

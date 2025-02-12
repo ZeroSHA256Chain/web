@@ -1,50 +1,55 @@
-import {
-  Button,
-  ButtonGroup,
-  For,
-  Heading,
-  List,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, For, Heading, List, Stack, Text } from "@chakra-ui/react";
 import { useAtomValue } from "jotai";
 import React, { useCallback, useEffect, useState } from "react";
 
 import { toaster } from "@/components/ui";
-import { ProjectView, TaskVerifiedEvent } from "@/services";
+import { TaskVerifiedEvent } from "@/services";
 import { smartContractServiceAtom } from "@/store/atoms";
 
+import { TaskShortItem } from "../../items";
+
 interface VerifiedTasksListProps {
-  project: ProjectView,
-  projectId: number
+  projectId: number;
+  onVerifiedIdsChange: (verifiedsIds: number[]) => void;
 }
 
-export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({project, projectId}) => {
+export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({
+  projectId,
+  onVerifiedIdsChange,
+}) => {
   const service = useAtomValue(smartContractServiceAtom);
 
   const [taskVerifiedEvents, setTaskVerifiedEvents] =
     useState<TaskVerifiedEvent[]>();
 
-  useEffect(() => {
-    fetchAllVerifiedTasks()
-  }, [])
-
   const fetchAllVerifiedTasks = useCallback(async () => {
     if (!service) return;
 
     try {
-      setTaskVerifiedEvents(await service.getTaskVerifiedEvents({projectId: projectId}));
+      const taskVerifiedEvents = await service.getTaskVerifiedEvents({
+        projectId,
+      });
+
+      setTaskVerifiedEvents(taskVerifiedEvents);
+
+      onVerifiedIdsChange(taskVerifiedEvents.map((event) => event.projectId));
     } catch (error) {
       toaster.create({
         description: "Error fetching verified tasks",
         type: "error",
       });
     }
-  }, [service]);
+  }, [service, onVerifiedIdsChange, projectId]);
+
+  useEffect(() => {
+    fetchAllVerifiedTasks();
+  }, []);
 
   return (
-    <Stack spaceY={4} p={4} bg="green.100">
-      <Heading>Verified Tasks</Heading>
+    <Stack spaceY={4} p={4} bg="gray.700">
+      <Heading bg="green.700" p={2}>
+        Verified Tasks
+      </Heading>
 
       <List.Root spaceY={3}>
         <For
@@ -58,23 +63,19 @@ export const VerifiedTasksList: React.FC<VerifiedTasksListProps> = ({project, pr
               borderWidth="1px"
               borderRadius="md"
             >
-              <Text as="span" fontWeight="bold">
-                Project ID: {event.projectId}, Student: {event.student}
-              </Text>
+              <TaskShortItem task={event} />
             </List.Item>
           )}
         </For>
       </List.Root>
 
-      <ButtonGroup display="flex" justifyContent="center" spaceX={4}>
-        <Button
-          disabled={typeof projectId !== "number"}
-          colorPalette="blue"
-          onClick={() => fetchAllVerifiedTasks()}
-        >
-          Verified Tasks
-        </Button>
-      </ButtonGroup>
+      <Button
+        disabled={typeof projectId !== "number"}
+        colorPalette="blue"
+        onClick={() => fetchAllVerifiedTasks()}
+      >
+        Refetch
+      </Button>
     </Stack>
   );
 };

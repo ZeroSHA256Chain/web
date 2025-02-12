@@ -2,60 +2,59 @@ import {
   Button,
   Fieldset,
   Field as FormControl,
-  Input,
   Textarea,
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
 
-import { ProjectSelect } from "@/components/features";
 import { FormFieldError, toaster } from "@/components/ui";
-import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
+import "@/services";
+import { SubmitTaskDto } from "@/services";
+import { smartContractServiceAtom } from "@/store/atoms";
 
-import { SubmitTaskFormValues, submitTaskSchema } from "./validaton";
-import { ProjectView } from "@/services";
+import { submitTaskSchema } from "./validaton";
 
 interface SubmitTaskFormProps {
-  project: ProjectView,
-  projectId: number
+  projectId: number;
 }
 
-export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({ projectId }) => {
+export const SubmitTaskForm: React.FC<SubmitTaskFormProps> = ({
+  projectId,
+}) => {
   const service = useAtomValue(smartContractServiceAtom);
 
-  const { Field, Subscribe, handleSubmit, reset } =
-    useForm<SubmitTaskFormValues>({
-      defaultValues: {
-        projectId: null,
-        taskString: "",
-      },
-      onSubmit: async ({ value }) => {
-        if (!service) return;
+  const { Field, Subscribe, handleSubmit, reset } = useForm<SubmitTaskDto>({
+    defaultValues: {
+      projectId,
+      taskString: "",
+    },
+    onSubmit: async ({ value }) => {
+      if (!service) return;
 
-        try {
-          await service.submitTaskAndHash({
-            projectId: projectId,
-            taskString: value.taskString,
-          });
-          console.log("Task submitted successfully");
+      try {
+        await service.submitTaskAndHash({
+          projectId: projectId,
+          taskString: value.taskString,
+        });
+        console.log("Task submitted successfully");
 
-          reset();
+        reset();
 
-          toaster.create({
-            description: "Task submitted successfully",
-            type: "success",
-          });
-        } catch (error) {
-          toaster.create({
-            description: "Error submitting task",
-            type: "error",
-          });
-        }
-      },
-      validators: {
-        onChange: submitTaskSchema,
-      },
-    });
+        toaster.create({
+          description: "Task submitted successfully",
+          type: "success",
+        });
+      } catch (error) {
+        toaster.create({
+          description: "Error submitting task",
+          type: "error",
+        });
+      }
+    },
+    validators: {
+      onChange: submitTaskSchema,
+    },
+  });
 
   return (
     <form
