@@ -1,34 +1,27 @@
-import { Show, Spinner, Stack } from "@chakra-ui/react";
+import { Alert, Show } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 
-import {
-  ProjectsList
-} from "@/components/features";
-import { projectsAtom } from "@/store/atoms";
+import { ProjectsList } from "@/components/features";
+import { connectedAccountAtom } from "@/store/atoms";
 
 const Index: React.FC = () => {
-  const projects = useAtomValue(projectsAtom);
+  const connectedAccount = useAtomValue(connectedAccountAtom);
 
   return (
-    <>
+    <Show
+      when={Boolean(connectedAccount)}
+      fallback={
+        <Alert.Root status="info">
+          <Alert.Indicator />
+          <Alert.Title w="100%">
+            Connect your account to see projects
+          </Alert.Title>
+        </Alert.Root>
+      }
+    >
       <ProjectsList />
-
-      <Show
-        when={projects.length > 0}
-        fallback={
-          <Stack align="center" justify="center" h={300}>
-            <Spinner
-              size="xl"
-              borderWidth="4px"
-              colorPalette="teal"
-              color="teal.600"
-            />
-          </Stack>
-        }
-      >
-      </Show>
-    </>
+    </Show>
   );
 };
 

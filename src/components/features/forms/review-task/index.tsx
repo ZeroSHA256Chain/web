@@ -9,33 +9,48 @@ import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 
-import { ProjectSelect } from "@/components/features";
 import { FormFieldError, toaster } from "@/components/ui";
 import { RejectTaskDto, VerifyTaskDto } from "@/services";
-import { projectsAtom, smartContractServiceAtom } from "@/store/atoms";
+import { smartContractServiceAtom } from "@/store/atoms";
 
 import { Action } from "./types";
-import { SubmitTaskFormValues, reviewTaskSchema } from "./validation";
+import { ReviewTaskFormValues, reviewTaskSchema } from "./validation";
 
-interface TaskReviewFormProps {}
+interface TaskReviewFormProps {
+  projectId: number;
+  studentAddress: string;
+  onSuccess: () => void;
+}
 
-export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
+export const TaskReviewForm: React.FC<TaskReviewFormProps> = ({
+  projectId,
+  studentAddress,
+  onSuccess,
+}) => {
   const service = useAtomValue(smartContractServiceAtom);
-  const projects = useAtomValue(projectsAtom);
 
   const [action, setAction] = useState<Action | null>(null);
 
-  const { Field, Subscribe, handleSubmit } = useForm<SubmitTaskFormValues>({
+  const { Field, Subscribe, handleSubmit } = useForm<ReviewTaskFormValues>({
     defaultValues: {
-      projectId: null,
-      student: "",
-      grade: 50,
+      projectId,
+      student: studentAddress,
+      grade: null,
     },
     onSubmit: async ({ value }) => {
-      if (!service || !action || !value.projectId) return;
+      if (!service || !action) return;
 
       try {
         if (action === "verify") {
+          if (!value.grade) {
+            toaster.create({
+              description: "Grade is required to verify the task",
+              type: "error",
+            });
+
+            return;
+          }
+
           const verifyData: VerifyTaskDto = {
             projectId: value.projectId,
             student: value.student,
@@ -61,6 +76,8 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
             type: "success",
           });
         }
+
+        onSuccess();
       } catch (error) {
         toaster.create({
           description: "Error reviewing task",
@@ -84,47 +101,6 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
     >
       <Fieldset.Root spaceY={4} bg="gray.700" p={4}>
         <Field
-          name="projectId"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Project:
-              </FormControl.Label>
-
-              <ProjectSelect
-                projects={projects}
-                value={[field.state.value?.toString() ?? ""]}
-                onChange={(values) => field.handleChange(Number(values[0]))}
-              />
-
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
-
-        <Field
-          name="student"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Student Address:
-              </FormControl.Label>
-
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                onBlur={field.handleBlur}
-              />
-
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
-
-        <Field
           name="grade"
           children={(field) => (
             <FormControl.Root>
@@ -135,8 +111,10 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
                 color="white"
                 colorPalette="teal"
                 id={field.name}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(Number(e.target.value))}
+                value={field.state.value ?? 0}
+                onChange={(event) =>
+                  field.handleChange(Number(event.target.value))
+                }
                 onBlur={field.handleBlur}
               />
 
@@ -150,6 +128,7 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
           children={([canSubmit, isSubmitting]) => (
             <ButtonGroup justifyContent="center">
               <Button
+                fontWeight="bold"
                 colorPalette="green"
                 type="submit"
                 disabled={!canSubmit}
@@ -159,6 +138,7 @@ export const TaskReviewForm: React.FC<TaskReviewFormProps> = () => {
               </Button>
 
               <Button
+                fontWeight="bold"
                 colorPalette="red"
                 type="submit"
                 disabled={!canSubmit}

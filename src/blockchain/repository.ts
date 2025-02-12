@@ -11,7 +11,7 @@ import {
   TaskSubmittedEvent,
   TaskSubmittedEventFilter,
   TaskVerifiedEvent,
-  TaskVerifiedEventFilter
+  TaskVerifiedEventFilter,
 } from "@/services";
 
 export class SmartContractRepository {
@@ -84,14 +84,18 @@ export class SmartContractRepository {
   }
 
   async isAllowedStudent(projectId: number, student: string): Promise<boolean> {
-    const result: boolean = await this.contract.methods.isAllowedStudent(projectId, student).call();
-    return result
+    const result: boolean = await this.contract.methods
+      .isAllowedStudent(projectId, student)
+      .call();
+    return result;
   }
 
   async isVerifier(projectId: number, student: string): Promise<boolean> {
-    const result: boolean = await this.contract.methods.isVerifier(projectId, student).call();
+    const result: boolean = await this.contract.methods
+      .isVerifier(projectId, student)
+      .call();
 
-    return result
+    return result;
   }
 
   async getProjectCreatedEvents(
@@ -121,9 +125,9 @@ export class SmartContractRepository {
       { filter: filter, fromBlock: 0 }
     );
     console.log(events);
-  
+
     const lastSubmittedTasks: { [key: string]: TaskSubmittedEvent } = {};
-  
+
     events.forEach((event) => {
       const student = event.returnValues["student"] as string;
       const projectId = event.returnValues["projectId"] as number;
@@ -134,14 +138,14 @@ export class SmartContractRepository {
         student: student,
         taskHash: event.returnValues["taskHash"] as string,
       };
-      
+
       // Create a unique key combining student and projectId
       const key = `${student}-${projectId}`;
-      
+
       // Update the map with the last task for this student and projectId
       lastSubmittedTasks[key] = task;
     });
-  
+
     // Convert the map to an array
     return Object.values(lastSubmittedTasks);
   }
@@ -150,7 +154,7 @@ export class SmartContractRepository {
     filter: TaskVerifiedEventFilter = {}
   ): Promise<TaskVerifiedEvent[]> {
     const contractAny = this.contract as any;
-    const events: EventLog[] = await contractAny.getPastEvents("TaskRejected", {
+    const events: EventLog[] = await contractAny.getPastEvents("TaskVerified", {
       filter: filter,
       fromBlock: 0,
     });
@@ -158,7 +162,7 @@ export class SmartContractRepository {
       projectId: event.returnValues["projectId"] as number,
       student: event.returnValues["student"] as string,
       grade: event.returnValues["grade"] as number,
-      taskHash: event.returnValues["taskHash"] as string
+      taskHash: event.returnValues["taskHash"] as string,
     }));
 
     return event;

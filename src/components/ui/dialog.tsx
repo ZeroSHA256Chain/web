@@ -3,6 +3,7 @@ import {
   Dialog as ChakraDialog,
   ColorPalette,
   ConditionalValue,
+  DialogOpenChangeDetails,
   Portal,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -74,8 +75,7 @@ interface DialogProps {
   children: React.ReactNode;
   triggerText: string;
   triggerColorPalette: ColorPalette;
-  onClose: () => void;
-  onOpen: () => void;
+  onOpenChange: (event: DialogOpenChangeDetails) => void;
   isOpen: boolean;
 }
 export const Dialog = ({
@@ -84,11 +84,24 @@ export const Dialog = ({
   children,
   triggerText,
   triggerColorPalette,
+  onOpenChange,
+  isOpen,
 }: DialogProps) => {
   return (
-    <DialogRoot placement={placement} motionPreset="slide-in-bottom">
+    <DialogRoot
+      placement={placement}
+      initialFocusEl={() => null}
+      motionPreset="slide-in-bottom"
+      onOpenChange={onOpenChange}
+      open={isOpen}
+    >
       <DialogTrigger asChild>
-        <Button colorPalette={triggerColorPalette} variant="solid">
+        <Button
+          fontWeight="bold"
+          width="fit-content"
+          colorPalette={triggerColorPalette}
+          variant="solid"
+        >
           {triggerText}
         </Button>
       </DialogTrigger>

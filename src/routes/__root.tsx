@@ -45,7 +45,7 @@ const Root: React.FC = () => {
         color="white"
       />
 
-      <VStack bg="teal.100" as="main" spaceX={4} p={4}>
+      <VStack bg="teal.100" as="main" spaceX={4}>
         <Outlet />
       </VStack>
     </VStack>

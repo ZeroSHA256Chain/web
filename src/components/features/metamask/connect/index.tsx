@@ -6,7 +6,7 @@ import { Web3 } from "web3";
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
 import { SmartContractRepository } from "@/blockchain/repository";
 import { toaster } from "@/components/ui";
-import { formatEthereumAddress } from "@/helpers";
+import { formatLongString } from "@/helpers";
 import { SmartContractService } from "@/services";
 import {
   connectedAccountAtom,
@@ -98,7 +98,7 @@ export const ConnectMetamask = () => {
         <Show when={Boolean(connectedAccount)}>
           <Button
             variant="subtle"
-            colorPalette="pink"
+            colorPalette="black"
             onClick={async () => {
               if (!connectedAccount) return;
 
@@ -111,12 +111,13 @@ export const ConnectMetamask = () => {
               });
             }}
           >
-            {connectedAccount ? formatEthereumAddress(connectedAccount) : ""}
+            {connectedAccount ? formatLongString(connectedAccount) : ""}
           </Button>
         </Show>
       </HStack>
       <Show when={!connectedAccount && attemptedToConnect && !warning}>
         <Button
+          fontWeight="bold"
           variant="solid"
           colorPalette="red"
           onClick={() => requestAccounts()}
