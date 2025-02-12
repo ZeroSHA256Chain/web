@@ -134,7 +134,8 @@ You can use deployed website on https://web-zeta-wheat-80.vercel.app/ but it is 
    <img width="1158" alt="image" src="https://github.com/user-attachments/assets/2101af02-e225-4ea9-8d6b-39fbafb894e4" />
 <img width="1384" alt="image" src="https://github.com/user-attachments/assets/78b175d0-615e-47c3-8559-564ca661c439" />
 
-
+7. You can verify any submission on "Verify Submission" Page
+<img width="1463" alt="image" src="https://github.com/user-attachments/assets/ecd9cbda-768c-46d2-a8e6-a4245f8d450e" />
 
 
 
