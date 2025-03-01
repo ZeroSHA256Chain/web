@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   HStack,
   Heading,
@@ -10,7 +9,7 @@ import {
 import { formatDistance } from "date-fns";
 import { memo } from "react";
 
-import { AddressButton } from "@/components/features";
+import { AddressButton, AuctionStatusBadge } from "@/components/features";
 import { LoadedContentController } from "@/components/utils";
 import { ETHEREUM_TOKEN } from "@/constants";
 import { gweiToETH } from "@/helpers";
@@ -19,18 +18,11 @@ import { Auction } from "@/services";
 
 import { AssetDetails, BidHistory } from "./components";
 
-const statusColorMap = {
-  Active: "green",
-  Ended: "gray",
-  Declined: "red",
-  WaitFinalization: "orange",
-} as const;
-
-interface AuctionItemProps {
+interface AuctionDetailsProps {
   id: number;
 }
 
-export const AuctionItem: React.FC<AuctionItemProps> = memo(({ id }) => {
+export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
   const {
     data: auction,
     isLoading,
@@ -65,14 +57,7 @@ export const AuctionItem: React.FC<AuctionItemProps> = memo(({ id }) => {
                 </HStack>
               </VStack>
 
-              <Badge
-                colorPalette={statusColorMap[auction.status]}
-                px={3}
-                py={1}
-                borderRadius="full"
-              >
-                {auction.status}
-              </Badge>
+              <AuctionStatusBadge status={auction.status} />
             </HStack>
 
             <Separator />

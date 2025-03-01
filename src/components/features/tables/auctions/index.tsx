@@ -1,20 +1,12 @@
-import { Badge, For, Table, Text } from "@chakra-ui/react";
+import { For, IconButton, Table, Text } from "@chakra-ui/react";
+import { Link } from "@tanstack/react-router";
 import { memo } from "react";
 
-import { AddressButton } from "@/components/features";
+import { AddressButton, AuctionStatusBadge } from "@/components/features";
+import { Icon } from "@/components/ui";
 import { ETHEREUM_TOKEN } from "@/constants";
 import { formatDate, gweiToETH } from "@/helpers";
-import { AuctionStatus, ShortAuction } from "@/services";
-
-const STATUS_MAP = {
-  [AuctionStatus.Active]: { color: "green", label: "Active" },
-  [AuctionStatus.Ended]: { color: "gray", label: "Ended" },
-  [AuctionStatus.Declined]: { color: "red", label: "Declined" },
-  [AuctionStatus.WaitFinalization]: {
-    color: "orange",
-    label: "Finalization",
-  },
-} as const;
+import { ShortAuction } from "@/services";
 
 const AUCTION_COLUMNS = [
   { key: "name", label: "Name" },
@@ -23,6 +15,7 @@ const AUCTION_COLUMNS = [
   { key: "status", label: "Status" },
   { key: "endTime", label: "Date" },
   { key: "creator", label: "Creator" },
+  { key: "action", label: "" },
 ] as const;
 
 export const AuctionsTable = memo(
@@ -65,14 +58,7 @@ export const AuctionsTable = memo(
                 </Table.Cell>
 
                 <Table.Cell>
-                  <Badge
-                    colorPalette={STATUS_MAP[auction.status].color}
-                    px={2}
-                    py={1}
-                    borderRadius="md"
-                  >
-                    {STATUS_MAP[auction.status].label}
-                  </Badge>
+                  <AuctionStatusBadge status={auction.status} />
                 </Table.Cell>
 
                 <Table.Cell>
@@ -81,6 +67,23 @@ export const AuctionsTable = memo(
 
                 <Table.Cell>
                   <AddressButton address={auction.creator} />
+                </Table.Cell>
+
+                <Table.Cell>
+                  <Link
+                    to="/$auctionId"
+                    params={{ auctionId: String(auction.id) }}
+                  >
+                    <IconButton
+                      w={5}
+                      h={5}
+                      variant="ghost"
+                      aria-label="View Auction"
+                      colorPalette="white"
+                    >
+                      <Icon name="ExternalLink" />
+                    </IconButton>
+                  </Link>
                 </Table.Cell>
               </Table.Row>
             ))}

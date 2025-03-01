@@ -9,6 +9,7 @@ export const AddressButton = memo(({ address }: { address: string }) => {
 
   return (
     <Button
+      pl={0}
       color="teal.300"
       colorPalette="black"
       fontSize="sm"
@@ -16,6 +17,7 @@ export const AddressButton = memo(({ address }: { address: string }) => {
       variant="ghost"
       fontFamily="monospace"
       onClick={() => copyAddress(address)}
+      cursor="grab"
     >
       {formatETHAddress(address, { long: true })}
     </Button>
