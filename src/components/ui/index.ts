@@ -9,3 +9,4 @@ export * from "./toaster";
 export * from "./select";
 export * from "./dialog";
 export * from "./accordion";
+export * from "./drawer";

@@ -134,7 +134,13 @@ export const ConnectMetamask = () => {
 
   if (error) {
     return (
-      <Alert.Root status="error" minW={170} h={10} p={2} alignItems="center">
+      <Alert.Root
+        status="error"
+        w="fit-content"
+        h={10}
+        p={2}
+        alignItems="center"
+      >
         <Alert.Indicator />
         <Alert.Title>{error}</Alert.Title>
 
@@ -154,8 +160,8 @@ export const ConnectMetamask = () => {
   return (
     <Button
       w={170}
-      variant="subtle"
-      colorPalette={connectedAccount ? "black" : "teal"}
+      variant="solid"
+      colorPalette="white"
       onClick={connectedAccount ? copyAddressToClipboard : connectWallet}
       loading={isLoading}
       disabled={Boolean(error)}
