@@ -1,11 +1,12 @@
-import { Alert, Button, HStack, Show } from "@chakra-ui/react";
+import { Alert, Button, IconButton } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
 import { SmartContractRepository } from "@/blockchain/repository";
-import { toaster } from "@/components/ui";
+import { Icon, toaster } from "@/components/ui";
+import { SECOND } from "@/constants";
 import { formatLongString } from "@/helpers";
 import { SmartContractService } from "@/services";
 import {
@@ -21,111 +22,149 @@ export const ConnectMetamask = () => {
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
   const setService = useSetAtom(smartContractServiceAtom);
 
-  const [warning, setWarning] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [attemptedToConnect, setAttemptedToConnect] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
 
-  const requestAccounts = useCallback(async () => {
+  // to avoid flickering when loading
+  const setLoadingWithMinDuration = useCallback(async (loading: boolean) => {
+    const MIN_LOADING_TIME = 1 * SECOND;
+
+    if (loading) {
+      setIsLoading(true);
+    } else {
+      const startTime = Date.now();
+      const timeElapsed = Date.now() - startTime;
+
+      if (timeElapsed < MIN_LOADING_TIME) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, MIN_LOADING_TIME - timeElapsed)
+        );
+      }
+
+      setIsLoading(false);
+    }
+  }, []);
+
+  const connectWallet = useCallback(async () => {
     if (!web3) return;
 
-    setWarning(null);
+    setError(null);
 
-    await requestEthereumAccounts();
+    await setLoadingWithMinDuration(true);
 
-    removeRequestAccountsDialog();
+    try {
+      await requestEthereumAccounts();
 
-    const allAccounts = await web3.eth.getAccounts();
+      removeRequestAccountsDialog();
 
-    // set the first account as the connected account
-    setConnectedAccount(allAccounts[0]);
-  }, [web3, setConnectedAccount]);
+      const allAccounts = await web3.eth.getAccounts();
 
-  useEffect(() => {
-    // ensure that there is an injected the Ethereum provider
-    if (window.ethereum) {
-      // use the injected Ethereum provider to initialize Web3.js
-      setWeb3(new Web3(window.ethereum));
-      // check if Ethereum provider comes from MetaMask
-      if (window.ethereum.isMetaMask) {
-        setStatusMessage("MetaMask installed");
-      } else {
-        setStatusMessage("Non-MetaMask provider detected.");
+      setConnectedAccount(allAccounts[0]);
+    } catch (_error) {
+      setError("Connection error");
+    } finally {
+      await setLoadingWithMinDuration(false);
+    }
+  }, [web3, setConnectedAccount, setLoadingWithMinDuration]);
+
+  useEffect(
+    function checkForMetaMaskInstallation() {
+      const checkMetaMask = async () => {
+        await setLoadingWithMinDuration(true);
+
+        if (window.ethereum) {
+          setIsMetaMaskInstalled(true);
+          setWeb3(new Web3(window.ethereum));
+        } else {
+          setError("Please install MetaMask to use this application");
+        }
+
+        await setLoadingWithMinDuration(false);
+      };
+
+      checkMetaMask();
+    },
+    [setWeb3, setLoadingWithMinDuration]
+  );
+
+  useEffect(
+    function initializeSmartContractService() {
+      if (connectedAccount) {
+        const repository = new SmartContractRepository(
+          import.meta.env.VITE_PROVIDER_URL,
+          import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
+          SMART_CONTRACT_ABI,
+          connectedAccount
+        );
+        setService(new SmartContractService(repository));
       }
-    } else {
-      // no Ethereum provider - instruct user to install MetaMask
-      setWarning("Please install MetaMask");
-    }
+    },
+    [connectedAccount, setService]
+  );
 
-    setAttemptedToConnect(true);
-  }, [setWeb3]);
+  useEffect(
+    function tryToConnectAutomatically() {
+      if (isMetaMaskInstalled && !connectedAccount && !error) {
+        connectWallet();
+      }
+    },
+    [isMetaMaskInstalled, connectedAccount, error, connectWallet]
+  );
 
-  useEffect(() => {
-    if (connectedAccount) {
-      const repository = new SmartContractRepository(
-        import.meta.env.VITE_PROVIDER_URL,
-        import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
-        SMART_CONTRACT_ABI,
-        connectedAccount
-      );
+  useEffect(
+    function clearErrorWhenAccountIsConnected() {
+      if (connectedAccount && error) {
+        setError(null);
+      }
+    },
+    [connectedAccount, error]
+  );
+  const copyAddressToClipboard = async () => {
+    if (!connectedAccount) return;
 
-      const service = new SmartContractService(repository);
+    await navigator.clipboard.writeText(connectedAccount);
 
-      setService(service);
-    }
-  }, [connectedAccount, setService]);
+    toaster.create({
+      title: "Copied to clipboard",
+      description: "Your address has been copied to clipboard",
+      type: "success",
+    });
+  };
 
-  useEffect(() => {
-    requestAccounts();
-  }, [requestAccounts]);
+  if (error) {
+    return (
+      <Alert.Root status="error" minW={170} h={10} p={2} alignItems="center">
+        <Alert.Indicator />
+        <Alert.Title>{error}</Alert.Title>
+
+        <IconButton
+          variant="ghost"
+          colorPalette="black"
+          onClick={connectWallet}
+          color="white"
+          size="sm"
+        >
+          <Icon name="RefreshCw" />
+        </IconButton>
+      </Alert.Root>
+    );
+  }
 
   return (
-    <HStack spaceX={2} align="center">
-      <HStack spaceX={2} align="center">
-        <Show when={Boolean(warning)}>
-          <Alert.Root status="error" minW={250}>
-            <Alert.Indicator />
-            <Alert.Title w="100%">{warning}</Alert.Title>
-          </Alert.Root>
-        </Show>
-
-        <Show when={Boolean(statusMessage && !connectedAccount)}>
-          <Alert.Root status="success">
-            <Alert.Indicator />
-            <Alert.Title>{statusMessage}</Alert.Title>
-          </Alert.Root>
-        </Show>
-
-        <Show when={Boolean(connectedAccount)}>
-          <Button
-            variant="subtle"
-            colorPalette="black"
-            onClick={async () => {
-              if (!connectedAccount) return;
-
-              await navigator.clipboard.writeText(connectedAccount);
-
-              toaster.create({
-                title: "Copied to clipboard",
-                description: "Your address has been copied to clipboard",
-                type: "success",
-              });
-            }}
-          >
-            {connectedAccount ? formatLongString(connectedAccount) : ""}
-          </Button>
-        </Show>
-      </HStack>
-      <Show when={!connectedAccount && attemptedToConnect && !warning}>
-        <Button
-          fontWeight="bold"
-          variant="solid"
-          colorPalette="red"
-          onClick={() => requestAccounts()}
-          disabled={Boolean(warning)}
-        >
-          Connect MetaMask
-        </Button>
-      </Show>
-    </HStack>
+    <Button
+      w={170}
+      variant="subtle"
+      colorPalette={connectedAccount ? "black" : "teal"}
+      onClick={connectedAccount ? copyAddressToClipboard : connectWallet}
+      loading={isLoading}
+      disabled={Boolean(error)}
+    >
+      {isLoading
+        ? "Connecting..."
+        : connectedAccount
+          ? formatLongString(connectedAccount)
+          : "Connect MetaMask"}
+    </Button>
   );
 };

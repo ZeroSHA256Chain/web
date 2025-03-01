@@ -17,19 +17,17 @@ const routes = [
 const appName = "ZeroSHA256Chain";
 
 const Root: React.FC = () => {
-
-
   return (
-    <VStack background="teal.100" minHeight="100vh" width="100vw">
+    <VStack background="black" color="white" minHeight="100vh" width="100vw">
       <Header
         routes={routes}
         appName={appName}
-        bg="teal.700"
         p={4}
-        color="white"
+        borderBottom="1px solid"
+        borderColor="gray.500"
       />
 
-      <VStack bg="teal.100" as="main" spaceX={4}>
+      <VStack w="fit-content" h="100%" as="main">
         <Outlet />
       </VStack>
     </VStack>

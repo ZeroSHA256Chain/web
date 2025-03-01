@@ -39,7 +39,7 @@ const About: React.FC = () => {
       bg="gray.900"
       color="white"
     >
-      <Heading size="xl" textAlign="center" color="teal.600">
+      <Heading size="xl" textAlign="center">
         About Us
       </Heading>
 
@@ -53,7 +53,7 @@ const About: React.FC = () => {
       </Text>
 
       <VStack gap={6} align="stretch">
-        <Heading textAlign="center" size="xl" color="teal.600">
+        <Heading textAlign="center" size="xl">
           Our Mission
         </Heading>
 
@@ -110,7 +110,7 @@ const About: React.FC = () => {
       </VStack>
 
       <VStack gap={4} align="stretch">
-        <Heading textAlign="center" size="xl" color="teal.600">
+        <Heading textAlign="center" size="xl">
           Our Team
         </Heading>
         <SimpleGrid columns={[2, 3, 4]} gap={4}>
@@ -128,7 +128,7 @@ const About: React.FC = () => {
                 p={1}
                 borderRadius="md"
                 border="1px solid"
-                borderColor="teal.300"
+                borderColor="gray.300"
                 _hover={{
                   textDecoration: "none",
                 }}
