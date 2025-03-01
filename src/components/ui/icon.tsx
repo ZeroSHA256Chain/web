@@ -2,6 +2,7 @@ import {
   ChevronDown,
   ExternalLink,
   type LucideProps,
+  Menu,
   Moon,
   Plus,
   RefreshCw,
@@ -20,6 +21,7 @@ const IconsList = {
   ChevronDown,
   ExternalLink,
   RefreshCw,
+  Menu,
 };
 
 export type IconName = keyof typeof IconsList;
