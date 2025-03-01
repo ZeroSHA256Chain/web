@@ -2,10 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { CreateAuctionForm } from "@/components/features";
 
-export const Route = createFileRoute("/create-auction")({
-  component: RouteComponent,
-});
-
-function RouteComponent() {
+const CreateAuction = () => {
   return <CreateAuctionForm />;
-}
+};
+
+export const Route = createFileRoute("/create-auction")({
+  component: CreateAuction,
+});

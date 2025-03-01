@@ -7,3 +7,4 @@ export * from "./buttons";
 export * from "./alerts";
 export * from "./badges";
 export * from "./details";
+export * from "./sections";

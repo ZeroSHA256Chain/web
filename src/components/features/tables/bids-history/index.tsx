@@ -1,4 +1,4 @@
-import { For, Table, Text, VStack } from "@chakra-ui/react";
+import { For, Heading, Table, Text, VStack } from "@chakra-ui/react";
 import { memo } from "react";
 
 import { LoadedContentController } from "@/components/utils";
@@ -13,13 +13,13 @@ const BID_COLUMNS = [
   { key: "date", label: "Date" },
 ] as const;
 
-interface BidHistoryProps {
+interface BidsHistoryProps {
   bestBid: Bid;
   bidsCount: bigint;
   id: number;
 }
 
-export const BidHistory: React.FC<BidHistoryProps> = memo(
+export const BidsHistory: React.FC<BidsHistoryProps> = memo(
   ({ bestBid, bidsCount, id }) => {
     const {
       data: bids,
@@ -40,18 +40,18 @@ export const BidHistory: React.FC<BidHistoryProps> = memo(
         data={bids}
       >
         {(bids) => (
-          <VStack align="start" w="full" spaceY={4}>
-            <Text fontWeight="bold" fontSize="lg">
-              Bid History
-            </Text>
+          <VStack align="start" w="full" spaceY={2}>
+            <Heading as="h3" fontWeight="bold" fontSize="lg">
+              Bids History
+            </Heading>
 
             <Table.ScrollArea maxH={300}>
-              <Table.Root variant="outline" colorScheme="teal">
+              <Table.Root variant="outline">
                 <Table.Header>
                   <Table.Row>
                     <For each={BID_COLUMNS}>
                       {(column) => (
-                        <Table.ColumnHeader key={column.key} color="gray.500">
+                        <Table.ColumnHeader key={column.key} color="text.muted">
                           {column.label}
                         </Table.ColumnHeader>
                       )}
@@ -105,7 +105,7 @@ export const BidHistory: React.FC<BidHistoryProps> = memo(
               </Table.Root>
             </Table.ScrollArea>
 
-            <Text color="gray.400" fontSize="sm">
+            <Text color="fg.muted" fontSize="sm">
               Total Bids: {bidsCount.toString()}
             </Text>
           </VStack>

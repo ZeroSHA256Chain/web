@@ -6,7 +6,7 @@ import { mockAuctions } from "@/__mocks__/auctions_list";
 import { AuctionsTable } from "@/components/features";
 import { connectedAccountAtom } from "@/store/atoms";
 
-const Index: React.FC = () => {
+const Home: React.FC = () => {
   const connectedAccount = useAtomValue(connectedAccountAtom);
 
   return (
@@ -28,5 +28,5 @@ const Index: React.FC = () => {
 };
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Home,
 });

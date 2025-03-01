@@ -27,7 +27,7 @@ export const LoadedContentController = <T extends object>({
       </Center>
     ))
     .with({ isEmpty: true }, () => (
-      <Text fontSize="lg" color="gray.700">
+      <Text fontSize="lg" color="fg.muted">
         No data found
       </Text>
     ))

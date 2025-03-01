@@ -1,4 +1,4 @@
-import { Box, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Center, Spinner, VStack } from "@chakra-ui/react";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 
@@ -24,7 +24,7 @@ const appName = "ZeroSHA256Chain";
 
 const Root: React.FC = () => {
   return (
-    <VStack background="black" color="white" minHeight="100vh" width="100vw">
+    <VStack background="black" color="white" minHeight="100vh">
       <Suspense
         fallback={
           <Box
@@ -42,12 +42,12 @@ const Root: React.FC = () => {
           appName={appName}
           p={4}
           borderBottom="1px solid"
-          borderColor="gray.500"
+          borderColor="border.muted"
         />
 
-        <VStack w="fit-content" h="100%" as="main">
+        <Center as="main" w="full" h="100%" py={4}>
           <Outlet />
-        </VStack>
+        </Center>
       </Suspense>
     </VStack>
   );

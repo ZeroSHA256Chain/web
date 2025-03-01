@@ -2,12 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { AuctionDetails } from "@/components/features";
 
-const AuctionRoute = () => {
+const Auction = () => {
   const { auctionId } = Route.useParams();
 
   return <AuctionDetails id={Number(auctionId)} />;
 };
 
 export const Route = createFileRoute("/$auctionId")({
-  component: AuctionRoute,
+  component: Auction,
 });

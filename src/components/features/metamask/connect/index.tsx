@@ -1,6 +1,6 @@
 import { Alert, Button, IconButton } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
-import { memo, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
@@ -17,7 +17,7 @@ import {
 
 import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 
-export const ConnectMetamask = memo(() => {
+export const ConnectMetamask = () => {
   const [web3, setWeb3] = useAtom(web3Atom);
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
   const setService = useSetAtom(auctionServiceAtom);
@@ -168,4 +168,4 @@ export const ConnectMetamask = memo(() => {
           : "Connect MetaMask"}
     </Button>
   );
-});
+};

@@ -1,5 +1,5 @@
 import {
-  Box,
+  Badge,
   HStack,
   Heading,
   Separator,
@@ -9,14 +9,17 @@ import {
 import { formatDistance } from "date-fns";
 import { memo } from "react";
 
-import { AddressButton, AuctionStatusBadge } from "@/components/features";
+import {
+  AddressButton,
+  AssetDetails,
+  AuctionStatusBadge,
+  BidsHistory,
+  BidsOverviewTable,
+} from "@/components/features";
+import { Icon } from "@/components/ui";
 import { LoadedContentController } from "@/components/utils";
-import { ETHEREUM_TOKEN } from "@/constants";
-import { gweiToETH } from "@/helpers";
 import { useAuctionFetch } from "@/hooks";
 import { Auction } from "@/services";
-
-import { AssetDetails, BidHistory } from "./components";
 
 interface AuctionDetailsProps {
   id: number;
@@ -42,73 +45,79 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
       data={auction}
     >
       {(auction) => (
-        <Box borderRadius="lg" p={6} boxShadow="xl" w="full">
-          <VStack align="start" spaceY={6}>
-            <HStack justify="space-between" w="full">
-              <VStack align="start" spaceY={1}>
-                <Heading as="h2" fontSize="2xl" fontWeight="bold">
-                  {auction.name}
-                </Heading>
+        <VStack align="start" spaceY={6}>
+          <HStack spaceX={2} w="full" justify="space-between">
+            <VStack align="start" spaceY={2}>
+              <Heading as="h2" fontSize="2xl" fontWeight="bold">
+                {auction.name}
+              </Heading>
 
-                <HStack spaceX={2}>
-                  <Text color="gray.500">Created by </Text>
+              <HStack>
+                <Text color="fg.muted">Created by </Text>
 
-                  <AddressButton address={auction.creator} />
-                </HStack>
-              </VStack>
+                <AddressButton address={auction.creator} />
+              </HStack>
+            </VStack>
 
-              <AuctionStatusBadge status={auction.status} />
-            </HStack>
+            <VStack align="end" spaceY={2}>
+              <Badge size="md" variant="solid" colorPalette="black">
+                <Icon height="1rem" width="1rem" name="CalendarClock" />
 
-            <Separator />
-
-            <HStack justify="space-between" w="full">
-              <VStack align="start" spaceY={2}>
-                <Text>
-                  Start Price: {gweiToETH(Number(auction.startPrice))}{" "}
-                  {ETHEREUM_TOKEN}
-                </Text>
-
-                <Text>
-                  Current Bid: {gweiToETH(Number(auction.bestBid.price))}{" "}
-                  {ETHEREUM_TOKEN}
-                </Text>
-
-                <Text>
-                  Minimum Step: {gweiToETH(Number(auction.bidStep))}{" "}
-                  {ETHEREUM_TOKEN}
-                </Text>
-              </VStack>
-
-              <VStack align="end" spaceY={2}>
-                <Text>
-                  Ends:{" "}
+                <Text as="span">
+                  {Number(auction.endTime) > Date.now() ? "Ends " : "Ended "}
                   {formatDistance(Number(auction.endTime), Date.now(), {
                     addSuffix: true,
                   })}
                 </Text>
+              </Badge>
 
-                <HStack spaceX={2}>
-                  <Text>Arbiter: </Text>
+              <AuctionStatusBadge status={auction.status} />
+            </VStack>
+          </HStack>
+
+          <Separator w="full" />
+
+          <HStack justify="space-between" w="full">
+            <VStack
+              align="start"
+              w="full"
+              border="1px solid"
+              borderColor="border.muted"
+              p={4}
+              borderRadius="md"
+            >
+              <BidsOverviewTable
+                bestBid={Number(auction.bestBid.price)}
+                bidStep={Number(auction.bidStep)}
+                minBid={Number(auction.startPrice)}
+              />
+
+              <VStack align="end" spaceY={2}>
+                <HStack>
+                  <Text color="fg.muted">Arbiter</Text>
 
                   <AddressButton address={auction.creator} />
                 </HStack>
               </VStack>
-            </HStack>
+            </VStack>
 
-            <Separator />
-
-            <AssetDetails asset={auction.asset} />
-
-            <Separator />
-
-            <BidHistory
-              bestBid={auction.bestBid}
-              bidsCount={auction.bidsCount}
-              id={id}
+            <AssetDetails
+              asset={auction.asset}
+              border="1px solid"
+              borderColor="border.muted"
+              p={4}
+              borderRadius="md"
             />
-          </VStack>
-        </Box>
+          </HStack>
+
+          <Separator w="full" />
+
+          <BidsHistory
+            bestBid={auction.bestBid}
+            bidsCount={auction.bidsCount}
+            id={id}
+          />
+        </VStack>
       )}
     </LoadedContentController>
   );

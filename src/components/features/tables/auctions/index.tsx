@@ -34,7 +34,7 @@ export const AuctionsTable = memo(
             <Table.Row>
               <For each={AUCTION_COLUMNS}>
                 {(column) => (
-                  <Table.ColumnHeader key={column.key} color="gray.500">
+                  <Table.ColumnHeader key={column.key} color="fg.muted">
                     {column.label}
                   </Table.ColumnHeader>
                 )}
@@ -66,7 +66,7 @@ export const AuctionsTable = memo(
                 </Table.Cell>
 
                 <Table.Cell>
-                  <AddressButton address={auction.creator} />
+                  <AddressButton address={auction.creator} inline />
                 </Table.Cell>
 
                 <Table.Cell>
