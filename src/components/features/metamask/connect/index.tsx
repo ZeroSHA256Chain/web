@@ -4,14 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
-import { SmartContractRepository } from "@/blockchain/repository";
 import { Icon, toaster } from "@/components/ui";
 import { SECOND } from "@/constants";
 import { formatLongString } from "@/helpers";
-import { SmartContractService } from "@/services";
+import { AuctionService } from "@/services";
 import {
+  auctionServiceAtom,
   connectedAccountAtom,
-  smartContractServiceAtom,
   web3Atom,
 } from "@/store/atoms";
 
@@ -20,7 +19,7 @@ import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 export const ConnectMetamask = () => {
   const [web3, setWeb3] = useAtom(web3Atom);
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
-  const setService = useSetAtom(smartContractServiceAtom);
+  const setService = useSetAtom(auctionServiceAtom);
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,15 +88,16 @@ export const ConnectMetamask = () => {
   );
 
   useEffect(
-    function initializeSmartContractService() {
+    function initializeAuctionService() {
       if (connectedAccount) {
-        const repository = new SmartContractRepository(
-          import.meta.env.VITE_PROVIDER_URL,
-          import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
-          SMART_CONTRACT_ABI,
-          connectedAccount
+        setService(
+          new AuctionService(
+            import.meta.env.VITE_PROVIDER_URL,
+            import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
+            SMART_CONTRACT_ABI,
+            connectedAccount
+          )
         );
-        setService(new SmartContractService(repository));
       }
     },
     [connectedAccount, setService]
