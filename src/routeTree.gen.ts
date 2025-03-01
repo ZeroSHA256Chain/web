@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as CreateAuctionImport } from './routes/create-auction'
 import { Route as AboutImport } from './routes/about'
+import { Route as AuctionIdImport } from './routes/$auctionId'
 import { Route as IndexImport } from './routes/index'
 
 // Create/Update Routes
@@ -26,6 +27,12 @@ const CreateAuctionRoute = CreateAuctionImport.update({
 const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuctionIdRoute = AuctionIdImport.update({
+  id: '/$auctionId',
+  path: '/$auctionId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,6 +51,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/$auctionId': {
+      id: '/$auctionId'
+      path: '/$auctionId'
+      fullPath: '/$auctionId'
+      preLoaderRoute: typeof AuctionIdImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -67,12 +81,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$auctionId': typeof AuctionIdRoute
   '/about': typeof AboutRoute
   '/create-auction': typeof CreateAuctionRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$auctionId': typeof AuctionIdRoute
   '/about': typeof AboutRoute
   '/create-auction': typeof CreateAuctionRoute
 }
@@ -80,27 +96,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/$auctionId': typeof AuctionIdRoute
   '/about': typeof AboutRoute
   '/create-auction': typeof CreateAuctionRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/create-auction'
+  fullPaths: '/' | '/$auctionId' | '/about' | '/create-auction'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/create-auction'
-  id: '__root__' | '/' | '/about' | '/create-auction'
+  to: '/' | '/$auctionId' | '/about' | '/create-auction'
+  id: '__root__' | '/' | '/$auctionId' | '/about' | '/create-auction'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuctionIdRoute: typeof AuctionIdRoute
   AboutRoute: typeof AboutRoute
   CreateAuctionRoute: typeof CreateAuctionRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuctionIdRoute: AuctionIdRoute,
   AboutRoute: AboutRoute,
   CreateAuctionRoute: CreateAuctionRoute,
 }
@@ -116,12 +135,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/$auctionId",
         "/about",
         "/create-auction"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/$auctionId": {
+      "filePath": "$auctionId.tsx"
     },
     "/about": {
       "filePath": "about.tsx"

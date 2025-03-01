@@ -1,7 +1,13 @@
 import Web3, { AbiFragment, Contract } from "web3";
 import { AbiItem } from "web3-utils";
 
-type Methods = "createAuction" | "getAuction"; // todo: get from abi?
+export type CallMethods = "createAuction";
+export type QueryMethods =
+  | "getAuction"
+  | "getBids"
+  // todo: remove
+  | "_getMockBids"
+  | "_getMockAuction";
 
 export class SmartContractRepository {
   private web3: Web3;
@@ -18,7 +24,7 @@ export class SmartContractRepository {
   }
 
   protected async call(
-    methodName: Methods,
+    methodName: CallMethods,
     args: unknown[],
     options: { value?: string } = {}
   ) {
@@ -28,7 +34,10 @@ export class SmartContractRepository {
     });
   }
 
-  protected async query(methodName: Methods, args: unknown[] = []) {
+  protected async query<T>(
+    methodName: QueryMethods,
+    args: unknown[] = []
+  ): Promise<T> {
     return await this.contract.methods[methodName](...args).call();
   }
 }

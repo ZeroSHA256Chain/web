@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
+import { memo } from "react";
 
 import { AssetTypeSelector } from "@/components/features";
 import { DatePicker, FormFieldError, toaster } from "@/components/ui";
@@ -19,9 +20,7 @@ import { auctionServiceAtom } from "@/store/atoms";
 import { handleDecimalInput } from "./utils";
 import { CreateAuctionFormData, createAuctionSchema } from "./validation";
 
-interface CreateAuctionFormProps {}
-
-export const CreateAuctionForm: React.FC<CreateAuctionFormProps> = () => {
+export const CreateAuctionForm = memo(() => {
   const service = useAtomValue(auctionServiceAtom);
 
   const width = useBreakpointValue({
@@ -214,4 +213,4 @@ export const CreateAuctionForm: React.FC<CreateAuctionFormProps> = () => {
       </Fieldset.Root>
     </form>
   );
-};
+});

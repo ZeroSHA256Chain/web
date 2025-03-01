@@ -1,12 +1,13 @@
 import { Alert, Button, IconButton } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
-import { Icon, toaster } from "@/components/ui";
+import { Icon } from "@/components/ui";
 import { SECOND } from "@/constants";
 import { formatETHAddress } from "@/helpers";
+import { useCopyAddress } from "@/hooks";
 import { AuctionService } from "@/services";
 import {
   auctionServiceAtom,
@@ -16,7 +17,7 @@ import {
 
 import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 
-export const ConnectMetamask = () => {
+export const ConnectMetamask = memo(() => {
   const [web3, setWeb3] = useAtom(web3Atom);
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
   const setService = useSetAtom(auctionServiceAtom);
@@ -24,6 +25,8 @@ export const ConnectMetamask = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
+
+  const copyAddress = useCopyAddress();
 
   // to avoid flickering when loading
   const setLoadingWithMinDuration = useCallback(async (loading: boolean) => {
@@ -121,17 +124,6 @@ export const ConnectMetamask = () => {
     },
     [connectedAccount, error]
   );
-  const copyAddressToClipboard = async () => {
-    if (!connectedAccount) return;
-
-    await navigator.clipboard.writeText(connectedAccount);
-
-    toaster.create({
-      title: "Copied to clipboard",
-      description: "Your address has been copied to clipboard",
-      type: "success",
-    });
-  };
 
   if (error) {
     return (
@@ -163,7 +155,9 @@ export const ConnectMetamask = () => {
       w={170}
       variant="solid"
       colorPalette="white"
-      onClick={connectedAccount ? copyAddressToClipboard : connectWallet}
+      onClick={
+        connectedAccount ? () => copyAddress(connectedAccount) : connectWallet
+      }
       loading={isLoading}
       disabled={Boolean(error)}
     >
@@ -174,4 +168,4 @@ export const ConnectMetamask = () => {
           : "Connect MetaMask"}
     </Button>
   );
-};
+});

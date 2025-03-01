@@ -1,4 +1,5 @@
 import { For, Text, createListCollection } from "@chakra-ui/react";
+import { memo } from "react";
 
 import {
   SelectContent,
@@ -21,42 +22,41 @@ const assetsCollection = createListCollection({
   })),
 });
 
-export const AssetTypeSelector: React.FC<AssetTypeSelectorProps> = ({
-  value,
-  onChange,
-}) => {
-  return (
-    <SelectRoot
-      _placeholder={{
-        color: "white",
-      }}
-      color="white"
-      colorPalette="teal"
-      size="sm"
-      collection={assetsCollection}
-      value={value}
-      onValueChange={({ value }) => onChange(value)}
-    >
-      <SelectTrigger>
-        <SelectValueText
-          placeholder="Select"
-          fontWeight="semibold"
-          color="white"
-        />
-      </SelectTrigger>
+export const AssetTypeSelector: React.FC<AssetTypeSelectorProps> = memo(
+  ({ value, onChange }) => {
+    return (
+      <SelectRoot
+        _placeholder={{
+          color: "white",
+        }}
+        color="white"
+        colorPalette="teal"
+        size="sm"
+        collection={assetsCollection}
+        value={value}
+        onValueChange={({ value }) => onChange(value)}
+      >
+        <SelectTrigger>
+          <SelectValueText
+            placeholder="Select"
+            fontWeight="semibold"
+            color="white"
+          />
+        </SelectTrigger>
 
-      <SelectContent>
-        <For
-          each={assetsCollection.items}
-          fallback={<Text>No assets found</Text>}
-        >
-          {(asset) => (
-            <SelectItem item={asset} key={asset.value}>
-              {asset.label}
-            </SelectItem>
-          )}
-        </For>
-      </SelectContent>
-    </SelectRoot>
-  );
-};
+        <SelectContent>
+          <For
+            each={assetsCollection.items}
+            fallback={<Text>No assets found</Text>}
+          >
+            {(asset) => (
+              <SelectItem item={asset} key={asset.value}>
+                {asset.label}
+              </SelectItem>
+            )}
+          </For>
+        </SelectContent>
+      </SelectRoot>
+    );
+  }
+);
