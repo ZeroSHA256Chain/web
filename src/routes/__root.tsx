@@ -9,6 +9,11 @@ const routes = [
     path: "/",
     label: "Home",
   },
+
+  {
+    path: "/create-auction",
+    label: "Create Auction",
+  },
   {
     path: "/about",
     label: "About Us",

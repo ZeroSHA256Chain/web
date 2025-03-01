@@ -113,6 +113,7 @@ export const ConnectMetamask = () => {
   );
 
   useEffect(
+    // todo: review bahavior when account is reconected after error
     function clearErrorWhenAccountIsConnected() {
       if (connectedAccount && error) {
         setError(null);
