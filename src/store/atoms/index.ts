@@ -1,2 +1,2 @@
 export * from "./web3";
-export * from "./service";
+export * from "./auctionService";

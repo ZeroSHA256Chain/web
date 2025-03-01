@@ -12,13 +12,13 @@ import { FormFieldError, toaster } from "@/components/ui";
 import { CreateAuction } from "@/services";
 import { auctionServiceAtom } from "@/store/atoms";
 
-import { addAuctionSchema } from "./validation";
+import { createAuctionSchema } from "./validation";
 
-interface AddAuctionFormProps {
+interface CreateAuctionFormProps {
   onSuccess: () => void;
 }
 
-export const AddAuctionForm: React.FC<AddAuctionFormProps> = ({
+export const CreateAuctionForm: React.FC<CreateAuctionFormProps> = ({
   onSuccess,
 }) => {
   const service = useAtomValue(auctionServiceAtom);
@@ -37,20 +37,20 @@ export const AddAuctionForm: React.FC<AddAuctionFormProps> = ({
         reset();
 
         toaster.create({
-          description: "Auction added successfully",
+          description: "Auction createed successfully",
           type: "success",
         });
 
         onSuccess();
       } catch (error) {
         toaster.create({
-          description: "Error adding auction",
+          description: "Error createing auction",
           type: "error",
         });
       }
     },
     validators: {
-      onChange: addAuctionSchema,
+      onChange: createAuctionSchema,
     },
   });
 
@@ -118,7 +118,7 @@ export const AddAuctionForm: React.FC<AddAuctionFormProps> = ({
               type="submit"
               disabled={!canSubmit}
             >
-              {isSubmitting ? "Adding Auction..." : "Add Auction"}
+              {isSubmitting ? "Createing Auction..." : "Create Auction"}
             </Button>
           )}
         />
