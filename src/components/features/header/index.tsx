@@ -1,6 +1,7 @@
 import {
   Box,
   BoxProps,
+  Button,
   Flex,
   For,
   HStack,
@@ -11,7 +12,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import React from "react";
 
-import { ConnectMetamask } from "../metamask";
+import { ConnectMetamask } from "@/components/features";
 
 interface HeaderProps extends BoxProps {
   routes: {
@@ -32,44 +33,38 @@ export const Header: React.FC<HeaderProps> = ({
         <Heading
           as="h1"
           size="2xl"
-          color="white"
           fontWeight="extrabold"
           letterSpacing="wide"
-          textShadow="2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000"
+          textShadow="2px 2px 0 teal, -2px -2px 0 #000, 2px -2px 0 teal, -2px 2px 0 teal"
         >
           <Link to="/">{appName}</Link>
         </Heading>
 
         <Spacer />
 
-        <HStack spaceX={8} as="nav">
-          <List.Root
-            spaceX={4}
-            display="flex"
-            flexDirection="row"
-            listStyle="none"
-          >
+        <HStack spaceX={4} as="nav">
+          <List.Root display="flex" flexDirection="row" listStyle="none">
             <For each={routes}>
               {({ path, label }) => (
                 <List.Item
+                  h={10}
                   key={path}
                   fontWeight="semibold"
-                  color="white"
                   css={{
                     a: {
                       textDecoration: "none",
                     },
                   }}
                 >
-                  <Link to={path}>{label}</Link>
+                  <Button colorPalette="teal" variant="ghost" color="white">
+                    <Link to={path}>{label}</Link>
+                  </Button>
                 </List.Item>
               )}
             </For>
           </List.Root>
 
-          <HStack spaceX={4}>
-            <ConnectMetamask />
-          </HStack>
+          <ConnectMetamask />
         </HStack>
       </Flex>
     </Box>
