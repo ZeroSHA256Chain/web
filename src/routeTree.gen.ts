@@ -11,18 +11,10 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as VerifySubmissionImport } from './routes/verify-submission'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
-import { Route as ProjectsProjectIdImport } from './routes/projects.$projectId'
 
 // Create/Update Routes
-
-const VerifySubmissionRoute = VerifySubmissionImport.update({
-  id: '/verify-submission',
-  path: '/verify-submission',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -33,12 +25,6 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProjectsProjectIdRoute = ProjectsProjectIdImport.update({
-  id: '/projects/$projectId',
-  path: '/projects/$projectId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,20 +46,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/verify-submission': {
-      id: '/verify-submission'
-      path: '/verify-submission'
-      fullPath: '/verify-submission'
-      preLoaderRoute: typeof VerifySubmissionImport
-      parentRoute: typeof rootRoute
-    }
-    '/projects/$projectId': {
-      id: '/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/projects/$projectId'
-      preLoaderRoute: typeof ProjectsProjectIdImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -82,51 +54,36 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/verify-submission': typeof VerifySubmissionRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/verify-submission': typeof VerifySubmissionRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/verify-submission': typeof VerifySubmissionRoute
-  '/projects/$projectId': typeof ProjectsProjectIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/verify-submission' | '/projects/$projectId'
+  fullPaths: '/' | '/about'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/verify-submission' | '/projects/$projectId'
-  id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/verify-submission'
-    | '/projects/$projectId'
+  to: '/' | '/about'
+  id: '__root__' | '/' | '/about'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  VerifySubmissionRoute: typeof VerifySubmissionRoute
-  ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  VerifySubmissionRoute: VerifySubmissionRoute,
-  ProjectsProjectIdRoute: ProjectsProjectIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -140,9 +97,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
-        "/verify-submission",
-        "/projects/$projectId"
+        "/about"
       ]
     },
     "/": {
@@ -150,12 +105,6 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
-    },
-    "/verify-submission": {
-      "filePath": "verify-submission.tsx"
-    },
-    "/projects/$projectId": {
-      "filePath": "projects.$projectId.tsx"
     }
   }
 }
