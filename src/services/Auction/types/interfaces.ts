@@ -61,8 +61,11 @@ export interface CreateAuction {
 }
 
 export interface ShortAuction {
-  id: bigint;
+  id: number;
   name: string;
+  bestBid: number;
+  bidStep: number;
   status: AuctionStatus;
-  asset: Asset;
+  endTime: number;
+  creator: Address;
 }

@@ -1,7 +1,9 @@
-import { Alert, Box, Show } from "@chakra-ui/react";
+import { Alert, Show } from "@chakra-ui/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 
+import { mockAuctions } from "@/__mocks__/auctions_list";
+import { AuctionsTable } from "@/components/features";
 import { connectedAccountAtom } from "@/store/atoms";
 
 const Index: React.FC = () => {
@@ -20,9 +22,7 @@ const Index: React.FC = () => {
         </Alert.Root>
       }
     >
-      <Box bg="black" color="white" p={4}>
-        Our content is here!
-      </Box>
+      <AuctionsTable auctions={mockAuctions} />
     </Show>
   );
 };

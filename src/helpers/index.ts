@@ -1,8 +1,13 @@
-export const formatLongString = (value: string) =>
-  `${value.slice(0, 6)}...${value.slice(-4)}`;
+const GWEI = 10 ** 9;
 
-export const ethToGwei = (value: number) => {
-  const GWEI = 10 ** 9;
+export const formatETHAddress = (
+  value: string,
+  options: { long?: boolean } = {}
+) =>
+  `${value.slice(0, options.long ? 10 : 8)}...${value.slice(-(options.long ? 8 : 6))}`;
 
-  return value * GWEI;
-};
+export const ethToGwei = (value: number) => value * GWEI;
+
+export const gweiToETH = (value: number) => value / GWEI;
+
+export * from "./date";

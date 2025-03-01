@@ -6,7 +6,7 @@ import { Web3 } from "web3";
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
 import { Icon, toaster } from "@/components/ui";
 import { SECOND } from "@/constants";
-import { formatLongString } from "@/helpers";
+import { formatETHAddress } from "@/helpers";
 import { AuctionService } from "@/services";
 import {
   auctionServiceAtom,
@@ -170,7 +170,7 @@ export const ConnectMetamask = () => {
       {isLoading
         ? "Connecting..."
         : connectedAccount
-          ? formatLongString(connectedAccount)
+          ? formatETHAddress(connectedAccount)
           : "Connect MetaMask"}
     </Button>
   );
