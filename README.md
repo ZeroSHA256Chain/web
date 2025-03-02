@@ -1,12 +1,43 @@
 # Blockchain-Based Auction Platform
 
-The Blockchain-Based Auction Platform is designed to transform traditional auctions by leveraging blockchain technology. It creates a secure, transparent, and trustless environment for auctioning both digital and physical assets. The platform is built on a robust two-layer architecture:
+The Blockchain-Based Auction Platform is designed to transform traditional auctions by leveraging blockchain technology. It creates a secure, transparent, and trustless environment for auctioning digital and physical assets. The platform is built on a robust two-layer architecture:
 
-## Frontend Layer
-- **Framework**: Developed using React.
-- **Blockchain Integration**: Utilizes web3.js and Metamask.
-- **Adaptive**: Supports both mobile and desktop interfaces.
-- **Libs**: Uses Chakra UI and Atom for UI components and state management.
+## Frontend Architecture
+
+### Core Technologies
+- **React**: Modern UI development using [React 19](https://react.dev/)
+  - Leverages hooks and functional components
+  - Built with TypeScript for type safety
+
+### Web3 Integration
+- **[Web3.js](https://web3js.readthedocs.io/en/v1.10.0/)**
+  - Ethereum JavaScript API
+  - Smart contract interaction
+- **MetaMask Integration**
+  - Wallet connection
+  - Transaction signing
+  - Account management
+
+### UI Components & State
+- **[Chakra UI](https://chakra-ui.com/)**
+  - Accessible component library
+  - Responsive design system
+  - Dark/light mode support
+
+- **[TanStack](https://tanstack.com/) Suite**
+  - `@tanstack/react-form`: Type-safe form management
+  - `@tanstack/react-router`: Modern routing with type safety
+
+- **[Jotai](https://jotai.org/)**
+  - Atomic state management
+  - Optimized for React concurrent features
+  - Minimal boilerplate
+
+### Responsive Design
+- Mobile-first approach
+- Adaptive layouts
+- Touch-friendly interactions
+- Cross-browser compatibility
 
 ## Installation
 ```sh
