@@ -6,20 +6,29 @@ import {
   Auction,
   AuctionMethodArgs,
   Bid,
-  CreateAuctionParams,
-  PlaceBidParams,
-  TakeMyBidParams,
-  VerifyNewArbiterParams,
+  PlaceBid,
+  TakeMyBid,
+  VerifyNewArbiter,
 } from "./types";
 
 export class AuctionService extends SmartContractRepository {
-  public async createAuction(params: CreateAuctionParams) {
-    await this.call<AuctionMethodArgs["createAuction"]>("createAuction", [
-      params,
-    ]);
+  public async createAuction(params: AuctionMethodArgs["createAuction"]) {
+    const orderedParams = [
+      params.title,
+      params.assetType,
+      params.startPrice,
+      params.bidStep,
+      params.endTime,
+      params.assetContract,
+      params.assetId,
+      params.assetAmount,
+      params.arbiter,
+    ];
+
+    await this.call("createAuction", orderedParams);
   }
 
-  public async placeBid({ auctionId, value }: PlaceBidParams) {
+  public async placeBid({ auctionId, value }: PlaceBid) {
     await this.call<AuctionMethodArgs["placeBid"]>("placeBid", [
       {
         auctionId,
@@ -28,16 +37,13 @@ export class AuctionService extends SmartContractRepository {
     ]);
   }
 
-  public async takeMyBid({ auctionId, bidId }: TakeMyBidParams) {
+  public async takeMyBid({ auctionId, bidId }: TakeMyBid) {
     await this.call<AuctionMethodArgs["takeMyBid"]>("takeMyBid", [
       { auctionId, bidId },
     ]);
   }
 
-  public async verifyNewArbiter({
-    auctionId,
-    newArbiter,
-  }: VerifyNewArbiterParams) {
+  public async verifyNewArbiter({ auctionId, newArbiter }: VerifyNewArbiter) {
     await this.call<AuctionMethodArgs["verifyNewArbiter"]>("verifyNewArbiter", [
       { auctionId, newArbiter },
     ]);

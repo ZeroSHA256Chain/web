@@ -11,9 +11,13 @@ import { useAtomValue } from "jotai";
 
 import { AssetTypeSelector, PriceInput } from "@/components/features";
 import { DatePicker, FormFieldError, toaster } from "@/components/ui";
-import { HOUR } from "@/constants";
+import {
+  AssetTypeLabel,
+  HOUR,
+  LABEL_TO_ASSET_TYPE,
+  ZERO_ADDRESS,
+} from "@/constants";
 import { ethToGwei } from "@/helpers";
-import { AssetType } from "@/services";
 import { auctionServiceAtom } from "@/store/atoms";
 
 import { CreateAuctionFormData, createAuctionSchema } from "./validation";
@@ -30,20 +34,28 @@ export const CreateAuctionForm = () => {
   const { Field, Subscribe, handleSubmit, reset } =
     useForm<CreateAuctionFormData>({
       defaultValues: {
-        name: "",
+        title: "",
         endTime: new Date(Date.now() + HOUR).getTime(),
         startPrice: "0",
         bidStep: "0",
-        asset: null,
+        assetType: null,
+        assetContract: "",
+        assetId: 0,
+        assetAmount: 0,
+        arbiter: "",
       },
       onSubmit: async ({ value }) => {
-        if (!service) return;
+        if (!service || !value.assetType) return;
 
         const data = {
           ...value,
-          asset: value.asset as AssetType,
+          assetType: LABEL_TO_ASSET_TYPE[value.assetType],
           startPrice: ethToGwei(Number(value.startPrice)),
           bidStep: ethToGwei(Number(value.bidStep)),
+          assetContract: value.assetContract || ZERO_ADDRESS,
+          assetId: value.assetId || 0,
+          assetAmount: value.assetAmount || 0,
+          arbiter: value.arbiter || ZERO_ADDRESS,
         };
 
         try {
@@ -78,11 +90,11 @@ export const CreateAuctionForm = () => {
     >
       <Fieldset.Root spaceY={4} p={4} w={width}>
         <Field
-          name="name"
+          name="title"
           children={(field) => (
             <FormControl.Root>
               <FormControl.Label htmlFor={field.name}>
-                Auction Name:
+                Auction Title:
               </FormControl.Label>
 
               <Input
@@ -92,6 +104,7 @@ export const CreateAuctionForm = () => {
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
                 onBlur={field.handleBlur}
+                placeholder="Enter auction title"
               />
 
               <FormFieldError state={field.state} />
@@ -124,15 +137,17 @@ export const CreateAuctionForm = () => {
         />
 
         <Field
-          name="asset"
+          name="assetType"
           children={(field) => (
             <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>Asset:</FormControl.Label>
+              <FormControl.Label htmlFor={field.name}>
+                Asset Type:
+              </FormControl.Label>
 
               <AssetTypeSelector
                 value={[field.state.value?.toString() ?? ""]}
                 onChange={(values) =>
-                  field.handleChange(values[0] as AssetType)
+                  field.handleChange(values[0] as AssetTypeLabel)
                 }
               />
 
@@ -174,6 +189,102 @@ export const CreateAuctionForm = () => {
                 handleChange={field.handleChange}
                 handleBlur={field.handleBlur}
                 value={field.state.value}
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="assetContract"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Asset Contract(optional):
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                placeholder="Enter asset contract"
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="arbiter"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Arbiter(optional):
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
+                placeholder="Enter arbiter address"
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="assetId"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Asset ID(optional):
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) =>
+                  field.handleChange(Number(event.target.value))
+                }
+                onBlur={field.handleBlur}
+                placeholder="Enter asset id"
+              />
+
+              <FormFieldError state={field.state} />
+            </FormControl.Root>
+          )}
+        />
+
+        <Field
+          name="assetAmount"
+          children={(field) => (
+            <FormControl.Root>
+              <FormControl.Label htmlFor={field.name}>
+                Asset Amount(optional):
+              </FormControl.Label>
+
+              <Input
+                color="white"
+                colorPalette="teal"
+                id={field.name}
+                value={field.state.value}
+                onChange={(event) =>
+                  field.handleChange(Number(event.target.value))
+                }
+                onBlur={field.handleBlur}
+                placeholder="Enter asset amount"
               />
 
               <FormFieldError state={field.state} />

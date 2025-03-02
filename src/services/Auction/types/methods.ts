@@ -2,38 +2,38 @@ import { Address } from "web3";
 
 import { AssetType } from "./enums";
 
-export interface CreateAuctionParams {
+export interface CreateAuction {
   title: string;
   assetType: AssetType;
   startPrice: number;
   bidStep: number;
   endTime: number;
-  assetContract: Address;
-  assetId: number;
-  assetAmount: number;
-  arbiter: Address;
+  assetContract: Address; // ERC721/ERC1155/ERC20
+  assetId: number; // ERC721/ERC1155
+  assetAmount: number; // ERC1155/ERC20
+  arbiter: Address; // Real Asset
 }
 
-export interface PlaceBidParams {
+export interface PlaceBid {
   auctionId: number;
   value: number;
 }
 
-export interface TakeMyBidParams {
+export interface TakeMyBid {
   auctionId: number;
   bidId: number;
 }
 
-export interface VerifyNewArbiterParams {
+export interface VerifyNewArbiter {
   auctionId: number;
   newArbiter: Address;
 }
 
 export type AuctionMethodArgs = {
-  createAuction: CreateAuctionParams;
-  placeBid: PlaceBidParams;
-  takeMyBid: TakeMyBidParams;
-  verifyNewArbiter: VerifyNewArbiterParams;
+  createAuction: CreateAuction;
+  placeBid: PlaceBid;
+  takeMyBid: TakeMyBid;
+  verifyNewArbiter: VerifyNewArbiter;
   approveRefund: number;
   getAuction: number;
   getBids: number;
