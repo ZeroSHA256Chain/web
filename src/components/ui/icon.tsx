@@ -1,4 +1,5 @@
 import {
+  CalendarClock,
   ChevronDown,
   ExternalLink,
   type LucideProps,
@@ -22,6 +23,7 @@ const IconsList = {
   ExternalLink,
   RefreshCw,
   Menu,
+  CalendarClock,
 };
 
 export type IconName = keyof typeof IconsList;

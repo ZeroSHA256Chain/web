@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import { Web3 } from "web3";
 
 import { SMART_CONTRACT_ABI } from "@/blockchain/";
-import { SmartContractRepository } from "@/blockchain/repository";
-import { Icon, toaster } from "@/components/ui";
+import { Icon } from "@/components/ui";
 import { SECOND } from "@/constants";
-import { formatLongString } from "@/helpers";
-import { SmartContractService } from "@/services";
+import { formatETHAddress } from "@/helpers";
+import { useCopyAddress } from "@/hooks";
+import { AuctionService } from "@/services";
 import {
+  auctionServiceAtom,
   connectedAccountAtom,
-  smartContractServiceAtom,
   web3Atom,
 } from "@/store/atoms";
 
@@ -20,11 +20,13 @@ import { removeRequestAccountsDialog, requestEthereumAccounts } from "./utils";
 export const ConnectMetamask = () => {
   const [web3, setWeb3] = useAtom(web3Atom);
   const [connectedAccount, setConnectedAccount] = useAtom(connectedAccountAtom);
-  const setService = useSetAtom(smartContractServiceAtom);
+  const setService = useSetAtom(auctionServiceAtom);
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
+
+  const copyAddress = useCopyAddress();
 
   // to avoid flickering when loading
   const setLoadingWithMinDuration = useCallback(async (loading: boolean) => {
@@ -89,15 +91,16 @@ export const ConnectMetamask = () => {
   );
 
   useEffect(
-    function initializeSmartContractService() {
+    function initializeAuctionService() {
       if (connectedAccount) {
-        const repository = new SmartContractRepository(
-          import.meta.env.VITE_PROVIDER_URL,
-          import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
-          SMART_CONTRACT_ABI,
-          connectedAccount
+        setService(
+          new AuctionService(
+            import.meta.env.VITE_PROVIDER_URL,
+            import.meta.env.VITE_SMART_CONTRACT_ADDRESS,
+            SMART_CONTRACT_ABI,
+            connectedAccount
+          )
         );
-        setService(new SmartContractService(repository));
       }
     },
     [connectedAccount, setService]
@@ -113,6 +116,7 @@ export const ConnectMetamask = () => {
   );
 
   useEffect(
+    // todo: review bahavior when account is reconected after error
     function clearErrorWhenAccountIsConnected() {
       if (connectedAccount && error) {
         setError(null);
@@ -120,17 +124,6 @@ export const ConnectMetamask = () => {
     },
     [connectedAccount, error]
   );
-  const copyAddressToClipboard = async () => {
-    if (!connectedAccount) return;
-
-    await navigator.clipboard.writeText(connectedAccount);
-
-    toaster.create({
-      title: "Copied to clipboard",
-      description: "Your address has been copied to clipboard",
-      type: "success",
-    });
-  };
 
   if (error) {
     return (
@@ -162,14 +155,16 @@ export const ConnectMetamask = () => {
       w={170}
       variant="solid"
       colorPalette="white"
-      onClick={connectedAccount ? copyAddressToClipboard : connectWallet}
+      onClick={
+        connectedAccount ? () => copyAddress(connectedAccount) : connectWallet
+      }
       loading={isLoading}
       disabled={Boolean(error)}
     >
       {isLoading
         ? "Connecting..."
         : connectedAccount
-          ? formatLongString(connectedAccount)
+          ? formatETHAddress(connectedAccount)
           : "Connect MetaMask"}
     </Button>
   );
