@@ -1,6 +1,7 @@
 import { Grid, Heading, VStack } from "@chakra-ui/react";
 import { memo, useMemo } from "react";
 
+import { mockAuction } from "@/__mocks__/auction";
 import {
   AssetDetails,
   AuctionStatusBadge,
@@ -22,12 +23,12 @@ const BLOCK_HEIGHT = 170;
 
 export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
   const {
-    data: auction,
+    data: auction = mockAuction,
     isLoading,
     isError,
     isFetched,
   } = useAuctionFetch<Auction>({
-    method: "_getMockAuction",
+    method: "getAuction",
     args: { id },
   });
 
@@ -42,6 +43,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
       isError={isError}
       isEmpty={isFetched && !auction}
       errorMessage="Failed to fetch auction. Please try again."
+      emptyMessage="No auction found"
       data={auction}
     >
       {(auction) => (
@@ -71,7 +73,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
                   }}
                   fontWeight="bold"
                 >
-                  {auction.name}
+                  {auction.title}
                 </Heading>
 
                 <AuctionStatusBadge w="fit-content" status={auction.status} />
@@ -125,9 +127,9 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
                 borderRadius="md"
               >
                 <BidsOverviewTable
-                  bestBid={Number(auction.bestBid.price)}
-                  bidStep={Number(auction.bidStep)}
-                  minBid={Number(auction.startPrice)}
+                  bestBid={auction.bestBid?.price || 0}
+                  bidStep={auction.bidStep}
+                  minBid={auction.startPrice}
                 />
 
                 <MakeBidForm auctionId={id} w="full" />

@@ -23,10 +23,11 @@ export interface ERC1155Asset {
 }
 
 export interface Bid {
-  id: bigint;
+  id: number;
   sender: Address;
-  price: bigint;
-  date: bigint;
+  price: number;
+  date: number;
+  withdrawn: boolean;
 }
 
 export interface Asset {
@@ -38,24 +39,14 @@ export interface Asset {
 }
 
 export interface Auction {
-  name: string;
+  id: number;
+  title: string;
   creator: Address;
-  bidsCount: bigint;
-  endTime: bigint;
-  startPrice: bigint;
-  bidStep: bigint;
-  bestBid: Bid;
+  bidsCount: number;
+  endTime: number;
+  startPrice: number;
+  bidStep: number;
+  bestBid: Bid | null;
   asset: Asset;
   status: AuctionStatus;
-  arbiter: Address;
-}
-
-export interface ShortAuction {
-  id: number;
-  name: string;
-  bestBid: number;
-  bidStep: number;
-  status: AuctionStatus;
-  endTime: number;
-  creator: Address;
 }

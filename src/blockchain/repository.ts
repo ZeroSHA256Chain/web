@@ -9,6 +9,8 @@ export type CallMethods =
 export type QueryMethods =
   | "getAuction"
   | "getBids"
+  | "auctionCount"
+
   // todo: remove
   | "_getMockBids"
   | "_getMockAuction";

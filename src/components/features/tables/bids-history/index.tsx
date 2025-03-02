@@ -18,7 +18,7 @@ const BID_COLUMNS = [
 ] as const;
 
 interface BidsHistoryProps {
-  bidsCount: bigint;
+  bidsCount: number;
   auctionId: number;
 }
 
@@ -32,7 +32,7 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
       isError,
       isFetched,
     } = useAuctionFetch<Bid[]>({
-      method: "_getMockBids",
+      method: "getBids",
       args: { id: auctionId },
     });
 
@@ -42,6 +42,7 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
         isError={isError}
         isEmpty={isFetched && bids?.length === 0}
         errorMessage="Failed to fetch bid history. Please try again."
+        emptyMessage="No bids found"
         data={bids}
       >
         {(bids) => (

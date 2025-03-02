@@ -8,6 +8,7 @@ interface LoadedContentControllerProps<T extends object> {
   isError: boolean;
   isEmpty: boolean;
   errorMessage: string;
+  emptyMessage: string;
   children: (data: T) => React.ReactNode;
   data: T | null;
 }
@@ -15,6 +16,7 @@ interface LoadedContentControllerProps<T extends object> {
 export const LoadedContentController = <T extends object>({
   isLoading,
   errorMessage,
+  emptyMessage,
   children,
   isEmpty,
   isError,
@@ -28,7 +30,7 @@ export const LoadedContentController = <T extends object>({
     ))
     .with({ isEmpty: true }, () => (
       <Text fontSize="lg" color="fg.muted">
-        No data found
+        {emptyMessage}
       </Text>
     ))
     .with({ isError: true }, () => (

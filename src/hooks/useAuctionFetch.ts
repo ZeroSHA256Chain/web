@@ -1,18 +1,18 @@
 import { useAtomValue } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 
-import { QueryMethods } from "@/blockchain";
-import { Auction, Bid } from "@/services";
 import { auctionServiceAtom } from "@/store/atoms";
 
+type FetchMethod = "getAuction" | "getAuctions" | "getBids";
+
 interface UseAuctionFetchOptions {
-  method: QueryMethods;
-  args: {
+  method: FetchMethod;
+  args?: {
     id: number;
   };
 }
 
-export const useAuctionFetch = <T extends Auction | Bid[]>({
+export const useAuctionFetch = <T>({
   method,
   args,
 }: UseAuctionFetchOptions) => {
@@ -29,7 +29,17 @@ export const useAuctionFetch = <T extends Auction | Bid[]>({
         if (!auctionService) return;
 
         try {
-          setData((await auctionService[method](args.id)) as T);
+          const methodToCall = auctionService[method].bind(auctionService);
+
+          let result: T;
+
+          if (methodToCall.length > 0 && args) {
+            result = (await methodToCall(args.id)) as T;
+          } else {
+            result = (await (methodToCall as () => Promise<T>)()) as T;
+          }
+
+          setData(result);
         } catch (error) {
           setError(error);
         } finally {

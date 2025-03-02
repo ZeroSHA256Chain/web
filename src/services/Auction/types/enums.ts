@@ -1,8 +1,8 @@
 export enum AuctionStatus {
-  Active = "Active",
-  Ended = "Ended",
-  Declined = "Declined",
-  WaitFinalization = "WaitFinalization",
+  Active,
+  Ended,
+  Declined,
+  WaitFinalization,
 }
 
 export enum AssetType {

@@ -81,9 +81,9 @@ export const MakeBidForm = ({ auctionId, ...props }: MakeBidFormProps) => {
                     fontWeight="bold"
                     variant="subtle"
                     type="submit"
-                    disabled={isSubmitting}
+                    loading={isSubmitting}
                   >
-                    {isSubmitting ? "..." : "Place"}
+                    Place
                   </Button>
                 )}
               />

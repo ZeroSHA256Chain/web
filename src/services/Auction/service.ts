@@ -3,6 +3,7 @@ import { mockBids } from "@/__mocks__/bids_list";
 import { SmartContractRepository } from "@/blockchain";
 
 import { Auction, AuctionMethodArgs, Bid } from "./types";
+import { parseAuction } from "./utils";
 
 export class AuctionService extends SmartContractRepository {
   public async createAuction(params: AuctionMethodArgs["createAuction"]) {
@@ -31,11 +32,28 @@ export class AuctionService extends SmartContractRepository {
     await this.call("requestWithdraw", [params.auctionId]);
   }
 
-  public async getAuction(id: number) {
-    return await this.query<Auction>("getAuction", [id]);
+  public async getAuctionCount(): Promise<number> {
+    return await this.query<number>("auctionCount");
   }
 
-  public async getBids(id: number) {
+  public async getAuction(id: number): Promise<Auction> {
+    return parseAuction(await this.query<Auction>("getAuction", [id]));
+  }
+
+  public async getAuctions(): Promise<Auction[]> {
+    const count = await this.getAuctionCount();
+
+    const auctions = await Promise.all(
+      Array.from({ length: Number(count) }, (_, id) => this.getAuction(id))
+    );
+
+    return auctions.map((auction, index) => ({
+      ...auction,
+      id: index,
+    }));
+  }
+
+  public async getBids(id: number): Promise<Bid[]> {
     return await this.query<Bid[]>("getBids", [id]);
   }
 
