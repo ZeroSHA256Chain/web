@@ -16,6 +16,7 @@ export const AuctionStatusBadge = memo(
         px={2}
         py={1}
         borderRadius="md"
+        size="lg"
         {...props}
       >
         {STATUS_MAP[status].label}

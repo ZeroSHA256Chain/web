@@ -25,17 +25,20 @@ export const MakeBidForm = ({ auctionId, ...props }: MakeBidFormProps) => {
       if (!service) return;
 
       try {
-        await service.makeBid(auctionId, ethToGwei(Number(value.price)));
+        await service.placeBid({
+          auctionId,
+          value: ethToGwei(Number(value.price)),
+        });
 
         toaster.create({
-          description: "Bid created successfully",
+          description: "Bid placed successfully",
           type: "success",
         });
 
         reset();
       } catch (error) {
         toaster.create({
-          description: "Error creating bid",
+          description: "Error placing bid",
           type: "error",
         });
       }
@@ -76,8 +79,7 @@ export const MakeBidForm = ({ auctionId, ...props }: MakeBidFormProps) => {
                   <Button
                     borderLeftRadius="none"
                     fontWeight="bold"
-                    variant="solid"
-                    colorPalette="black"
+                    variant="subtle"
                     type="submit"
                     disabled={isSubmitting}
                   >

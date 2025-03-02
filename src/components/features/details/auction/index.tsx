@@ -1,13 +1,13 @@
-import { Grid, HStack, Heading, Text, VStack } from "@chakra-ui/react";
-import { memo } from "react";
+import { Grid, Heading, VStack } from "@chakra-ui/react";
+import { memo, useMemo } from "react";
 
 import {
-  AddressButton,
   AssetDetails,
   AuctionStatusBadge,
   AuctionTimeBadge,
   BidsHistory,
   BidsOverviewTable,
+  RequestWithdrawnButton,
 } from "@/components/features";
 import { MakeBidForm } from "@/components/features";
 import { LoadedContentController } from "@/components/utils";
@@ -18,7 +18,7 @@ interface AuctionDetailsProps {
   id: number;
 }
 
-const BLOCK_HEIGHT = 220;
+const BLOCK_HEIGHT = 170;
 
 export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
   const {
@@ -30,6 +30,11 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
     method: "_getMockAuction",
     args: { id },
   });
+
+  const isEnded = useMemo(
+    () => (auction ? auction.endTime < Date.now() : false),
+    [auction]
+  );
 
   return (
     <LoadedContentController
@@ -69,11 +74,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
                   {auction.name}
                 </Heading>
 
-                <HStack>
-                  <Text color="fg.muted">Created by </Text>
-
-                  <AddressButton address={auction.creator} />
-                </HStack>
+                <AuctionStatusBadge w="fit-content" status={auction.status} />
               </VStack>
 
               <Grid
@@ -97,9 +98,12 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
                 }}
                 w="fit-content"
               >
-                <AuctionTimeBadge endTime={Number(auction.endTime)} />
+                <RequestWithdrawnButton disabled={isEnded} auctionId={id} />
 
-                <AuctionStatusBadge w="fit-content" status={auction.status} />
+                <AuctionTimeBadge
+                  endTime={Number(auction.endTime)}
+                  isEnded={isEnded}
+                />
               </Grid>
             </Grid>
 
@@ -130,6 +134,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
               </VStack>
 
               <AssetDetails
+                creator={auction.creator}
                 h={BLOCK_HEIGHT}
                 asset={auction.asset}
                 border="1px solid"
@@ -140,11 +145,7 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
             </Grid>
           </VStack>
 
-          <BidsHistory
-            bestBid={auction.bestBid}
-            bidsCount={auction.bidsCount}
-            auctionId={id}
-          />
+          <BidsHistory bidsCount={auction.bidsCount} auctionId={id} />
         </VStack>
       )}
     </LoadedContentController>

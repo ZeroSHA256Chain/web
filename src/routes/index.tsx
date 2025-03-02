@@ -13,7 +13,7 @@ const Home: React.FC = () => {
     <Show
       when={Boolean(connectedAccount)}
       fallback={
-        <Alert.Root status="info">
+        <Alert.Root status="info" w="fit-content">
           <Alert.Indicator />
 
           <Alert.Title w="100%">

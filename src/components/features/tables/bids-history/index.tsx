@@ -1,27 +1,31 @@
 import { For, HStack, Heading, Table, Text, VStack } from "@chakra-ui/react";
+import { useAtomValue } from "jotai";
 import { memo } from "react";
 
-import { AddressButton } from "@/components/features";
+import { WithdrawBidButton } from "@/components/features";
 import { LoadedContentController } from "@/components/utils";
 import { ETHEREUM_TOKEN } from "@/constants";
 import { formatDate, formatETHAddress, gweiToETH } from "@/helpers";
 import { useAuctionFetch } from "@/hooks";
 import { Bid } from "@/services";
+import { connectedAccountAtom } from "@/store/atoms";
 
 const BID_COLUMNS = [
   { key: "sender", label: "Bidder" },
   { key: "price", label: `Amount (${ETHEREUM_TOKEN})` },
   { key: "date", label: "Date" },
+  { key: "actions", label: "Actions" },
 ] as const;
 
 interface BidsHistoryProps {
-  bestBid: Bid;
   bidsCount: bigint;
   auctionId: number;
 }
 
 export const BidsHistory: React.FC<BidsHistoryProps> = memo(
-  ({ bestBid, bidsCount, auctionId }) => {
+  ({ bidsCount, auctionId }) => {
+    const connectedAccount = useAtomValue(connectedAccountAtom);
+
     const {
       data: bids,
       isLoading,
@@ -70,20 +74,6 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
                 </Table.Header>
 
                 <Table.Body>
-                  <Table.Row>
-                    <Table.Cell>
-                      <AddressButton address={bestBid.sender} />
-                    </Table.Cell>
-
-                    <Table.Cell>
-                      <Text>{gweiToETH(Number(bestBid.price))}</Text>
-                    </Table.Cell>
-
-                    <Table.Cell>
-                      <Text>{formatDate(Number(bestBid.date))}</Text>
-                    </Table.Cell>
-                  </Table.Row>
-
                   {bids.map((bid) => (
                     <Table.Row key={bid.id.toString()}>
                       <Table.Cell>
@@ -102,6 +92,19 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
 
                       <Table.Cell>
                         <Text>{formatDate(Number(bid.date))}</Text>
+                      </Table.Cell>
+
+                      <Table.Cell>
+                        <WithdrawBidButton
+                          disabled={connectedAccount !== bid.sender}
+                          auctionId={auctionId}
+                          bidId={Number(bid.id)}
+                          visibility={
+                            connectedAccount === bid.sender
+                              ? "visible"
+                              : "hidden"
+                          }
+                        />
                       </Table.Cell>
                     </Table.Row>
                   ))}

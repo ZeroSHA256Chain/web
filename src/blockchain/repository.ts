@@ -5,9 +5,7 @@ export type CallMethods =
   | "createAuction"
   | "placeBid"
   | "takeMyBid"
-  | "verifyNewArbiter"
-  | "approveRefund"
-  | "withdrawFees";
+  | "requestWithdraw";
 export type QueryMethods =
   | "getAuction"
   | "getBids"
