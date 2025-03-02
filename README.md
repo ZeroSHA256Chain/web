@@ -33,6 +33,14 @@ The Blockchain-Based Auction Platform is designed to transform traditional aucti
   - Optimized for React concurrent features
   - Minimal boilerplate
 
+### Data Validation & Type Safety
+- **[Zod](https://zod.dev/)**
+  - Schema declaration and validation
+  - Runtime type checking
+  - TypeScript integration
+  - API response validation
+  - Form data validation
+
 ### Responsive Design
 - Mobile-first approach
 - Adaptive layouts
