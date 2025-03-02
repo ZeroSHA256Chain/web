@@ -1,11 +1,11 @@
 import { Address } from "web3";
 
-import { HOUR } from "@/constants";
 import { ethToGwei } from "@/helpers";
 import { AssetType, Auction, AuctionStatus } from "@/services";
 
 import { mockBids } from "./bids_list";
 
+const HOUR = 1000 * 60 * 60;
 const assetExamples = {
   erc721: {
     kind: AssetType.ERC721,

@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/components/ui";
-import { AssetType } from "@/services";
+import { ASSET_TYPE_MAP } from "@/constants";
 
 interface AssetTypeSelectorProps {
   value: string[];
@@ -16,9 +16,9 @@ interface AssetTypeSelectorProps {
 }
 
 const assetsCollection = createListCollection({
-  items: Object.values(AssetType).map((assetType) => ({
-    label: assetType,
-    value: assetType,
+  items: Object.values(ASSET_TYPE_MAP).map(({ label }) => ({
+    label,
+    value: label,
   })),
 });
 

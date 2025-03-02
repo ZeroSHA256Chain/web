@@ -6,8 +6,8 @@ export enum AuctionStatus {
 }
 
 export enum AssetType {
-  Real = "Real",
-  ERC20 = "ERC20",
-  ERC721 = "ERC721",
-  ERC1155 = "ERC1155",
+  Real,
+  ERC20,
+  ERC721,
+  ERC1155,
 }
