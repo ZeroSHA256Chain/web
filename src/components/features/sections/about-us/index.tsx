@@ -92,7 +92,10 @@ export const AboutUsSection = () => {
         </Badge>
 
         <Grid
-          gridTemplateColumns="1fr 1fr 1fr"
+          gridTemplateColumns={{
+            base: "1fr",
+            lg: "1fr 1fr 1fr",
+          }}
           gap={4}
           w="full"
           justifyItems="space-between"
