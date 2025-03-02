@@ -69,9 +69,10 @@ export const CreateAuctionForm = () => {
           });
 
           reset();
-        } catch (error) {
+        } catch (error: any) {
           toaster.create({
-            description: "Error createing auction",
+            title: "Please check your inputs",
+            description: error.cause.message,
             type: "error",
           });
         }
