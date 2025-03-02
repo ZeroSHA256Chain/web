@@ -3,7 +3,6 @@ import { Address } from "web3";
 import { AssetType, AuctionStatus } from "./enums";
 
 export interface RealAsset {
-  description: string;
   arbiter: Address;
 }
 
@@ -24,10 +23,11 @@ export interface ERC1155Asset {
 }
 
 export interface Bid {
-  id: bigint;
+  id: number;
   sender: Address;
-  price: bigint;
-  date: bigint;
+  price: number;
+  date: number;
+  withdrawn: boolean;
 }
 
 export interface Asset {
@@ -39,32 +39,14 @@ export interface Asset {
 }
 
 export interface Auction {
-  name: string;
+  id: number;
+  title: string;
   creator: Address;
-  bidsCount: bigint;
-  endTime: bigint;
-  startPrice: bigint;
-  bidStep: bigint;
-  bestBid: Bid;
-  asset: Asset;
-  status: AuctionStatus;
-  arbiter: Address;
-}
-
-export interface CreateAuction {
-  name: string;
+  bidsCount: number;
   endTime: number;
   startPrice: number;
   bidStep: number;
-  asset: AssetType;
-}
-
-export interface ShortAuction {
-  id: number;
-  name: string;
-  bestBid: number;
-  bidStep: number;
+  bestBid: Bid | null;
+  asset: Asset;
   status: AuctionStatus;
-  endTime: number;
-  creator: Address;
 }

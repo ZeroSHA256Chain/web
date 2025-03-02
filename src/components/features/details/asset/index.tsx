@@ -9,10 +9,11 @@ import { AddressInfo, AssetTypeBadge, LabeledValue } from "./components";
 
 interface AssetDetailsProps extends StackProps {
   asset: Auction["asset"];
+  creator: string;
 }
 
 export const AssetDetails: React.FC<AssetDetailsProps> = memo(
-  ({ asset, ...props }) => {
+  ({ asset, creator, ...props }) => {
     return (
       <VStack align="start" spaceY={0} {...props}>
         {match(asset)
@@ -21,7 +22,6 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             ({ real }) => (
               <>
                 <AssetTypeBadge title="Real Asset" />
-                <LabeledValue label="Description" value={real.description} />
                 <AddressInfo address={real.arbiter} ownerLabel="Arbiter" />
               </>
             )
@@ -73,6 +73,8 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             )
           )
           .otherwise(() => null)}
+
+        <AddressInfo address={creator} ownerLabel="Created by" />
       </VStack>
     );
   }

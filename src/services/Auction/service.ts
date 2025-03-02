@@ -2,18 +2,12 @@ import { mockAuction } from "@/__mocks__/auction";
 import { mockBids } from "@/__mocks__/bids_list";
 import { SmartContractRepository } from "@/blockchain";
 
-import {
-  Auction,
-  AuctionMethodArgs,
-  Bid,
-  PlaceBid,
-  TakeMyBid,
-  VerifyNewArbiter,
-} from "./types";
+import { Auction, AuctionMethodArgs, Bid } from "./types";
+import { parseAuction } from "./utils";
 
 export class AuctionService extends SmartContractRepository {
   public async createAuction(params: AuctionMethodArgs["createAuction"]) {
-    const orderedParams = [
+    await this.call("createAuction", [
       params.title,
       params.assetType,
       params.startPrice,
@@ -23,48 +17,44 @@ export class AuctionService extends SmartContractRepository {
       params.assetId,
       params.assetAmount,
       params.arbiter,
-    ];
-
-    await this.call("createAuction", orderedParams);
-  }
-
-  public async placeBid({ auctionId, value }: PlaceBid) {
-    await this.call<AuctionMethodArgs["placeBid"]>("placeBid", [
-      {
-        auctionId,
-        value,
-      },
     ]);
   }
 
-  public async takeMyBid({ auctionId, bidId }: TakeMyBid) {
-    await this.call<AuctionMethodArgs["takeMyBid"]>("takeMyBid", [
-      { auctionId, bidId },
-    ]);
+  public async placeBid(params: AuctionMethodArgs["placeBid"]) {
+    await this.call("placeBid", [params.auctionId, params.value]);
   }
 
-  public async verifyNewArbiter({ auctionId, newArbiter }: VerifyNewArbiter) {
-    await this.call<AuctionMethodArgs["verifyNewArbiter"]>("verifyNewArbiter", [
-      { auctionId, newArbiter },
-    ]);
+  public async takeMyBid(params: AuctionMethodArgs["takeMyBid"]) {
+    await this.call("takeMyBid", [params.auctionId, params.bidId]);
   }
 
-  public async approveRefund(auctionId: number) {
-    await this.call<AuctionMethodArgs["approveRefund"]>("approveRefund", [
-      auctionId,
-    ]);
+  public async requestWithdraw(params: AuctionMethodArgs["requestWithdraw"]) {
+    await this.call("requestWithdraw", [params.auctionId]);
   }
 
-  public async getAuction(id: number) {
-    return await this.query<Auction>("getAuction", [id]);
+  public async getAuctionCount(): Promise<number> {
+    return await this.query<number>("auctionCount");
   }
 
-  public async getBids(id: number) {
+  public async getAuction(id: number): Promise<Auction> {
+    return parseAuction(await this.query<Auction>("getAuction", [id]));
+  }
+
+  public async getAuctions(): Promise<Auction[]> {
+    const count = await this.getAuctionCount();
+
+    const auctions = await Promise.all(
+      Array.from({ length: Number(count) }, (_, id) => this.getAuction(id))
+    );
+
+    return auctions.map((auction, index) => ({
+      ...auction,
+      id: index,
+    }));
+  }
+
+  public async getBids(id: number): Promise<Bid[]> {
     return await this.query<Bid[]>("getBids", [id]);
-  }
-
-  public async withdrawFees() {
-    await this.call<AuctionMethodArgs["withdrawFees"]>("withdrawFees", []);
   }
 
   // mock methods for development

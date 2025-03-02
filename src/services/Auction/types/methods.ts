@@ -2,7 +2,7 @@ import { Address } from "web3";
 
 import { AssetType } from "./enums";
 
-export interface CreateAuction {
+interface CreateAuction {
   title: string;
   assetType: AssetType;
   startPrice: number;
@@ -14,28 +14,25 @@ export interface CreateAuction {
   arbiter: Address; // Real Asset
 }
 
-export interface PlaceBid {
+interface PlaceBid {
   auctionId: number;
   value: number;
 }
 
-export interface TakeMyBid {
+interface TakeMyBid {
   auctionId: number;
   bidId: number;
 }
 
-export interface VerifyNewArbiter {
+interface RequestWithdraw {
   auctionId: number;
-  newArbiter: Address;
 }
 
 export type AuctionMethodArgs = {
   createAuction: CreateAuction;
   placeBid: PlaceBid;
   takeMyBid: TakeMyBid;
-  verifyNewArbiter: VerifyNewArbiter;
-  approveRefund: number;
+  requestWithdraw: RequestWithdraw;
   getAuction: number;
   getBids: number;
-  withdrawFees: [];
 };

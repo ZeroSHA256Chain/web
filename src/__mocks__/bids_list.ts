@@ -8,7 +8,7 @@ const HOUR = 3600000;
 export const mockBids: Bid[] = [
   {
     id: BigInt(1),
-    sender: "0x1234567890123456789012345678901234567890" as Address,
+    sender: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" as Address,
     price: BigInt(ethToGwei(2.5)), // 2.5 ETH - winning bid
     date: BigInt(Date.now() - HOUR * 1), // 1 hour ago
   },
@@ -20,7 +20,7 @@ export const mockBids: Bid[] = [
   },
   {
     id: BigInt(3),
-    sender: "0x3456789012345678901234567890123456789012" as Address,
+    sender: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" as Address,
     price: BigInt(ethToGwei(2.1)), // 2.1 ETH
     date: BigInt(Date.now() - HOUR * 3), // 3 hours ago
   },

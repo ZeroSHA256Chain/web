@@ -3,6 +3,7 @@ import {
   Button,
   Fieldset,
   Field as FormControl,
+  Grid,
   Input,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -13,6 +14,7 @@ import { AssetTypeSelector, PriceInput } from "@/components/features";
 import { DatePicker, FormFieldError, toaster } from "@/components/ui";
 import {
   AssetTypeLabel,
+  ETHEREUM_TOKEN,
   HOUR,
   LABEL_TO_ASSET_TYPE,
   ZERO_ADDRESS,
@@ -27,8 +29,8 @@ export const CreateAuctionForm = () => {
 
   const width = useBreakpointValue({
     base: 250,
-    sm: 300,
-    md: 400,
+    sm: 400,
+    md: 700,
   });
 
   const { Field, Subscribe, handleSubmit, reset } =
@@ -156,141 +158,149 @@ export const CreateAuctionForm = () => {
           )}
         />
 
-        <Field
-          name="startPrice"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Min Bid:
-              </FormControl.Label>
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            md: "1fr 1fr",
+          }}
+          gap={4}
+        >
+          <Field
+            name="startPrice"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  {`Min Bid(${ETHEREUM_TOKEN}):`}
+                </FormControl.Label>
 
-              <PriceInput
-                name={field.name}
-                handleChange={field.handleChange}
-                handleBlur={field.handleBlur}
-                value={field.state.value}
-              />
+                <PriceInput
+                  name={field.name}
+                  handleChange={field.handleChange}
+                  handleBlur={field.handleBlur}
+                  value={field.state.value}
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="bidStep"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Bid Step:
-              </FormControl.Label>
+          <Field
+            name="bidStep"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  {`Bid Step(${ETHEREUM_TOKEN}):`}
+                </FormControl.Label>
 
-              <PriceInput
-                name={field.name}
-                handleChange={field.handleChange}
-                handleBlur={field.handleBlur}
-                value={field.state.value}
-              />
+                <PriceInput
+                  name={field.name}
+                  handleChange={field.handleChange}
+                  handleBlur={field.handleBlur}
+                  value={field.state.value}
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="assetContract"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Asset Contract(optional):
-              </FormControl.Label>
+          <Field
+            name="assetContract"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  Asset Contract(optional):
+                </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                onBlur={field.handleBlur}
-                placeholder="Enter asset contract"
-              />
+                <Input
+                  color="white"
+                  colorPalette="teal"
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  onBlur={field.handleBlur}
+                  placeholder="Enter asset contract"
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="arbiter"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Arbiter(optional):
-              </FormControl.Label>
+          <Field
+            name="arbiter"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  Arbiter(optional):
+                </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                onBlur={field.handleBlur}
-                placeholder="Enter arbiter address"
-              />
+                <Input
+                  color="white"
+                  colorPalette="teal"
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  onBlur={field.handleBlur}
+                  placeholder="Enter arbiter address"
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="assetId"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Asset ID(optional):
-              </FormControl.Label>
+          <Field
+            name="assetId"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  Asset ID(optional):
+                </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
-                value={field.state.value}
-                onChange={(event) =>
-                  field.handleChange(Number(event.target.value))
-                }
-                onBlur={field.handleBlur}
-                placeholder="Enter asset id"
-              />
+                <Input
+                  color="white"
+                  colorPalette="teal"
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(event) =>
+                    field.handleChange(Number(event.target.value))
+                  }
+                  onBlur={field.handleBlur}
+                  placeholder="Enter asset id"
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
 
-        <Field
-          name="assetAmount"
-          children={(field) => (
-            <FormControl.Root>
-              <FormControl.Label htmlFor={field.name}>
-                Asset Amount(optional):
-              </FormControl.Label>
+          <Field
+            name="assetAmount"
+            children={(field) => (
+              <FormControl.Root>
+                <FormControl.Label htmlFor={field.name}>
+                  Asset Amount(optional):
+                </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
-                value={field.state.value}
-                onChange={(event) =>
-                  field.handleChange(Number(event.target.value))
-                }
-                onBlur={field.handleBlur}
-                placeholder="Enter asset amount"
-              />
+                <Input
+                  color="white"
+                  colorPalette="teal"
+                  id={field.name}
+                  value={field.state.value}
+                  onChange={(event) =>
+                    field.handleChange(Number(event.target.value))
+                  }
+                  onBlur={field.handleBlur}
+                  placeholder="Enter asset amount"
+                />
 
-              <FormFieldError state={field.state} />
-            </FormControl.Root>
-          )}
-        />
+                <FormFieldError state={field.state} />
+              </FormControl.Root>
+            )}
+          />
+        </Grid>
 
         <Subscribe
           selector={(state) => [state.isSubmitting]}
@@ -299,9 +309,9 @@ export const CreateAuctionForm = () => {
               fontWeight="bold"
               colorPalette="teal"
               type="submit"
-              disabled={isSubmitting}
+              loading={isSubmitting}
             >
-              {isSubmitting ? "Createing Auction..." : "Create Auction"}
+              Create Auction
             </Button>
           )}
         />
