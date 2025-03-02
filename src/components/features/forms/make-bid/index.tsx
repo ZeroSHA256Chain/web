@@ -5,7 +5,7 @@ import { useAtomValue } from "jotai";
 
 import { PriceInput } from "@/components/features";
 import { FormFieldError, toaster } from "@/components/ui";
-import { ethToGwei } from "@/helpers";
+import { ethToGwei, extractErrorMessage } from "@/helpers";
 import { auctionServiceAtom } from "@/store/atoms";
 
 import { MakeBidFormData, makeBidSchema } from "./validation";
@@ -36,9 +36,9 @@ export const MakeBidForm = ({ auctionId, ...props }: MakeBidFormProps) => {
         });
 
         reset();
-      } catch (error) {
+      } catch (error: any) {
         toaster.create({
-          description: "Error placing bid",
+          description: extractErrorMessage(error),
           type: "error",
         });
       }

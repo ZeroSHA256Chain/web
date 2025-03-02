@@ -19,7 +19,7 @@ import {
   LABEL_TO_ASSET_TYPE,
   ZERO_ADDRESS,
 } from "@/constants";
-import { ethToGwei } from "@/helpers";
+import { ethToGwei, extractErrorMessage } from "@/helpers";
 import { auctionServiceAtom } from "@/store/atoms";
 
 import { CreateAuctionFormData, createAuctionSchema } from "./validation";
@@ -69,9 +69,10 @@ export const CreateAuctionForm = () => {
           });
 
           reset();
-        } catch (error) {
+        } catch (error: any) {
           toaster.create({
-            description: "Error createing auction",
+            title: "Please check your inputs",
+            description: extractErrorMessage(error),
             type: "error",
           });
         }

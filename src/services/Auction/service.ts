@@ -1,5 +1,3 @@
-import { mockAuction } from "@/__mocks__/auction";
-import { mockBids } from "@/__mocks__/bids_list";
 import { SmartContractRepository } from "@/blockchain";
 
 import { Auction, AuctionMethodArgs, Bid } from "./types";
@@ -53,17 +51,19 @@ export class AuctionService extends SmartContractRepository {
     }));
   }
 
-  public async getBids(id: number): Promise<Bid[]> {
-    return await this.query<Bid[]>("getBids", [id]);
-  }
+  public async getBids(auctionId: number): Promise<Bid[]> {
+    const bidsCount = (await this.getAuction(auctionId)).bidsCount;
 
-  // mock methods for development
-  public async _getMockAuction(_id: number) {
-    return Promise.resolve(mockAuction);
-  }
+    const bids = await Promise.all(
+      Array.from({ length: Number(bidsCount) }, (_, id) =>
+        this.query<Bid>("bids", [auctionId, id])
+      )
+    );
 
-  public async _getMockBids(_id: number) {
-    return Promise.resolve(mockBids);
+    return bids.map((bid, index) => ({
+      ...bid,
+      id: index,
+    }));
   }
 }
 

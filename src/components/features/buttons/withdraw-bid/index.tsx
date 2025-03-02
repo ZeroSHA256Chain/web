@@ -20,6 +20,7 @@ export const WithdrawBidButton = memo(
 
       try {
         setIsLoading(true);
+
         await auctionService.takeMyBid({ auctionId, bidId });
 
         toaster.create({

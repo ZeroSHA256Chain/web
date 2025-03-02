@@ -129,7 +129,6 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
                 <BidsOverviewTable
                   bestBid={auction.bestBid?.price || 0}
                   bidStep={auction.bidStep}
-                  minBid={auction.startPrice}
                 />
 
                 <MakeBidForm auctionId={id} w="full" />

@@ -28,7 +28,7 @@ export const useAuctionMutation = <T>(
       try {
         setIsLoading(true);
 
-        const result = null;
+        const result = await auctionService[method](args);
 
         if (options.onSuccess) {
           options.onSuccess(result as T);

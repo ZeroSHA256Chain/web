@@ -7,6 +7,7 @@ import {
   Moon,
   Plus,
   RefreshCw,
+  Star,
   Sun,
   Trash,
   X,
@@ -24,6 +25,7 @@ const IconsList = {
   RefreshCw,
   Menu,
   CalendarClock,
+  Star,
 };
 
 export type IconName = keyof typeof IconsList;

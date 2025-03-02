@@ -5,15 +5,10 @@ export type CallMethods =
   | "createAuction"
   | "placeBid"
   | "takeMyBid"
-  | "requestWithdraw";
-export type QueryMethods =
-  | "getAuction"
-  | "getBids"
-  | "auctionCount"
+  | "requestWithdraw"
+  | "getBidsCount";
 
-  // todo: remove
-  | "_getMockBids"
-  | "_getMockAuction";
+export type QueryMethods = "getAuction" | "bids" | "auctionCount" | "bidsCount";
 
 export class SmartContractRepository {
   private web3: Web3;
