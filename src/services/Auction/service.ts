@@ -45,7 +45,6 @@ export class AuctionService extends SmartContractRepository {
       Array.from({ length: Number(count) }, (_, id) => this.getAuction(id))
     );
 
-    console.log({ auctions });
     return auctions.map((auction, index) => ({
       ...auction,
       id: index,

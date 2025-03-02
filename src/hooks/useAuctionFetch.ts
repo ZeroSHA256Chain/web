@@ -41,7 +41,6 @@ export const useAuctionFetch = <T>({
 
           setData(result);
         } catch (error) {
-          console.error({ error });
           setError(error);
         } finally {
           setIsLoading(false);
