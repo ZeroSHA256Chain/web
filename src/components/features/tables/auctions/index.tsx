@@ -9,9 +9,9 @@ import { formatDate, gweiToETH } from "@/helpers";
 import { Auction } from "@/services";
 
 const AUCTION_COLUMNS = [
-  { key: "name", label: "Name" },
+  { key: "name", label: "Title" },
   { key: "bestBid", label: `Best Bid (${ETHEREUM_TOKEN})` },
-  { key: "bidStep", label: `Min Step (${ETHEREUM_TOKEN})` },
+  { key: "bidStep", label: `Bid Step (${ETHEREUM_TOKEN})` },
   { key: "status", label: "Status" },
   { key: "endTime", label: "Date" },
   { key: "creator", label: "Creator" },

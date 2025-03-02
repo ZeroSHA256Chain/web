@@ -6,18 +6,17 @@ import { gweiToETH } from "@/helpers";
 
 const BIDS_COLUMNS = [
   { key: "bestBid", label: `Best Bid (${ETHEREUM_TOKEN})` },
-  { key: "bidStep", label: `Min Bid (${ETHEREUM_TOKEN})` },
+  { key: "bidStep", label: `Bid Step (${ETHEREUM_TOKEN})` },
   { key: "minBid", label: `Min Bid (${ETHEREUM_TOKEN})` },
 ] as const;
 
 interface BidsOverviewTableProps {
   bestBid: number;
   bidStep: number;
-  minBid: number;
 }
 
 export const BidsOverviewTable = memo(
-  ({ bestBid, bidStep, minBid }: BidsOverviewTableProps) => {
+  ({ bestBid, bidStep }: BidsOverviewTableProps) => {
     return (
       <Table.Root variant="outline">
         <Table.Header>
@@ -43,7 +42,7 @@ export const BidsOverviewTable = memo(
             </Table.Cell>
 
             <Table.Cell>
-              <Text>{gweiToETH(minBid)}</Text>
+              <Text>{gweiToETH(bestBid + bidStep)}</Text>
             </Table.Cell>
           </Table.Row>
         </Table.Body>
