@@ -3,7 +3,6 @@ import { Address } from "web3";
 import { AssetType, AuctionStatus } from "./enums";
 
 export interface RealAsset {
-  description: string;
   arbiter: Address;
 }
 
@@ -49,14 +48,6 @@ export interface Auction {
   asset: Asset;
   status: AuctionStatus;
   arbiter: Address;
-}
-
-export interface CreateAuction {
-  name: string;
-  endTime: number;
-  startPrice: number;
-  bidStep: number;
-  asset: AssetType;
 }
 
 export interface ShortAuction {

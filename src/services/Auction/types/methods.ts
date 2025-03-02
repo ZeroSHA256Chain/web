@@ -24,16 +24,10 @@ export interface TakeMyBid {
   bidId: number;
 }
 
-export interface VerifyNewArbiter {
-  auctionId: number;
-  newArbiter: Address;
-}
-
 export type AuctionMethodArgs = {
   createAuction: CreateAuction;
   placeBid: PlaceBid;
   takeMyBid: TakeMyBid;
-  verifyNewArbiter: VerifyNewArbiter;
   approveRefund: number;
   getAuction: number;
   getBids: number;

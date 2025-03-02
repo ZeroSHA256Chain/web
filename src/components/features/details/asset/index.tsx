@@ -21,7 +21,6 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             ({ real }) => (
               <>
                 <AssetTypeBadge title="Real Asset" />
-                <LabeledValue label="Description" value={real.description} />
                 <AddressInfo address={real.arbiter} ownerLabel="Arbiter" />
               </>
             )
