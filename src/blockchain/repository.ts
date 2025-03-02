@@ -1,7 +1,13 @@
 import Web3, { AbiFragment, Contract } from "web3";
 import { AbiItem } from "web3-utils";
 
-export type CallMethods = "createAuction" | "makeBid";
+export type CallMethods =
+  | "createAuction"
+  | "placeBid"
+  | "takeMyBid"
+  | "verifyNewArbiter"
+  | "approveRefund"
+  | "withdrawFees";
 export type QueryMethods =
   | "getAuction"
   | "getBids"
@@ -23,9 +29,9 @@ export class SmartContractRepository {
     this.contract = new this.web3.eth.Contract(abi, contractAddress);
   }
 
-  protected async call(
+  protected async call<T>(
     methodName: CallMethods,
-    args: unknown[],
+    args: T[],
     options: { value?: string } = {}
   ) {
     return await this.contract.methods[methodName](...args).send({
