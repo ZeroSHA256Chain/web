@@ -1,9 +1,11 @@
-import { StackProps, Text, VStack } from "@chakra-ui/react";
+import { StackProps, VStack } from "@chakra-ui/react";
 import { memo } from "react";
 import { P, match } from "ts-pattern";
 
-import { formatETHAddress, gweiToETH } from "@/helpers";
+import { gweiToETH } from "@/helpers";
 import { AssetType, Auction } from "@/services";
+
+import { AddressInfo, AssetTypeBadge, LabeledValue } from "./components";
 
 interface AssetDetailsProps extends StackProps {
   asset: Auction["asset"];
@@ -12,19 +14,15 @@ interface AssetDetailsProps extends StackProps {
 export const AssetDetails: React.FC<AssetDetailsProps> = memo(
   ({ asset, ...props }) => {
     return (
-      <VStack align="start" spaceY={2} {...props}>
+      <VStack align="start" spaceY={0} {...props}>
         {match(asset)
           .with(
             P.intersection({ kind: AssetType.Real, real: P.nonNullable }),
             ({ real }) => (
               <>
-                <Text fontWeight="bold">Real Asset</Text>
-                <Text>Description: {real.description}</Text>
-                <Text>Arbiter: {formatETHAddress(real.arbiter)}</Text>
-                <Text>
-                  Approvals:{" "}
-                  {Object.values(real.approves).filter(Boolean).length}
-                </Text>
+                <AssetTypeBadge title="Real Asset" />
+                <LabeledValue label="Description" value={real.description} />
+                <AddressInfo address={real.arbiter} ownerLabel="Arbiter" />
               </>
             )
           )
@@ -32,9 +30,15 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             P.intersection({ kind: AssetType.ERC20, erc20: P.nonNullable }),
             ({ erc20 }) => (
               <>
-                <Text fontWeight="bold">ERC20 Token</Text>
-                <Text>Amount: {gweiToETH(Number(erc20.amount))}</Text>
-                <Text>Contract: {formatETHAddress(erc20.tokenContract)}</Text>
+                <AssetTypeBadge title="ERC20 Token" />
+                <LabeledValue
+                  label="Amount"
+                  value={gweiToETH(Number(erc20.amount))}
+                />
+                <AddressInfo
+                  address={erc20.tokenContract}
+                  ownerLabel="Contract"
+                />
               </>
             )
           )
@@ -42,9 +46,12 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             P.intersection({ kind: AssetType.ERC721, erc721: P.nonNullable }),
             ({ erc721 }) => (
               <>
-                <Text fontWeight="bold">NFT (ERC721)</Text>
-                <Text>Token ID: {erc721.id.toString()}</Text>
-                <Text>Contract: {formatETHAddress(erc721.tokenContract)}</Text>
+                <AssetTypeBadge title="NFT (ERC721)" />
+                <LabeledValue label="Token ID" value={erc721.id.toString()} />
+                <AddressInfo
+                  address={erc721.tokenContract}
+                  ownerLabel="Contract"
+                />
               </>
             )
           )
@@ -52,20 +59,16 @@ export const AssetDetails: React.FC<AssetDetailsProps> = memo(
             P.intersection({ kind: AssetType.ERC1155, erc1155: P.nonNullable }),
             ({ erc1155 }) => (
               <>
-                <Text fontWeight="bold">NFT (ERC1155)</Text>
-                <Text>Token ID: {erc1155.id.toString()}</Text>
-                <Text>Amount: {erc1155.amount.toString()}</Text>
-                <Text>Contract: {formatETHAddress(erc1155.tokenContract)}</Text>
-              </>
-            )
-          )
-          .with(
-            P.intersection({ kind: AssetType.ERC721, erc721: P.nonNullable }),
-            ({ erc721 }) => (
-              <>
-                <Text fontWeight="bold">NFT (ERC721)</Text>
-                <Text>Token ID: {erc721.id.toString()}</Text>
-                <Text>Contract: {formatETHAddress(erc721.tokenContract)}</Text>
+                <AssetTypeBadge title="NFT (ERC1155)" />
+                <LabeledValue label="Token ID" value={erc1155.id.toString()} />
+                <LabeledValue
+                  label="Amount"
+                  value={erc1155.amount.toString()}
+                />
+                <AddressInfo
+                  address={erc1155.tokenContract}
+                  ownerLabel="Contract"
+                />
               </>
             )
           )

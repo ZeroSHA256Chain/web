@@ -5,7 +5,6 @@ import { AssetType, AuctionStatus } from "./enums";
 export interface RealAsset {
   description: string;
   arbiter: Address;
-  approves: Record<Address, boolean>;
 }
 
 export interface ERC20Asset {

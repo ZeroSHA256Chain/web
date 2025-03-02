@@ -1,22 +1,15 @@
-import {
-  Badge,
-  HStack,
-  Heading,
-  Separator,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { formatDistance } from "date-fns";
+import { Grid, HStack, Heading, Text, VStack } from "@chakra-ui/react";
 import { memo } from "react";
 
 import {
   AddressButton,
   AssetDetails,
   AuctionStatusBadge,
+  AuctionTimeBadge,
   BidsHistory,
   BidsOverviewTable,
 } from "@/components/features";
-import { Icon } from "@/components/ui";
+import { MakeBidForm } from "@/components/features";
 import { LoadedContentController } from "@/components/utils";
 import { useAuctionFetch } from "@/hooks";
 import { Auction } from "@/services";
@@ -24,6 +17,8 @@ import { Auction } from "@/services";
 interface AuctionDetailsProps {
   id: number;
 }
+
+const BLOCK_HEIGHT = 220;
 
 export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
   const {
@@ -45,77 +40,110 @@ export const AuctionDetails: React.FC<AuctionDetailsProps> = memo(({ id }) => {
       data={auction}
     >
       {(auction) => (
-        <VStack align="start" spaceY={6}>
-          <HStack spaceX={2} w="full" justify="space-between">
-            <VStack align="start" spaceY={2}>
-              <Heading as="h2" fontSize="2xl" fontWeight="bold">
-                {auction.name}
-              </Heading>
-
-              <HStack>
-                <Text color="fg.muted">Created by </Text>
-
-                <AddressButton address={auction.creator} />
-              </HStack>
-            </VStack>
-
-            <VStack align="end" spaceY={2}>
-              <Badge size="md" variant="solid" colorPalette="black">
-                <Icon height="1rem" width="1rem" name="CalendarClock" />
-
-                <Text as="span">
-                  {Number(auction.endTime) > Date.now() ? "Ends " : "Ended "}
-                  {formatDistance(Number(auction.endTime), Date.now(), {
-                    addSuffix: true,
-                  })}
-                </Text>
-              </Badge>
-
-              <AuctionStatusBadge status={auction.status} />
-            </VStack>
-          </HStack>
-
-          <Separator w="full" />
-
-          <HStack justify="space-between" w="full">
-            <VStack
-              align="start"
+        <VStack align="start" spaceY={6} maxW="full" p={4}>
+          <VStack align="start" spaceY={2} w="full">
+            <Grid
+              templateColumns={{
+                base: "1fr",
+                md: "1fr 1fr",
+              }}
+              gap={4}
               w="full"
-              border="1px solid"
-              borderColor="border.muted"
-              p={4}
-              borderRadius="md"
+              justifyItems="space-between"
             >
-              <BidsOverviewTable
-                bestBid={Number(auction.bestBid.price)}
-                bidStep={Number(auction.bidStep)}
-                minBid={Number(auction.startPrice)}
-              />
+              <VStack
+                align="start"
+                spaceY={{
+                  base: 0,
+                  md: 2,
+                }}
+              >
+                <Heading
+                  as="h2"
+                  fontSize={{
+                    base: "lg",
+                    md: "2xl",
+                  }}
+                  fontWeight="bold"
+                >
+                  {auction.name}
+                </Heading>
 
-              <VStack align="end" spaceY={2}>
                 <HStack>
-                  <Text color="fg.muted">Arbiter</Text>
+                  <Text color="fg.muted">Created by </Text>
 
                   <AddressButton address={auction.creator} />
                 </HStack>
               </VStack>
-            </VStack>
 
-            <AssetDetails
-              asset={auction.asset}
-              border="1px solid"
-              borderColor="border.muted"
-              p={4}
-              borderRadius="md"
-            />
-          </HStack>
+              <Grid
+                templateColumns={{
+                  base: "1fr 1fr",
+                  md: "1fr",
+                }}
+                alignSelf="start"
+                justifySelf={{
+                  base: "start",
+                  md: "end",
+                }}
+                justifyItems={{
+                  base: "start",
+                  md: "end",
+                }}
+                gap={2}
+                spaceY={{
+                  base: 0,
+                  md: 2,
+                }}
+                w="fit-content"
+              >
+                <AuctionTimeBadge endTime={Number(auction.endTime)} />
 
-          <Separator w="full" />
+                <AuctionStatusBadge w="fit-content" status={auction.status} />
+              </Grid>
+            </Grid>
+
+            <Grid
+              templateColumns={{
+                base: "1fr",
+                md: "1fr 1fr",
+              }}
+              gap={2}
+              w="full"
+            >
+              <VStack
+                h={BLOCK_HEIGHT}
+                align="start"
+                w="full"
+                border="1px solid"
+                borderColor="border.muted"
+                p={4}
+                borderRadius="md"
+              >
+                <BidsOverviewTable
+                  bestBid={Number(auction.bestBid.price)}
+                  bidStep={Number(auction.bidStep)}
+                  minBid={Number(auction.startPrice)}
+                />
+
+                <MakeBidForm auctionId={id} w="full" />
+              </VStack>
+
+              <AssetDetails
+                h={BLOCK_HEIGHT}
+                asset={auction.asset}
+                border="1px solid"
+                borderColor="border.muted"
+                p={4}
+                borderRadius="md"
+              />
+            </Grid>
+          </VStack>
 
           <BidsHistory
             bestBid={auction.bestBid}
             bidsCount={auction.bidsCount}
-            id={id}
+            auctionId={id}
           />
         </VStack>
       )}

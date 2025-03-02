@@ -66,7 +66,7 @@ export const AuctionsTable = memo(
                 </Table.Cell>
 
                 <Table.Cell>
-                  <AddressButton address={auction.creator} inline />
+                  <AddressButton address={auction.creator} />
                 </Table.Cell>
 
                 <Table.Cell>

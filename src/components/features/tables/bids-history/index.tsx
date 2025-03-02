@@ -1,6 +1,7 @@
-import { For, Heading, Table, Text, VStack } from "@chakra-ui/react";
+import { For, HStack, Heading, Table, Text, VStack } from "@chakra-ui/react";
 import { memo } from "react";
 
+import { AddressButton } from "@/components/features";
 import { LoadedContentController } from "@/components/utils";
 import { ETHEREUM_TOKEN } from "@/constants";
 import { formatDate, formatETHAddress, gweiToETH } from "@/helpers";
@@ -16,11 +17,11 @@ const BID_COLUMNS = [
 interface BidsHistoryProps {
   bestBid: Bid;
   bidsCount: bigint;
-  id: number;
+  auctionId: number;
 }
 
 export const BidsHistory: React.FC<BidsHistoryProps> = memo(
-  ({ bestBid, bidsCount, id }) => {
+  ({ bestBid, bidsCount, auctionId }) => {
     const {
       data: bids,
       isLoading,
@@ -28,7 +29,7 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
       isFetched,
     } = useAuctionFetch<Bid[]>({
       method: "_getMockBids",
-      args: { id },
+      args: { id: auctionId },
     });
 
     return (
@@ -41,11 +42,20 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
       >
         {(bids) => (
           <VStack align="start" w="full" spaceY={2}>
-            <Heading as="h3" fontWeight="bold" fontSize="lg">
-              Bids History
-            </Heading>
+            <HStack justify="space-between" w="full">
+              <Heading as="h3" fontWeight="bold" fontSize="lg">
+                Bids History
+              </Heading>
 
-            <Table.ScrollArea maxH={300}>
+              <Text color="fg.muted" fontSize="sm">
+                Total Bids:{" "}
+                <Text as="span" fontWeight="bold" color="white">
+                  {bidsCount.toString()}
+                </Text>
+              </Text>
+            </HStack>
+
+            <Table.ScrollArea w="full">
               <Table.Root variant="outline">
                 <Table.Header>
                   <Table.Row>
@@ -62,13 +72,7 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell>
-                      <Text
-                        color="teal.300"
-                        fontSize="sm"
-                        fontFamily="monospace"
-                      >
-                        {formatETHAddress(bestBid.sender, { long: true })}
-                      </Text>
+                      <AddressButton address={bestBid.sender} />
                     </Table.Cell>
 
                     <Table.Cell>
@@ -104,10 +108,6 @@ export const BidsHistory: React.FC<BidsHistoryProps> = memo(
                 </Table.Body>
               </Table.Root>
             </Table.ScrollArea>
-
-            <Text color="fg.muted" fontSize="sm">
-              Total Bids: {bidsCount.toString()}
-            </Text>
           </VStack>
         )}
       </LoadedContentController>

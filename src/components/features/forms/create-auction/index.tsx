@@ -9,14 +9,13 @@ import {
 import { useForm } from "@tanstack/react-form";
 import { useAtomValue } from "jotai";
 
-import { AssetTypeSelector } from "@/components/features";
+import { AssetTypeSelector, PriceInput } from "@/components/features";
 import { DatePicker, FormFieldError, toaster } from "@/components/ui";
 import { HOUR } from "@/constants";
 import { ethToGwei } from "@/helpers";
 import { AssetType } from "@/services";
 import { auctionServiceAtom } from "@/store/atoms";
 
-import { handleDecimalInput } from "./utils";
 import { CreateAuctionFormData, createAuctionSchema } from "./validation";
 
 export const CreateAuctionForm = () => {
@@ -150,18 +149,11 @@ export const CreateAuctionForm = () => {
                 Min Bid:
               </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
+              <PriceInput
+                name={field.name}
+                handleChange={field.handleChange}
+                handleBlur={field.handleBlur}
                 value={field.state.value}
-                onChange={(event) =>
-                  field.handleChange(handleDecimalInput(event.target.value))
-                }
-                onBlur={field.handleBlur}
-                type="text"
-                inputMode="decimal"
-                placeholder="0"
               />
 
               <FormFieldError state={field.state} />
@@ -177,18 +169,11 @@ export const CreateAuctionForm = () => {
                 Bid Step:
               </FormControl.Label>
 
-              <Input
-                color="white"
-                colorPalette="teal"
-                id={field.name}
+              <PriceInput
+                name={field.name}
+                handleChange={field.handleChange}
+                handleBlur={field.handleBlur}
                 value={field.state.value}
-                onChange={(event) =>
-                  field.handleChange(handleDecimalInput(event.target.value))
-                }
-                onBlur={field.handleBlur}
-                type="text"
-                inputMode="decimal"
-                placeholder="0"
               />
 
               <FormFieldError state={field.state} />

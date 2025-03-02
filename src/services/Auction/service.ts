@@ -24,6 +24,10 @@ export class AuctionService extends SmartContractRepository {
   public async _getMockBids(_id: number) {
     return Promise.resolve(mockBids);
   }
+
+  public async makeBid(id: number, price: number) {
+    await this.call("makeBid", [id, price]);
+  }
 }
 
 export * from "./types";

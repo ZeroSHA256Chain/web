@@ -1,7 +1,7 @@
 import Web3, { AbiFragment, Contract } from "web3";
 import { AbiItem } from "web3-utils";
 
-export type CallMethods = "createAuction";
+export type CallMethods = "createAuction" | "makeBid";
 export type QueryMethods =
   | "getAuction"
   | "getBids"
